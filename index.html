@@ -226,6 +226,12 @@ const BUFFS = {
   "strip":       { label:"Vol de buff",         desc:"Retire un buff ennemi.",             color:"#ff6699", power:8 },
   "dec_atb":     { label:"ATB ↓",              desc:"Réduit la jauge d'action.",          color:"#aa4488", power:7 },
   "hp_debuff":   { label:"Réduc. PV max",      desc:"Réduit les PV maximum.",             color:"#882244", power:6 },
+  // Spéciaux
+  "skill_accel": { label:"Accél. compétences", desc:"Réduit le temps de recharge des compétences.", color:"#44ccff", power:7 },
+  "cc_boost":    { label:"Contrôle ↑",         desc:"Augmente l'efficacité des effets de contrôle.", color:"#ffaa44", power:7 },
+  "petrify_dmg": { label:"Dég. pétrification", desc:"Dégâts augmentés sur cibles pétrifiées.",       color:"#bbaa66", power:7 },
+  "range_up":    { label:"Portée ↑",           desc:"Augmente la portée d'attaque.",                 color:"#66ddaa", power:6 },
+  "triple_hit":  { label:"Coup triple ↑",      desc:"Augmente le taux de coups triples.",            color:"#dd88ff", power:8 },
 };
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -286,6 +292,54 @@ const MONSTERS = {
         desc: "Sous Furtivité : dégâts infligés +150% pendant 3s (suppression impossible, cumulable). Attaque réussie : « Dégâts des coups puissants +20% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).",
         buffs: ["dmg_up", "crit_dmg_up", "stealth"],
         pvp: true, pve: false,
+      },
+    ],
+  },
+
+  "Grogen": {
+    image: "", type: "range",
+    awakenings: [
+      {
+        level: 3,
+        desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.",
+        buffs: ["cd_reset"],
+        pvp: true, pve: true,
+      },
+      {
+        level: 5,
+        desc: "Coup puissant réussi : « Accélération des compétences +20% » pendant 2s (cumulable).",
+        buffs: ["skill_accel"],
+        pvp: true, pve: true,
+      },
+      {
+        level: 7,
+        desc: "Attaque réussie : « Efficacité des effets de contrôle +20% » et « Dégâts sur cibles pétrifiées +20% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).",
+        buffs: ["cc_boost", "petrify_dmg", "dmg_up"],
+        pvp: true, pve: false,
+      },
+    ],
+  },
+
+  "Sabrina": {
+    image: "", type: "range",
+    awakenings: [
+      {
+        level: 3,
+        desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.",
+        buffs: ["cd_reset"],
+        pvp: true, pve: true,
+      },
+      {
+        level: 5,
+        desc: "Début de combat : « Portée +3 » et « Vitesse d'attaque +15% » (suppression impossible, cumulable).",
+        buffs: ["range_up", "atk_spd_up"],
+        pvp: true, pve: true,
+      },
+      {
+        level: 7,
+        desc: "Attaque réussie : « Taux de coups triples +10% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).",
+        buffs: ["triple_hit", "dmg_up"],
+        pvp: true, pve: true,
       },
     ],
   },
