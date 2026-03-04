@@ -6,153 +6,141 @@
 <title>SW Rush – Comparateur</title>
 <style>
   :root {
-    --bg: #0d0f1a; --card: #161929; --card2: #1e2235;
-    --border: #2e3455; --gold: #f0c040; --pvp: #e05555; --pve: #4aada8;
-    --text: #d0d8f0; --muted: #7a83a8; --atk: #e05555; --def: #4a90d9;
-    --sup: #7bc67e; --acc: #c87adb;
+    --bg:#0d0f1a;--card:#161929;--card2:#1e2235;--border:#2e3455;
+    --gold:#f0c040;--pvp:#e05555;--pve:#4aada8;--text:#d0d8f0;--muted:#7a83a8;
+    --atk:#e05555;--def:#4a90d9;--sup:#7bc67e;--acc:#c87adb;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
-  header { background: linear-gradient(90deg,#1a1f3a,#0d0f1a); border-bottom: 2px solid var(--border);
-    padding: 12px 20px; display: flex; align-items: center; gap: 14px; }
-  header h1 { font-size: 1.2rem; color: var(--gold); letter-spacing: 1px; }
-  header span { font-size: .8rem; color: var(--muted); }
-  .layout { display: flex; height: calc(100vh - 56px); }
-  .sidebar { width: 280px; min-width: 220px; background: var(--card); border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; overflow: hidden; }
-  .sidebar-search { padding: 10px; border-bottom: 1px solid var(--border); }
-  .sidebar-search input { width: 100%; background: var(--card2); border: 1px solid var(--border);
-    border-radius: 6px; padding: 7px 10px; color: var(--text); font-size: .85rem; outline: none; }
-  .sidebar-search input:focus { border-color: var(--gold); }
-  .monster-grid { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; overflow-y: auto; flex: 1; }
-  .m-thumb { width: 72px; cursor: pointer; border-radius: 8px; border: 2px solid transparent;
-    overflow: hidden; transition: border-color .2s, transform .15s; background: var(--card2); }
-  .m-thumb:hover { border-color: var(--gold); transform: scale(1.05); }
-  .m-thumb.selected-left  { border-color: #5599ff; }
-  .m-thumb.selected-right { border-color: #ff7755; }
-  .m-thumb img { width: 100%; height: 72px; object-fit: cover; display: block; }
-  .m-thumb .t-name { font-size: .6rem; text-align: center; padding: 2px 0 3px; color: var(--text);
-    background: rgba(0,0,0,.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .m-thumb .t-stars { text-align: center; font-size: .55rem; color: var(--gold); line-height: 1; padding-bottom: 2px; }
-  .compare { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .compare-top { display: flex; flex: 1; overflow: hidden; }
-  .compare-col { flex: 1; padding: 16px; overflow-y: auto; border-right: 1px solid var(--border); }
-  .compare-col:last-child { border-right: none; }
-  .compare-col.left-side  { border-top: 3px solid #5599ff; }
-  .compare-col.right-side { border-top: 3px solid #ff7755; }
-  .empty-slot { display: flex; flex-direction: column; align-items: center; justify-content: center;
-    height: 100%; color: var(--muted); gap: 10px; font-size: .9rem; }
-  .empty-slot svg { opacity: .3; }
-  .mc-header { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
-  .mc-portrait { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; border: 2px solid var(--border); flex-shrink: 0; }
-  .mc-portrait-placeholder { width: 90px; height: 90px; border-radius: 10px; background: var(--card2);
-    display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: .7rem; flex-shrink: 0; }
-  .mc-info h2 { font-size: 1.1rem; color: var(--gold); }
-  .mc-info .mc-stars { color: var(--gold); font-size: .85rem; letter-spacing: 2px; }
-  .mc-type-badge { display: inline-block; font-size: .7rem; padding: 2px 8px; border-radius: 12px; margin-top: 4px; font-weight: 700; }
-  .type-atk { background: #3a1a1a; color: var(--atk); }
-  .type-def { background: #1a2a3a; color: var(--def); }
-  .type-sup { background: #1a2e1a; color: var(--sup); }
-  .type-acc { background: #2a1a3a; color: var(--acc); }
-  .mc-awakening { font-size: .75rem; color: var(--muted); margin-top: 4px; }
-  .score-summary { display: flex; gap: 10px; margin-bottom: 14px; }
-  .score-box { flex: 1; border-radius: 8px; padding: 8px 12px; text-align: center; }
-  .score-box.pvp { background: #2e1a1a; border: 1px solid var(--pvp); }
-  .score-box.pve { background: #1a2a2a; border: 1px solid var(--pve); }
-  .score-box .sb-label { font-size: .65rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
-  .score-box.pvp .sb-label { color: var(--pvp); }
-  .score-box.pve .sb-label { color: var(--pve); }
-  .score-box .sb-val { font-size: 1.4rem; font-weight: 700; }
-  .skills-title { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
-    margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
-  .skill-card { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
-  .skill-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .skill-name { font-size: .9rem; font-weight: 600; color: #c0ccf0; }
-  .skill-badges { display: flex; gap: 5px; flex-shrink: 0; }
-  .badge { font-size: .65rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; }
-  .badge.pvp { background: #3a1818; color: var(--pvp); border: 1px solid var(--pvp); }
-  .badge.pve { background: #183030; color: var(--pve); border: 1px solid var(--pve); }
-  .skill-desc { font-size: .75rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
-  /* buff tags inline */
-  .buff-tag { display: inline-block; font-size: .62rem; padding: 1px 6px; border-radius: 8px;
-    margin: 2px 2px 0 0; font-weight: 600; border: 1px solid; }
-  .skill-bar-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-  .skill-bar-label { font-size: .65rem; width: 28px; flex-shrink: 0; }
-  .skill-bar-label.pvp { color: var(--pvp); }
-  .skill-bar-label.pve { color: var(--pve); }
-  .bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
-  .bar-fill.pvp { background: linear-gradient(90deg, #c03030, #ff7070); }
-  .bar-fill.pve { background: linear-gradient(90deg, #2a8a88, #4acdca); }
-  .bar-score { font-size: .7rem; width: 22px; text-align: right; flex-shrink: 0; }
-  .compare-bottom { background: var(--card); border-top: 1px solid var(--border); padding: 10px 20px;
-    display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-  .cmp-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-  .no-cmp { color: var(--muted); font-size: .8rem; flex: 1; text-align: center; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh}
+  header{background:linear-gradient(90deg,#1a1f3a,#0d0f1a);border-bottom:2px solid var(--border);
+    padding:12px 20px;display:flex;align-items:center;gap:14px}
+  header h1{font-size:1.2rem;color:var(--gold);letter-spacing:1px}
+  header span{font-size:.8rem;color:var(--muted)}
+  .layout{display:flex;height:calc(100vh - 56px)}
+  .sidebar{width:280px;min-width:220px;background:var(--card);border-right:1px solid var(--border);
+    display:flex;flex-direction:column;overflow:hidden}
+  .sidebar-search{padding:10px;border-bottom:1px solid var(--border)}
+  .sidebar-search input{width:100%;background:var(--card2);border:1px solid var(--border);
+    border-radius:6px;padding:7px 10px;color:var(--text);font-size:.85rem;outline:none}
+  .sidebar-search input:focus{border-color:var(--gold)}
+  .monster-grid{display:flex;flex-wrap:wrap;gap:6px;padding:10px;overflow-y:auto;flex:1}
+  .m-thumb{width:72px;cursor:pointer;border-radius:8px;border:2px solid transparent;
+    overflow:hidden;transition:border-color .2s,transform .15s;background:var(--card2)}
+  .m-thumb:hover{border-color:var(--gold);transform:scale(1.05)}
+  .m-thumb.selected-left{border-color:#5599ff}
+  .m-thumb.selected-right{border-color:#ff7755}
+  .m-thumb img{width:100%;height:72px;object-fit:cover;display:block}
+  .t-name{font-size:.6rem;text-align:center;padding:2px 0 3px;color:var(--text);
+    background:rgba(0,0,0,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .t-stars{text-align:center;font-size:.55rem;color:var(--gold);line-height:1;padding-bottom:2px}
+  .compare{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .compare-top{display:flex;flex:1;overflow:hidden}
+  .compare-col{flex:1;padding:16px;overflow-y:auto;border-right:1px solid var(--border)}
+  .compare-col:last-child{border-right:none}
+  .compare-col.left-side{border-top:3px solid #5599ff}
+  .compare-col.right-side{border-top:3px solid #ff7755}
+  .empty-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    height:100%;color:var(--muted);gap:10px;font-size:.9rem}
+  .empty-slot svg{opacity:.3}
+  /* Card */
+  .mc-header{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+  .mc-portrait{width:90px;height:90px;border-radius:10px;object-fit:cover;border:2px solid var(--border);flex-shrink:0}
+  .mc-portrait-placeholder{width:90px;height:90px;border-radius:10px;background:var(--card2);
+    display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.7rem;flex-shrink:0}
+  .mc-info h2{font-size:1.1rem;color:var(--gold)}
+  .mc-stars{color:var(--gold);font-size:.85rem;letter-spacing:2px}
+  .mc-type-badge{display:inline-block;font-size:.7rem;padding:2px 8px;border-radius:12px;margin-top:4px;font-weight:700}
+  .type-atk{background:#3a1a1a;color:var(--atk)}.type-def{background:#1a2a3a;color:var(--def)}
+  .type-sup{background:#1a2e1a;color:var(--sup)}.type-acc{background:#2a1a3a;color:var(--acc)}
+  /* Score global */
+  .score-summary{background:var(--card2);border:1px solid var(--border);border-radius:8px;
+    padding:8px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .score-summary .ss-label{font-size:.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+  .score-summary .ss-val{font-size:1.4rem;font-weight:700;color:var(--gold)}
+  /* Section titles */
+  .section-title{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);
+    margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px;margin-top:14px}
+  /* Éveil */
+  .awakening-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;
+    padding:10px 12px;margin-bottom:8px}
+  .awk-header{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .awk-level{font-size:.7rem;font-weight:700;color:var(--gold);background:#2a2400;
+    border:1px solid var(--gold);border-radius:10px;padding:1px 8px;flex-shrink:0}
+  .awk-desc{font-size:.8rem;color:#c0ccf0;flex:1}
+  .awk-badges{display:flex;gap:5px;flex-shrink:0}
+  .awk-badge{font-size:.65rem;padding:2px 7px;border-radius:10px;font-weight:700}
+  .awk-badge.pvp{background:#3a1818;color:var(--pvp);border:1px solid var(--pvp)}
+  .awk-badge.pve{background:#183030;color:var(--pve);border:1px solid var(--pve)}
+  .awk-tags{margin-top:4px}
+  /* Skills */
+  .skill-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;
+    padding:10px 12px;margin-bottom:8px}
+  .skill-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .skill-name{font-size:.9rem;font-weight:600;color:#c0ccf0}
+  .skill-score-badge{font-size:.7rem;padding:2px 9px;border-radius:10px;font-weight:700;flex-shrink:0;
+    background:#2a2400;color:var(--gold);border:1px solid var(--gold)}
+  .skill-desc{font-size:.75rem;color:var(--muted);margin-top:4px;line-height:1.5}
+  .buff-tags{margin-top:5px}
+  .buff-tag{display:inline-block;font-size:.62rem;padding:1px 6px;border-radius:8px;
+    margin:2px 2px 0 0;font-weight:600;border:1px solid}
+  .skill-bar-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+  .skill-bar-label{font-size:.65rem;color:var(--muted);width:60px;flex-shrink:0}
+  .bar-bg{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#a07800,var(--gold));transition:width .5s ease}
+  .bar-score{font-size:.7rem;width:22px;text-align:right;flex-shrink:0;color:var(--gold)}
+  /* Bottom bar */
+  .compare-bottom{background:var(--card);border-top:1px solid var(--border);padding:10px 20px;
+    display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .cmp-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .no-cmp{color:var(--muted);font-size:.8rem;flex:1;text-align:center}
 </style>
 </head>
 <body>
-
 <script>
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║                    ⚙️  CONFIGURATION                            ║
+// ╚══════════════════════════════════════════════════════════════════╝
+const IMAGES_PATH = "./images/";
+
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║              📖  BIBLIOTHÈQUE DES EFFETS / BUFFS                ║
 // ╠══════════════════════════════════════════════════════════════════╣
-// ║  Chaque clé est un identifiant court que vous réutilisez        ║
-// ║  dans les compétences via :  buffs: ["id1", "id2", ...]         ║
-// ║                                                                  ║
 // ║  TEMPLATE :                                                      ║
-// ║  "id_unique": {                                                  ║
-// ║    label: "Nom affiché",   ← texte du badge                     ║
-// ║    desc:  "Explication.",  ← tooltip au survol                  ║
-// ║    color: "#rrggbb",       ← couleur du badge (fond clair auto) ║
-// ║  },                                                              ║
+// ║  "id": { label:"Nom badge", desc:"Tooltip.", color:"#rrggbb" }, ║
 // ╚══════════════════════════════════════════════════════════════════╝
 const BUFFS = {
-
-  // ── Buffs offensifs
-  "atk_up":      { label: "ATQ ↑",          desc: "Augmente l'ATQ de la cible alliée.",             color: "#e05555" },
-  "atk_spd_up":  { label: "Vit. ATQ ↑",     desc: "Augmente la vitesse d'attaque.",                  color: "#ff8c42" },
-  "crit_up":     { label: "CRIT ↑",          desc: "Augmente le taux de critique.",                   color: "#ffcc00" },
-  "crit_dmg_up": { label: "Dég. CRIT ↑",    desc: "Augmente les dégâts critiques.",                  color: "#ffd966" },
-  "ignore_def":  { label: "Perce DEF",       desc: "Ignore une partie de la défense ennemie.",        color: "#cc6600" },
-
-  // ── Buffs défensifs
-  "def_up":      { label: "DEF ↑",           desc: "Augmente la DEF de la cible alliée.",             color: "#4a90d9" },
-  "shield":      { label: "Bouclier",         desc: "Absorbe une quantité de dégâts.",                 color: "#5599ff" },
-  "invincible":  { label: "Invincible",       desc: "Immunise aux dégâts pendant X tour(s).",          color: "#88ccff" },
-  "reflect":     { label: "Réflexion",        desc: "Renvoie une partie des dégâts à l'attaquant.",    color: "#3366cc" },
-
-  // ── Buffs utilitaires
-  "heal":        { label: "Soin",             desc: "Restaure des PV.",                                color: "#7bc67e" },
-  "regen":       { label: "Régén. PV",        desc: "Restaure des PV à chaque début de tour.",         color: "#5cb85c" },
-  "revive":      { label: "Résurrection",     desc: "Ranime un allié avec un % de ses PV max.",        color: "#aaffaa" },
-  "cleanse":     { label: "Purification",     desc: "Supprime les debuffs d'un allié.",                color: "#66ff99" },
-  "immunity":    { label: "Immunité",         desc: "Empêche l'application de debuffs.",               color: "#33cc77" },
-  "extra_turn":  { label: "Tour bonus",       desc: "Accorde un tour supplémentaire à un allié.",      color: "#cc88ff" },
-  "spd_up":      { label: "Vit. ↑",          desc: "Augmente la vitesse de déplacement/tour.",         color: "#aa66ff" },
-
-  // ── Debuffs offensifs
-  "stun":        { label: "Étourdissement",   desc: "Passe le tour de la cible.",                      color: "#ffaa00" },
-  "freeze":      { label: "Gel",              desc: "Immobilise la cible, elle ne peut pas agir.",     color: "#88ddff" },
-  "sleep":       { label: "Sommeil",          desc: "Endort la cible (se réveille si touchée).",       color: "#9966cc" },
-  "taunt":       { label: "Provocation",      desc: "Force l'ennemi à attaquer le lanceur.",           color: "#cc4444" },
-  "silence":     { label: "Silence",          desc: "Empêche l'utilisation des compétences actives.",  color: "#888888" },
-  "dot":         { label: "DoT",              desc: "Dégâts sur la durée chaque tour.",                color: "#cc6600" },
-  "burn":        { label: "Brûlure",          desc: "DoT de type feu.",                               color: "#ff4400" },
-  "poison":      { label: "Poison",           desc: "DoT de type poison.",                            color: "#66bb00" },
-  "bleed":       { label: "Saignement",       desc: "DoT basé sur le % des PV max ennemis.",          color: "#cc0033" },
-
-  // ── Debuffs utilitaires
-  "atk_down":    { label: "ATQ ↓",            desc: "Réduit l'ATQ de la cible ennemie.",              color: "#994444" },
-  "def_down":    { label: "DEF ↓",            desc: "Réduit la DEF de la cible ennemie.",             color: "#336699" },
-  "spd_down":    { label: "Vit. ↓",           desc: "Réduit la vitesse de la cible.",                 color: "#776699" },
-  "heal_block":  { label: "Anti-soin",         desc: "Empêche la cible de recevoir des soins.",        color: "#cc3366" },
-  "strip":       { label: "Vol de buff",       desc: "Retire un buff de la cible ennemie.",            color: "#ff6699" },
-  "dec_atb":     { label: "ATB ↓",            desc: "Réduit la jauge d'action de la cible.",          color: "#aa4488" },
-  "hp_debuff":   { label: "Réduc. PV max",    desc: "Réduit les PV maximum de la cible.",             color: "#882244" },
-
-  // ── Ajouter vos propres effets ici…
-
+  "atk_up":      { label:"ATQ ↑",          desc:"Augmente l'ATQ alliée.",               color:"#e05555" },
+  "atk_spd_up":  { label:"Vit. ATQ ↑",     desc:"Augmente la vitesse d'attaque.",        color:"#ff8c42" },
+  "crit_up":     { label:"CRIT ↑",          desc:"Augmente le taux de critique.",         color:"#ffcc00" },
+  "crit_dmg_up": { label:"Dég. CRIT ↑",    desc:"Augmente les dégâts critiques.",        color:"#ffd966" },
+  "ignore_def":  { label:"Perce DEF",       desc:"Ignore une partie de la DEF ennemie.", color:"#cc6600" },
+  "def_up":      { label:"DEF ↑",           desc:"Augmente la DEF alliée.",              color:"#4a90d9" },
+  "shield":      { label:"Bouclier",         desc:"Absorbe une quantité de dégâts.",      color:"#5599ff" },
+  "invincible":  { label:"Invincible",       desc:"Immunise aux dégâts X tour(s).",       color:"#88ccff" },
+  "reflect":     { label:"Réflexion",        desc:"Renvoie une partie des dégâts.",       color:"#3366cc" },
+  "heal":        { label:"Soin",             desc:"Restaure des PV.",                     color:"#7bc67e" },
+  "regen":       { label:"Régén. PV",        desc:"Restaure des PV chaque tour.",         color:"#5cb85c" },
+  "revive":      { label:"Résurrection",     desc:"Ranime un allié avec % PV max.",       color:"#aaffaa" },
+  "cleanse":     { label:"Purification",     desc:"Supprime les debuffs d'un allié.",     color:"#66ff99" },
+  "immunity":    { label:"Immunité",         desc:"Empêche l'application de debuffs.",    color:"#33cc77" },
+  "extra_turn":  { label:"Tour bonus",       desc:"Accorde un tour supplémentaire.",      color:"#cc88ff" },
+  "spd_up":      { label:"Vit. ↑",          desc:"Augmente la vitesse de tour.",          color:"#aa66ff" },
+  "stun":        { label:"Étourdissement",   desc:"Passe le tour de la cible.",           color:"#ffaa00" },
+  "freeze":      { label:"Gel",              desc:"Immobilise la cible.",                 color:"#88ddff" },
+  "sleep":       { label:"Sommeil",          desc:"Endort la cible.",                     color:"#9966cc" },
+  "taunt":       { label:"Provocation",      desc:"Force l'ennemi à attaquer le lanceur.",color:"#cc4444" },
+  "silence":     { label:"Silence",          desc:"Empêche les compétences actives.",     color:"#888888" },
+  "dot":         { label:"DoT",              desc:"Dégâts sur la durée.",                 color:"#cc6600" },
+  "burn":        { label:"Brûlure",          desc:"DoT feu.",                             color:"#ff4400" },
+  "poison":      { label:"Poison",           desc:"DoT poison.",                          color:"#66bb00" },
+  "bleed":       { label:"Saignement",       desc:"DoT % PV max ennemis.",               color:"#cc0033" },
+  "atk_down":    { label:"ATQ ↓",            desc:"Réduit l'ATQ ennemie.",               color:"#994444" },
+  "def_down":    { label:"DEF ↓",            desc:"Réduit la DEF ennemie.",              color:"#336699" },
+  "spd_down":    { label:"Vit. ↓",           desc:"Réduit la vitesse.",                  color:"#776699" },
+  "heal_block":  { label:"Anti-soin",         desc:"Empêche de recevoir des soins.",      color:"#cc3366" },
+  "strip":       { label:"Vol de buff",       desc:"Retire un buff ennemi.",              color:"#ff6699" },
+  "dec_atb":     { label:"ATB ↓",            desc:"Réduit la jauge d'action.",           color:"#aa4488" },
+  "hp_debuff":   { label:"Réduc. PV max",    desc:"Réduit les PV maximum.",              color:"#882244" },
 };
 
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -160,18 +148,24 @@ const BUFFS = {
 // ╠══════════════════════════════════════════════════════════════════╣
 // ║  TEMPLATE :                                                      ║
 // ║  "NomMonstre": {                                                 ║
-// ║    image: "",            ← laisser "" : l'image se charge       ║
-// ║                            automatiquement via "NomMonstre.png" ║
-// ║    stars: 5,             ← 1 à 5                                ║
-// ║    type: "atk",          ← "atk" | "def" | "sup" | "acc"       ║
-// ║    awakening: 0,         ← 0 | 1 | 2 | 3                       ║
+// ║    image: "",          ← laisser vide (auto NomMonstre.png)     ║
+// ║    stars: 5,           ← 1 à 5                                  ║
+// ║    type: "atk",        ← "atk" | "def" | "sup" | "acc"         ║
+// ║    awakenings: [       ← liste des niveaux d'éveil (0 à 3)      ║
+// ║      {                                                           ║
+// ║        level: 1,                                                 ║
+// ║        desc: "Description du bonus d'éveil.",                   ║
+// ║        buffs: ["atk_up"],  ← effets apportés par cet éveil      ║
+// ║        pvp: true,          ← utile en PvP ?                     ║
+// ║        pve: false,         ← utile en PvE ?                     ║
+// ║      },                                                          ║
+// ║    ],                                                            ║
 // ║    skills: [                                                     ║
 // ║      {                                                           ║
 // ║        name: "Nom compétence",                                  ║
 // ║        desc: "Description courte.",                             ║
-// ║        buffs: ["heal", "shield"],  ← IDs depuis BUFFS ci-dessus ║
-// ║        pvp: 8,           ← score PvP 0-10                      ║
-// ║        pve: 6,           ← score PvE 0-10                      ║
+// ║        buffs: ["heal", "shield"],  ← effets de la compétence    ║
+// ║        score: 8,       ← score de puissance 0-10                ║
 // ║      },                                                          ║
 // ║    ]                                                             ║
 // ║  },                                                              ║
@@ -179,11 +173,50 @@ const BUFFS = {
 const MONSTERS = {
 
   "Craka": {
-    image: "", stars: 5, type: "atk", awakening: 0,
+    image: "", stars: 5, type: "atk",
+    awakenings: [
+      {
+        level: 3,
+        desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.",
+        buffs: [],
+        pvp: true, pve: true,
+      },
+      {
+        level: 5,
+        desc: "Début de combat : ATQ +10% (cumulable) + Réduc. dégâts longue portée -30% (suppression impossible, cumulable). Chaque application de saignement accorde à un allié 'Détection point faible – Saignement 10%' pendant 10s (cumulable).",
+        buffs: ["atk_up", "def_up", "bleed"],
+        pvp: true, pve: false,
+      },
+      {
+        level: 7,
+        desc: "Attaque réussie : applique 'Point faible – Saignement 15%' 10s (suppression impossible, cumulable). Dégâts infligés +20% (suppression impossible, cumulable).",
+        buffs: ["bleed", "atk_up"],
+        pvp: true, pve: false,
+      },
+    ],
     skills: [
-      { name: "Test", desc: "Compétence de test.", buffs: [], pvp: 8, pve: 6 },
+      {
+        name: "Nom compétence 1",
+        desc: "Description à remplir.",
+        buffs: [],
+        score: 0,
+      },
+      {
+        name: "Nom compétence 2",
+        desc: "Description à remplir.",
+        buffs: [],
+        score: 0,
+      },
+      {
+        name: "Nom compétence 3",
+        desc: "Description à remplir.",
+        buffs: [],
+        score: 0,
+      },
     ]
   },
+
+  // ← Ajoutez vos monstres ici
 
 };
 </script>
@@ -223,66 +256,69 @@ const MONSTERS = {
 </div>
 
 <script>
-let selected = { left: null, right: null };
-let nextSlot = 'left';
+let selected={left:null,right:null}, nextSlot='left';
+const stars=n=>'★'.repeat(n)+'☆'.repeat(5-n);
+const typeLabel=t=>({atk:'ATQ',def:'DEF',sup:'SUP',acc:'ACC'}[t]||t.toUpperCase());
 
-const stars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
-const typeLabel = t => ({ atk:'ATQ', def:'DEF', sup:'SUP', acc:'ACC' }[t] || t.toUpperCase());
-
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+function hexToRgb(hex){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
   return `${r},${g},${b}`;
 }
-
-function renderBuffTags(buffIds = []) {
-  return buffIds.map(id => {
-    const b = BUFFS[id];
-    if (!b) return '';
-    const rgb = hexToRgb(b.color);
+function renderBuffTags(ids=[]){
+  return ids.map(id=>{
+    const b=BUFFS[id]; if(!b) return '';
+    const rgb=hexToRgb(b.color);
     return `<span class="buff-tag" style="color:${b.color};border-color:${b.color};background:rgba(${rgb},.12)" title="${b.desc}">${b.label}</span>`;
   }).join('');
 }
 
-function totalScores(monster) {
-  let pvp = 0, pve = 0;
-  monster.skills.forEach(s => { pvp += s.pvp; pve += s.pve; });
-  return { pvp, pve, max: monster.skills.length * 10 };
+function totalScore(monster){
+  return monster.skills.reduce((s,k)=>s+(k.score||0),0);
 }
 
-function imgSrc(name, m) {
-  return m.image || `${name}.png`;
-}
+function renderMonsterCard(name){
+  const m=MONSTERS[name];
+  const total=totalScore(m), maxTotal=m.skills.length*10;
+  const src=`${IMAGES_PATH}${name}.png`;
+  const portrait=`<img class="mc-portrait" src="${src}" alt="${name}" onerror="this.outerHTML='<div class=mc-portrait-placeholder>${name}</div>'">`;
 
-function renderMonsterCard(name) {
-  const m = MONSTERS[name];
-  const { pvp, pve, max } = totalScores(m);
-  const src = imgSrc(name, m);
-  const portrait = `<img class="mc-portrait" src="${src}" alt="${name}" onerror="this.outerHTML='<div class=mc-portrait-placeholder>Pas d\'image</div>'">`;
-  const awakStr = m.awakening > 0 ? `Éveil ${m.awakening}` : 'Non éveillé';
+  // Éveils
+  let awkHTML='';
+  if(m.awakenings && m.awakenings.length){
+    m.awakenings.forEach(a=>{
+      const tags=renderBuffTags(a.buffs||[]);
+      const pvpB=a.pvp?`<span class="awk-badge pvp">PvP</span>`:'';
+      const pveB=a.pve?`<span class="awk-badge pve">PvE</span>`:'';
+      awkHTML+=`
+        <div class="awakening-card">
+          <div class="awk-header">
+            <span class="awk-level">Éveil ${a.level}</span>
+            <span class="awk-desc">${a.desc}</span>
+            <div class="awk-badges">${pvpB}${pveB}</div>
+          </div>
+          ${tags?`<div class="awk-tags">${tags}</div>`:''}
+        </div>`;
+    });
+  } else {
+    awkHTML=`<div style="font-size:.8rem;color:var(--muted);padding:6px 0">Aucun éveil renseigné.</div>`;
+  }
 
-  let skillsHTML = '';
-  m.skills.forEach(s => {
-    const tags = renderBuffTags(s.buffs || []);
-    skillsHTML += `
+  // Compétences
+  let skillsHTML='';
+  m.skills.forEach(s=>{
+    const tags=renderBuffTags(s.buffs||[]);
+    skillsHTML+=`
       <div class="skill-card">
         <div class="skill-top">
           <span class="skill-name">${s.name}</span>
-          <div class="skill-badges">
-            <span class="badge pvp">PvP ${s.pvp}/10</span>
-            <span class="badge pve">PvE ${s.pve}/10</span>
-          </div>
+          <span class="skill-score-badge">⚡ ${s.score}/10</span>
         </div>
-        ${s.desc ? `<div class="skill-desc">${s.desc}</div>` : ''}
-        ${tags ? `<div style="margin-top:5px">${tags}</div>` : ''}
+        ${s.desc?`<div class="skill-desc">${s.desc}</div>`:''}
+        ${tags?`<div class="buff-tags">${tags}</div>`:''}
         <div class="skill-bar-row">
-          <span class="skill-bar-label pvp">PvP</span>
-          <div class="bar-bg"><div class="bar-fill pvp" style="width:${s.pvp*10}%"></div></div>
-          <span class="bar-score">${s.pvp}</span>
-        </div>
-        <div class="skill-bar-row">
-          <span class="skill-bar-label pve">PvE</span>
-          <div class="bar-bg"><div class="bar-fill pve" style="width:${s.pve*10}%"></div></div>
-          <span class="bar-score">${s.pve}</span>
+          <span class="skill-bar-label">Puissance</span>
+          <div class="bar-bg"><div class="bar-fill" style="width:${(s.score||0)*10}%"></div></div>
+          <span class="bar-score">${s.score}</span>
         </div>
       </div>`;
   });
@@ -294,95 +330,86 @@ function renderMonsterCard(name) {
         <h2>${name}</h2>
         <div class="mc-stars">${stars(m.stars)}</div>
         <span class="mc-type-badge type-${m.type}">${typeLabel(m.type)}</span>
-        <div class="mc-awakening">⬡ ${awakStr}</div>
       </div>
     </div>
     <div class="score-summary">
-      <div class="score-box pvp"><div class="sb-label">Score PvP</div><div class="sb-val" style="color:var(--pvp)">${pvp}/${max}</div></div>
-      <div class="score-box pve"><div class="sb-label">Score PvE</div><div class="sb-val" style="color:var(--pve)">${pve}/${max}</div></div>
+      <div><div class="ss-label">Score total compétences</div><div class="ss-val">${total}/${maxTotal}</div></div>
     </div>
-    <div class="skills-title">Compétences (${m.skills.length})</div>
+    <div class="section-title">⬡ Éveils (${(m.awakenings||[]).length})</div>
+    ${awkHTML}
+    <div class="section-title">⚔️ Compétences (${m.skills.length})</div>
     ${skillsHTML}`;
 }
 
-function updateCompareBar() {
-  const bot = document.getElementById('compareBottom');
-  if (!selected.left || !selected.right) {
-    bot.innerHTML = `<span class="no-cmp">← Sélectionnez deux monstres pour voir la comparaison globale</span>`;
+function updateCompareBar(){
+  const bot=document.getElementById('compareBottom');
+  if(!selected.left||!selected.right){
+    bot.innerHTML=`<span class="no-cmp">← Sélectionnez deux monstres pour voir la comparaison globale</span>`;
     return;
   }
-  const ls = totalScores(MONSTERS[selected.left]), rs = totalScores(MONSTERS[selected.right]);
-  const mxP = Math.max(ls.pvp, rs.pvp) || 1, mxE = Math.max(ls.pve, rs.pve) || 1;
-  const lPW = Math.round(ls.pvp/mxP*50), rPW = Math.round(rs.pvp/mxP*50);
-  const lEW = Math.round(ls.pve/mxE*50), rEW = Math.round(rs.pve/mxE*50);
-  const row = (label, col, lw, rw, lv, rv) => `
-    <div style="display:flex;align-items:center;gap:8px;font-size:.7rem;">
-      <span style="color:${col};font-weight:700;width:28px">${label}</span>
-      <span style="color:#5599ff;font-weight:700;min-width:80px;text-align:right">${selected.left} (${lv})</span>
+  const ls=totalScore(MONSTERS[selected.left]), rs=totalScore(MONSTERS[selected.right]);
+  const mx=Math.max(ls,rs)||1;
+  const lw=Math.round(ls/mx*50), rw=Math.round(rs/mx*50);
+  bot.innerHTML=`
+    <span class="cmp-label">Score total</span>
+    <div style="flex:1;display:flex;align-items:center;gap:8px;font-size:.75rem">
+      <span style="color:#5599ff;font-weight:700;min-width:90px;text-align:right">${selected.left} (${ls})</span>
       <div style="flex:1;display:flex;gap:2px">
-        <div style="height:12px;width:${lw}%;background:#5599ff;border-radius:3px 0 0 3px;transition:width .5s"></div>
-        <div style="height:12px;width:${rw}%;background:#ff7755;border-radius:0 3px 3px 0;transition:width .5s"></div>
+        <div style="height:14px;width:${lw}%;background:#5599ff;border-radius:3px 0 0 3px;transition:width .5s"></div>
+        <div style="height:14px;width:${rw}%;background:#ff7755;border-radius:0 3px 3px 0;transition:width .5s"></div>
       </div>
-      <span style="color:#ff7755;font-weight:700;min-width:80px">${selected.right} (${rv})</span>
-    </div>`;
-  bot.innerHTML = `
-    <span class="cmp-label">Comparaison</span>
-    <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
-      ${row('PvP','var(--pvp)',lPW,rPW,ls.pvp,rs.pvp)}
-      ${row('PvE','var(--pve)',lEW,rEW,ls.pve,rs.pve)}
+      <span style="color:#ff7755;font-weight:700;min-width:90px">${selected.right} (${rs})</span>
     </div>`;
 }
 
-function selectMonster(name) {
-  const slot = nextSlot;
-  const colId = 'col' + slot.charAt(0).toUpperCase() + slot.slice(1);
-  if (selected[slot] === name) {
-    selected[slot] = null;
-    document.getElementById(colId).innerHTML = `<div class="empty-slot">
+function selectMonster(name){
+  const slot=nextSlot, colId='col'+slot.charAt(0).toUpperCase()+slot.slice(1);
+  if(selected[slot]===name){
+    selected[slot]=null;
+    document.getElementById(colId).innerHTML=`<div class="empty-slot">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
       </svg>Sélectionnez un monstre</div>`;
   } else {
-    selected[slot] = name;
-    document.getElementById(colId).innerHTML = renderMonsterCard(name);
-    nextSlot = slot === 'left' ? 'right' : 'left';
+    selected[slot]=name;
+    document.getElementById(colId).innerHTML=renderMonsterCard(name);
+    nextSlot=slot==='left'?'right':'left';
   }
-  refreshThumbs();
-  updateCompareBar();
+  refreshThumbs(); updateCompareBar();
 }
 
-function refreshThumbs() {
-  document.querySelectorAll('.m-thumb').forEach(el => {
-    el.classList.toggle('selected-left',  selected.left  === el.dataset.name);
-    el.classList.toggle('selected-right', selected.right === el.dataset.name);
+function refreshThumbs(){
+  document.querySelectorAll('.m-thumb').forEach(el=>{
+    el.classList.toggle('selected-left', selected.left===el.dataset.name);
+    el.classList.toggle('selected-right',selected.right===el.dataset.name);
   });
 }
 
-function buildGrid(filter = '') {
-  const grid = document.getElementById('monsterGrid');
-  grid.innerHTML = '';
-  const names = Object.keys(MONSTERS).filter(n => n.toLowerCase().includes(filter.toLowerCase()));
-  if (names.length === 0) {
-    grid.innerHTML = `<div style="color:var(--muted);font-size:.8rem;padding:10px;width:100%;text-align:center">Aucun monstre ajouté.</div>`;
+function buildGrid(filter=''){
+  const grid=document.getElementById('monsterGrid');
+  grid.innerHTML='';
+  const names=Object.keys(MONSTERS).filter(n=>n.toLowerCase().includes(filter.toLowerCase()));
+  if(!names.length){
+    grid.innerHTML=`<div style="color:var(--muted);font-size:.8rem;padding:10px;width:100%;text-align:center">Aucun monstre ajouté.</div>`;
     return;
   }
-  names.forEach(name => {
-    const m = MONSTERS[name];
-    const thumb = document.createElement('div');
-    thumb.className = 'm-thumb';
-    thumb.dataset.name = name;
-    if (selected.left  === name) thumb.classList.add('selected-left');
-    if (selected.right === name) thumb.classList.add('selected-right');
-    const src = imgSrc(name, m);
-    thumb.innerHTML = `<img src="${src}" alt="${name}" loading="lazy" onerror="this.outerHTML='<div style=width:100%;height:72px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--muted);text-align:center;padding:4px>${name}</div>'">`
-      + `<div class="t-name">${name}</div><div class="t-stars">${stars(m.stars)}</div>`;
-    thumb.onclick = () => selectMonster(name);
-    grid.appendChild(thumb);
+  names.forEach(name=>{
+    const m=MONSTERS[name], el=document.createElement('div');
+    el.className='m-thumb'; el.dataset.name=name;
+    if(selected.left===name) el.classList.add('selected-left');
+    if(selected.right===name) el.classList.add('selected-right');
+    const src=`${IMAGES_PATH}${name}.png`;
+    el.innerHTML=`<img src="${src}" alt="${name}" loading="lazy"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div style="display:none;width:100%;height:72px;background:var(--card2);align-items:center;
+        justify-content:center;font-size:.6rem;color:var(--muted);text-align:center;padding:4px">${name}</div>
+      <div class="t-name">${name}</div><div class="t-stars">${stars(m.stars)}</div>`;
+    el.onclick=()=>selectMonster(name);
+    grid.appendChild(el);
   });
 }
 
-function filterMonsters() { buildGrid(document.getElementById('searchInput').value); }
-
+function filterMonsters(){buildGrid(document.getElementById('searchInput').value);}
 buildGrid();
 </script>
 </body>
