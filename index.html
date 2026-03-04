@@ -5,437 +5,361 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SW Rush – Expert Comparator</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Nunito:wght@300;400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@300;400;600;700&display=swap');
 
   :root {
-    --bg: #05060a;
-    --side-bg: #0a0c16;
-    --card: rgba(20, 23, 40, 0.7);
-    --card-hover: rgba(30, 35, 60, 0.9);
-    --border: #1e233d;
-    --border-bright: #363e63;
-    --gold: #d4a843;
-    --gold-glow: rgba(212, 168, 67, 0.3);
-    --text: #d1d5e8;
-    --muted: #62698a;
-    
-    /* Roles Colors */
-    --melee: #ff4d4d;
-    --tank: #4da6ff;
-    --range: #ffcc33;
-    --support: #47d147;
-    --all: #a3a3a3;
-
-    /* Slots */
-    --left-accent: #4d7fff;
-    --right-accent: #ff6633;
+    --bg: #07080f; --card: #0f1120; --card2: #141728; --card3: #191d30;
+    --border: #252a45; --border2: #2e3560;
+    --gold: #d4a843; --gold2: #f0c868; --gold-glow: rgba(212,168,67,.18);
+    --pvp: #c94444; --pvp-bg: rgba(201,68,68,.12);
+    --pve: #3a9e9a; --pve-bg: rgba(58,158,154,.12);
+    --text: #c8d0e8; --muted: #5a6080; --muted2: #7a84a8;
+    --melee: #e05555; --range: #d4a843; --tank: #4a90d9; --support: #7bc67e;
+    --left: #4d7fff; --right: #ff6633;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { 
-    background: var(--bg); 
-    color: var(--text); 
-    font-family: 'Nunito', sans-serif; 
-    height: 100vh; 
-    overflow: hidden; 
+    background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; 
+    height: 100vh; overflow: hidden; 
     background-image: radial-gradient(circle at 50% -20%, #1a1f3d 0%, var(--bg) 70%);
   }
 
-  /* --- HEADER --- */
   header {
-    height: 60px;
-    background: rgba(10, 12, 22, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-bright);
-    display: flex;
-    align-items: center;
-    padding: 0 30px;
-    justify-content: space-between;
-    z-index: 100;
+    height: 52px; background: linear-gradient(180deg,#0c0e1a 0%,#080a14 100%);
+    border-bottom: 1px solid var(--border2); padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between; z-index: 100;
   }
-  header h1 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.2rem;
-    color: var(--gold);
-    letter-spacing: 3px;
-    text-shadow: 0 0 15px var(--gold-glow);
-  }
+  header h1 { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold2); letter-spacing: 2px; text-shadow: 0 0 20px var(--gold); }
 
-  /* --- LAYOUT --- */
-  .main-container { display: flex; height: calc(100vh - 60px); }
+  .layout { display: flex; height: calc(100vh - 52px); }
 
-  /* --- SIDEBAR --- */
+  /* SIDEBAR */
   .sidebar {
-    width: 280px;
-    background: var(--side-bg);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    z-index: 10;
+    width: 280px; flex-shrink: 0; background: linear-gradient(180deg,#0c0e1c 0%,#090b17 100%);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column;
   }
+  .sidebar-ctrl { padding: 15px; border-bottom: 1px solid var(--border); }
+  
+  .search-wrap { position: relative; margin-bottom: 12px; }
+  .search-wrap input {
+    width: 100%; background: var(--card2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 10px 8px 32px; color: var(--text); font-size: .8rem; outline: none;
+  }
+  .search-wrap svg { position: absolute; left: 10px; top: 10px; opacity: 0.4; color: white; }
 
-  .sidebar-header { padding: 20px 15px 10px; }
-  .search-box {
-    position: relative;
-    margin-bottom: 15px;
-  }
-  .search-box input {
-    width: 100%;
-    background: #141728;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 10px 10px 35px;
-    color: white;
-    outline: none;
-    transition: 0.3s;
-  }
-  .search-box input:focus { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
-  .search-box svg { position: absolute; left: 10px; top: 11px; color: var(--muted); }
-
-  /* Filters */
-  .filter-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border);
-  }
+  .filter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
   .f-btn {
-    background: #141728;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 8px 2px;
-    border-radius: 4px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.2s;
+    background: var(--card3); border: 1px solid var(--border); color: var(--muted2);
+    font-size: 0.65rem; font-weight: 700; padding: 8px 2px; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.2s;
   }
   .f-btn:hover { border-color: var(--muted); color: white; }
-  .f-btn.active[data-role="all"] { border-color: var(--all); color: white; background: rgba(163,163,163,0.1); }
-  .f-btn.active[data-role="melee"] { border-color: var(--melee); color: var(--melee); background: rgba(255,77,77,0.1); }
-  .f-btn.active[data-role="tank"] { border-color: var(--tank); color: var(--tank); background: rgba(77,166,255,0.1); }
-  .f-btn.active[data-role="range"] { border-color: var(--range); color: var(--range); background: rgba(255,204,51,0.1); }
-  .f-btn.active[data-role="support"] { border-color: var(--support); color: var(--support); background: rgba(71,209,71,0.1); }
+  .f-btn.active { border-color: var(--gold); color: var(--gold2); background: var(--gold-glow); }
 
-  /* Monster List */
-  .monster-list { flex: 1; overflow-y: auto; padding: 10px; }
-  .monster-list::-webkit-scrollbar { width: 5px; }
-  .monster-list::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 10px; }
-
+  .monster-list { flex: 1; overflow-y: auto; padding: 8px; }
   .m-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 5px;
-    transition: 0.2s;
+    display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px;
+    cursor: pointer; border: 1px solid transparent; margin-bottom: 4px; transition: 0.2s;
   }
-  .m-item:hover { background: var(--card-hover); }
-  .m-item.sel-left { border-color: var(--left-accent); background: rgba(77,127,255,0.1); }
-  .m-item.sel-right { border-color: var(--right-accent); background: rgba(255,102,51,0.1); }
+  .m-item:hover { background: var(--card2); }
+  .m-item.selected-left { border-color: var(--left); background: rgba(77,127,255,.1); }
+  .m-item.selected-right { border-color: var(--right); background: rgba(255,102,51,.1); }
+  
+  .m-thumb-wrap { width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--border2); overflow: hidden; background: var(--card3); position: relative; flex-shrink: 0; }
+  .m-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .m-thumb-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--gold); background: var(--card3); }
 
-  .m-img { width: 42px; height: 42px; border-radius: 6px; border: 1px solid var(--border-bright); object-fit: cover; }
-  .m-name { font-weight: 700; font-size: 0.85rem; }
-  .m-role-tag { font-size: 0.6rem; text-transform: uppercase; padding: 2px 5px; border-radius: 3px; background: rgba(0,0,0,0.3); }
-
-  /* --- COMPARISON AREA --- */
-  .compare-engine {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-  .columns { display: flex; flex: 1; overflow: hidden; }
-  .col { 
-    flex: 1; 
-    padding: 30px; 
-    overflow-y: auto; 
-    transition: background 0.5s;
-  }
+  /* COMPARE ZONE */
+  .compare { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .compare-top { display: flex; flex: 1; overflow: hidden; }
+  .col { flex: 1; padding: 30px; overflow-y: auto; }
   .col-left { border-right: 1px solid var(--border); background: linear-gradient(180deg, rgba(77,127,255,0.03) 0%, transparent 100%); }
   .col-right { background: linear-gradient(180deg, rgba(255,102,51,0.03) 0%, transparent 100%); }
 
-  .empty-state {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    font-style: italic;
-    gap: 15px;
-  }
+  .empty-slot { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); font-style: italic; gap: 10px; }
 
-  /* Cards Design */
-  .hero-header { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 25px; }
-  .hero-img { width: 100px; height: 100px; border-radius: 12px; border: 2px solid var(--border-bright); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-  .hero-title h2 { font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--gold); }
+  /* CARDS */
+  .mc-header { display: flex; gap: 20px; margin-bottom: 25px; align-items: center; }
+  .mc-portrait-wrap { width: 100px; height: 100px; border-radius: 15px; border: 2px solid var(--border2); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: var(--card2); }
+  .mc-portrait-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .mc-name { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--gold2); line-height: 1; }
   
-  .score-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: 800;
-    font-size: 0.8rem;
-    margin-top: 10px;
-  }
-
-  .awk-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    position: relative;
-  }
-  .awk-card::before {
-    content: ''; position: absolute; left: 0; top: 15px; bottom: 15px; width: 3px; border-radius: 0 4px 4px 0;
-  }
-  .awk-card.lvl3::before { background: #4d7fff; }
-  .awk-card.lvl5::before { background: #d4a843; }
-  .awk-card.lvl7::before { background: #ff4d4d; }
-
-  .awk-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
-  .awk-lvl { font-family: 'Cinzel', serif; font-size: 0.75rem; color: var(--gold); }
-  .awk-desc { font-size: 0.85rem; line-height: 1.5; color: #b0b5cf; margin-bottom: 12px; }
+  .awk-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 15px; position: relative; border-left-width: 4px; }
+  .awk-card.lvl3 { border-left-color: #4d7fff; }
+  .awk-card.lvl5 { border-left-color: var(--gold); }
+  .awk-card.lvl7 { border-left-color: #ff4d4d; }
   
-  .buff-list { display: flex; flex-wrap: wrap; gap: 5px; }
-  .buff-tag {
-    font-size: 0.65rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px solid;
-    font-weight: 700;
-  }
+  .awk-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .awk-lvl { font-family: 'Cinzel', serif; font-size: 0.8rem; color: var(--gold); letter-spacing: 1px; }
+  .awk-desc { font-size: 0.9rem; line-height: 1.6; color: #b0b5cf; margin-bottom: 12px; }
+  
+  .buff-chip { display: inline-flex; font-size: .65rem; padding: 3px 10px; border-radius: 4px; font-weight: 800; border: 1px solid; margin: 0 6px 6px 0; text-transform: uppercase; }
+  .mode-tag { font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid transparent; }
 
-  /* --- BOTTOM BAR --- */
-  .bottom-bar {
-    height: 70px;
-    background: #0a0c16;
-    border-top: 1px solid var(--border-bright);
-    display: flex;
-    align-items: center;
-    padding: 0 40px;
-    gap: 30px;
-  }
-  .comp-bar-bg { flex: 1; height: 12px; background: #1a1e33; border-radius: 6px; display: flex; overflow: hidden; }
-  .comp-fill-l { height: 100%; background: var(--left-accent); transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  .comp-fill-r { height: 100%; background: var(--right-accent); transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  /* BOTTOM BAR */
+  .compare-bottom { height: 70px; background: #0a0c18; border-top: 1px solid var(--border2); display: flex; align-items: center; padding: 0 40px; gap: 25px; box-shadow: 0 -5px 20px rgba(0,0,0,0.5); }
+  .cmp-bar-wrap { flex: 1; height: 12px; background: #1a1e33; border-radius: 6px; display: flex; overflow: hidden; border: 1px solid #252a45; }
+  .cmp-fill-l { height: 100%; background: var(--left); transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .cmp-fill-r { height: 100%; background: var(--right); transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-left: auto; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
 </style>
 </head>
 <body>
 
+<script>
+// CHEMIN VERS TON DOSSIER D'IMAGES
+const IMAGES_PATH = "./images/"; 
+
+const BUFFS = {
+  "atk_up": { label:"ATQ ↑", desc:"Augmente l'ATQ.", color:"#e05555", power:6 },
+  "atk_spd_up": { label:"Vit. ATQ ↑", desc:"Augmente la vitesse d'attaque.", color:"#ff8c42", power:5 },
+  "crit_up": { label:"Coup puissant ↑", desc:"Augmente le taux de coup puissant.", color:"#ffcc00", power:6 },
+  "crit_dmg_up": { label:"Dég. puissants ↑", desc:"Augmente les dégâts des coups puissants.", color:"#ffd966", power:7 },
+  "dmg_up": { label:"Dégâts ↑", desc:"Augmente les dégâts infligés.", color:"#ff6644", power:8 },
+  "def_up": { label:"DEF ↑", desc:"Augmente la DEF.", color:"#4a90d9", power:5 },
+  "range_up": { label:"Portée ↑", desc:"Augmente la portée d'attaque.", color:"#66ddaa", power:6 },
+  "dodge": { label:"Esquive absolue", desc:"Esquive toutes les attaques.", color:"#88ccff", power:9 },
+  "stealth": { label:"Furtivité", desc:"Invisible, buffs sous furtivité actifs.", color:"#9966cc", power:8 },
+  "stealth_shield": { label:"Bouclier invisible", desc:"Bouclier combiné à l'invisibilité.", color:"#cc99ff", power:9 },
+  "count_shield": { label:"Bouclier à compte", desc:"Absorbe un nombre défini de coups.", color:"#5588ff", power:7 },
+  "move_spd_up": { label:"Vit. déplacement ↑", desc:"Augmente la vitesse de déplacement.", color:"#55eebb", power:5 },
+  "cd_reset": { label:"Reset CD", desc:"Réinitialise les temps de recharge.", color:"#44aacc", power:9 },
+  "skill_accel": { label:"Accél. compétences", desc:"Réduit le temps de recharge des compétences.", color:"#44ccff", power:7 },
+  "bleed": { label:"Saignement", desc:"DoT % PV max ennemis.", color:"#cc0033", power:7 },
+  "frost_trace": { label:"Trace de givre", desc:"Détection de faiblesse – Trace de givre.", color:"#aaeeff", power:7 },
+  "freeze_weak": { label:"Faiblesse gel", desc:"Détection de point faible – Congélation.", color:"#66ccff", power:7 },
+  "triple_hit": { label:"Coup triple ↑", desc:"Augmente le taux de coups triples.", color:"#dd88ff", power:8 },
+  "double_hit": { label:"Coup double ↑", desc:"Augmente le taux de coups doubles.", color:"#ff99cc", power:8 },
+  "buff_scaling": { label:"Dég. / buffs", desc:"Dégâts bonus selon le nombre de buffs actifs.", color:"#ffdd44", power:8 },
+  "debuff_scaling": { label:"Dég. / debuffs", desc:"Dégâts bonus selon les debuffs sur la cible.", color:"#ff8844", power:8 },
+  "cc_boost": { label:"Contrôle ↑", desc:"Augmente l'efficacité des effets de contrôle.", color:"#ffaa44", power:7 },
+  "petrify_dmg": { label:"Dég. pétrification", desc:"Dégâts augmentés sur cibles pétrifiées.", color:"#bbaa66", power:7 },
+  "aoe_dmg_recv": { label:"Dég. zone reçus ↑", desc:"Dégâts de zone reçus augmentés (ennemi).", color:"#ff6633", power:6 },
+  "crit_recv_up": { label:"Dég. crit reçus ↑", desc:"Dégâts critiques reçus augmentés (ennemi).", color:"#ffaa33", power:7 },
+};
+
+const AWK3 = { level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: ["cd_reset"], pvp: true, pve: true };
+
+const MONSTERS = {
+  "Craka": { type: "melee", awakenings: [ AWK3, 
+    { level: 5, desc: "Début de combat : ATQ +10% (cumulable) + Réduc. dégâts longue portée -30% (suppression impossible, cumulable). Chaque application de saignement accorde à un allié « Détection point faible – Saignement 10% » pendant 10s (cumulable).", buffs: ["atk_up", "def_up", "bleed"], pvp: true, pve: false },
+    { level: 7, desc: "Attaque réussie : applique « Point faible – Saignement 15% » 10s (suppression impossible, cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["bleed", "dmg_up"], pvp: true, pve: false }
+  ]},
+  "Mago": { type: "melee", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : applique « Esquive absolue » pendant 3s. ATQ +10% (suppression impossible, cumulable). Sous Furtivité : « Taux de coup puissant +10% » pendant 3s (suppression impossible, cumulable).", buffs: ["dodge", "atk_up", "stealth", "crit_up"], pvp: true, pve: false },
+    { level: 7, desc: "Sous Furtivité : dégâts infligés +150% pendant 3s (suppression impossible, cumulable). Attaque réussie : « Dégâts des coups puissants +20% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["dmg_up", "crit_dmg_up", "stealth"], pvp: true, pve: false }
+  ]},
+  "Grogen": { type: "range", awakenings: [ AWK3,
+    { level: 5, desc: "Coup puissant réussi : « Accélération des compétences +20% » pendant 2s (cumulable).", buffs: ["skill_accel"], pvp: true, pve: true },
+    { level: 7, desc: "Attaque réussie : « Efficacité des effets de contrôle +20% » et « Dégâts sur cibles pétrifiées +20% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["cc_boost", "petrify_dmg", "dmg_up"], pvp: true, pve: false }
+  ]},
+  "Sabrina": { type: "range", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : « Portée +3 » et « Vitesse d'attaque +15% » (suppression impossible, cumulable).", buffs: ["range_up", "atk_spd_up"], pvp: true, pve: true },
+    { level: 7, desc: "Attaque réussie : « Taux de coups triples +10% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["triple_hit", "dmg_up"], pvp: true, pve: true }
+  ]},
+  "Jagger": { type: "melee", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : bouclier d'invisibilité + Vit. déplacement +200% pendant 3s (cumulable). ATQ +10%, DEF +15%, Réduc. dégâts longue portée -30% (suppression impossible, cumulable).", buffs: ["stealth_shield", "move_spd_up", "atk_up", "def_up"], pvp: true, pve: false },
+    { level: 7, desc: "Attaque réussie : Dégâts critiques +20% pendant 10s (cumulable). Dégâts bonus selon le nombre de buffs actifs (max 30). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["crit_dmg_up", "buff_scaling", "dmg_up"], pvp: true, pve: false }
+  ]},
+  "Theomars": { type: "range", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : Portée +3 (suppression impossible, cumulable). Chaque effet cumulable appliqué à un ennemi : Dégâts critiques +10% pendant 20s (cumulable).", buffs: ["range_up", "crit_dmg_up"], pvp: true, pve: true },
+    { level: 7, desc: "Attaque réussie : accorde aux alliés « Trace de givre 15% » 10s + Taux de coups puissants +10% 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["frost_trace", "crit_up", "dmg_up"], pvp: true, pve: false }
+  ]},
+  "Laima": { type: "range", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : Portée +3 et Accélération compétences +15% (suppression impossible, cumulable).", buffs: ["range_up", "skill_accel"], pvp: true, pve: true },
+    { level: 7, desc: "Attaque réussie : Taux critique +10% et Dégâts critiques +20% pendant 5s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["crit_up", "crit_dmg_up", "dmg_up"], pvp: true, pve: true }
+  ]},
+  "Trinity": { type: "melee", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : bouclier à compte (5 fois) + Dégâts critiques +20% (suppression impossible, cumulable). Coup puissant réussi : « Dégâts de zone reçus +10% » sur l'ennemi pendant 2s (cumulable).", buffs: ["count_shield", "crit_dmg_up", "aoe_dmg_recv"], pvp: true, pve: false },
+    { level: 7, desc: "Attaque réussie : « Dégâts critiques reçus +10% » sur l'ennemi pendant 10s (cumulable). Dégâts bonus selon le nombre de debuffs sur la cible (max 15). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["crit_recv_up", "debuff_scaling", "dmg_up"], pvp: true, pve: false }
+  ]},
+  "Anavel": { type: "range", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : Portée +3 et Taux critique +10% (suppression impossible, cumulable).", buffs: ["range_up", "crit_up"], pvp: true, pve: true },
+    { level: 7, desc: "Début de combat : Portée +3 et Taux critique +10% (suppression impossible, cumulable). Attaque réussie : accorde aux alliés « Faiblesse Congélation 10% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["range_up", "crit_up", "freeze_weak", "dmg_up"], pvp: true, pve: true }
+  ]},
+  "Melissa": { type: "melee", awakenings: [ AWK3,
+    { level: 5, desc: "Début de combat : Vitesse d'attaque +15% (suppression impossible, cumulable) + bouclier à compte (5 fois).", buffs: ["atk_spd_up", "count_shield"], pvp: true, pve: false },
+    { level: 7, desc: "Attaque réussie : « Taux de coups doubles +15% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["double_hit", "dmg_up"], pvp: true, pve: false }
+  ]}
+};
+
+let currentFilter = null;
+let selected = { left: null, right: null };
+let lastSlot = 'left';
+
+function getAwkScore(awk) {
+  return (awk.buffs || []).reduce((s, id) => s + (BUFFS[id]?.power || 0), 0);
+}
+
+function getMonsterScore(name) {
+  return MONSTERS[name].awakenings.reduce((s, a) => s + getAwkScore(a), 0);
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.f-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-f') === f);
+  });
+  updateList();
+}
+
+function updateList() {
+  const list = document.getElementById('monsterList');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  list.innerHTML = '';
+
+  if (!currentFilter && !search) {
+    list.innerHTML = '<div class="empty-slot" style="font-size:0.7rem; padding:20px;">Choisissez un rôle pour filtrer</div>';
+    return;
+  }
+
+  const filtered = Object.keys(MONSTERS).filter(name => {
+    const m = MONSTERS[name];
+    const matchRole = currentFilter === 'all' || m.type === currentFilter;
+    const matchSearch = name.toLowerCase().includes(search);
+    return (currentFilter ? matchRole : true) && matchSearch;
+  });
+
+  filtered.forEach(name => {
+    const m = MONSTERS[name];
+    const score = getMonsterScore(name);
+    const item = document.createElement('div');
+    item.className = `m-item ${selected.left === name ? 'selected-left' : ''} ${selected.right === name ? 'selected-right' : ''}`;
+    item.innerHTML = `
+      <div class="m-thumb-wrap">
+        <div class="m-thumb-fallback">${name[0]}</div>
+        <img src="${IMAGES_PATH}${name}.png" onerror="this.style.opacity='0'">
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:700; font-size:0.85rem">${name}</div>
+        <div style="font-size:0.6rem; color:var(--${m.type})">${m.type.toUpperCase()}</div>
+      </div>
+      <div style="font-size:0.7rem; font-weight:700; color:var(--gold)">⚡${score}</div>
+    `;
+    item.onclick = () => selectMonster(name);
+    list.appendChild(item);
+  });
+}
+
+function selectMonster(name) {
+  if (selected.left === name) selected.left = null;
+  else if (selected.right === name) selected.right = null;
+  else {
+    selected[lastSlot] = name;
+    lastSlot = (lastSlot === 'left') ? 'right' : 'left';
+  }
+  renderCompare();
+  updateList();
+}
+
+function renderCard(name, side) {
+  if (!name) return `<div class="empty-slot">Sélectionnez le ${side === 'left' ? '1er' : '2ème'} combattant</div>`;
+  const m = MONSTERS[name];
+  const total = getMonsterScore(name);
+  
+  let html = `
+    <div class="mc-header">
+      <div class="mc-portrait-wrap">
+        <div class="m-thumb-fallback" style="font-size:2rem">${name[0]}</div>
+        <img src="${IMAGES_PATH}${name}.png" onerror="this.style.opacity='0'">
+      </div>
+      <div>
+        <div class="mc-name">${name}</div>
+        <span class="mode-tag" style="background:rgba(255,255,255,0.05); border-color:var(--${m.type}); color:var(--${m.type}); margin-left:0">${m.type.toUpperCase()}</span>
+        <div style="margin-top:8px; font-weight:800; font-size:0.9rem; color:var(--gold)">Score de Puissance : ${total}</div>
+      </div>
+    </div>
+  `;
+
+  m.awakenings.forEach(awk => {
+    const pts = getAwkScore(awk);
+    html += `
+      <div class="awk-card lvl${awk.level}">
+        <div class="awk-top">
+          <span class="awk-lvl">Niveau ${awk.level}</span>
+          <div style="display:flex; align-items:center">
+             ${awk.pvp ? '<span class="mode-tag" style="background:var(--pvp-bg); border-color:var(--pvp); color:var(--pvp)">PvP</span>' : ''}
+             ${awk.pve ? '<span class="mode-tag" style="background:var(--pve-bg); border-color:var(--pve); color:var(--pve)">PvE</span>' : ''}
+             <span style="margin-left:12px; font-size:0.7rem; font-weight:700; color:var(--muted2)">⚡ ${pts} pts</span>
+          </div>
+        </div>
+        <div class="awk-desc">${awk.desc}</div>
+        <div class="buff-row">
+          ${awk.buffs.map(b => {
+            const info = BUFFS[b];
+            return `<span class="buff-chip" style="color:${info.color}; border-color:${info.color}66; background:${info.color}11">${info.label}</span>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  });
+  return html;
+}
+
+function renderCompare() {
+  document.getElementById('colLeft').innerHTML = renderCard(selected.left, 'left');
+  document.getElementById('colRight').innerHTML = renderCard(selected.right, 'right');
+
+  const ui = document.getElementById('bottomUI');
+  if (selected.left && selected.right) {
+    ui.style.display = 'flex';
+    const sL = getMonsterScore(selected.left);
+    const sR = getMonsterScore(selected.right);
+    const total = sL + sR;
+    document.getElementById('barL').style.width = (sL / total * 100) + '%';
+    document.getElementById('barR').style.width = (sR / total * 100) + '%';
+    document.getElementById('nameL').innerText = selected.left + " ("+sL+")";
+    document.getElementById('nameR').innerText = "(" + sR + ") " + selected.right;
+  } else {
+    ui.style.display = 'none';
+  }
+}
+</script>
+
 <header>
-  <h1>SW RUSH <span style="font-weight: 300; color: white;">Expert</span></h1>
-  <div style="font-size: 0.7rem; color: var(--muted);">Comparateur d'éveils stratégiques</div>
+  <h1>SW RUSH <span style="font-weight:300; color:white">COMPARATOR</span></h1>
+  <div style="font-size: 0.6rem; color: var(--muted); letter-spacing: 1px;">DATABASE VERSION 1.0.4</div>
 </header>
 
-<div class="main-container">
+<div class="layout">
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="search-box">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="mSearch" placeholder="Nom du monstre..." oninput="updateList()">
+    <div class="sidebar-ctrl">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Rechercher un monstre..." oninput="updateList()">
       </div>
       <div class="filter-grid">
-        <button class="f-btn" data-role="all" onclick="setRole('all')">Tous</button>
-        <button class="f-btn" data-role="melee" onclick="setRole('melee')">Mêlée</button>
-        <button class="f-btn" data-role="range" onclick="setRole('range')">Range</button>
-        <button class="f-btn" data-role="tank" onclick="setRole('tank')">Tank</button>
-        <button class="f-btn" data-role="support" onclick="setRole('support')">Support</button>
+        <button class="f-btn" data-f="all" onclick="setFilter('all')">Tous</button>
+        <button class="f-btn" data-f="melee" onclick="setFilter('melee')">Mêlée</button>
+        <button class="f-btn" data-f="range" onclick="setFilter('range')">Range</button>
+        <button class="f-btn" data-f="tank" onclick="setFilter('tank')">Tank</button>
+        <button class="f-btn" data-f="support" onclick="setFilter('support')">Support</button>
       </div>
     </div>
-    <div class="monster-list" id="mList">
-      <div class="empty-state" style="font-size: 0.7rem;">Choisissez un rôle ou recherchez un nom</div>
-    </div>
+    <div class="monster-list" id="monsterList"></div>
   </aside>
 
-  <main class="compare-engine">
-    <div class="columns">
-      <div class="col col-left" id="slot-left">
-        <div class="empty-state">Sélectionnez le 1er combattant</div>
-      </div>
-      <div class="col col-right" id="slot-right">
-        <div class="empty-state">Sélectionnez le 2ème combattant</div>
-      </div>
+  <main class="compare">
+    <div class="compare-top">
+      <div class="col col-left" id="colLeft"></div>
+      <div class="col col-right" id="colRight"></div>
     </div>
-
-    <div class="bottom-bar" id="bottomBar" style="display: none;">
-      <div id="name-l" style="color: var(--left-accent); font-weight: 700; width: 120px; text-align: right;"></div>
-      <div class="comp-bar-bg">
-        <div class="comp-fill-l" id="bar-l"></div>
-        <div class="comp-fill-r" id="bar-r" style="margin-left: auto;"></div>
+    <div class="compare-bottom" id="bottomUI" style="display:none">
+      <div id="nameL"></div>
+      <div class="cmp-bar-wrap">
+        <div class="cmp-fill-l" id="barL"></div>
+        <div class="cmp-fill-r" id="barR"></div>
       </div>
-      <div id="name-r" style="color: var(--right-accent); font-weight: 700; width: 120px;"></div>
+      <div id="nameR"></div>
     </div>
   </main>
 </div>
 
 <script>
-  // --- DATABASE ---
-  const BUFFS = {
-    "atk_up": { label:"ATQ ↑", desc:"Augmente l'ATQ.", color:"#e05555", power:6 },
-    "atk_spd_up": { label:"Vit. ATQ ↑", desc:"Augmente la vitesse d'attaque.", color:"#ff8c42", power:5 },
-    "crit_up": { label:"Coup puissant ↑", desc:"Augmente le taux de coup puissant.", color:"#ffcc00", power:6 },
-    "crit_dmg_up": { label:"Dég. puissants ↑", desc:"Augmente les dégâts des coups puissants.", color:"#ffd966", power:7 },
-    "dmg_up": { label:"Dégâts ↑", desc:"Augmente les dégâts infligés.", color:"#ff6644", power:8 },
-    "def_up": { label:"DEF ↑", desc:"Augmente la DEF.", color:"#4a90d9", power:5 },
-    "range_up": { label:"Portée ↑", desc:"Augmente la portée d'attaque.", color:"#66ddaa", power:6 },
-    "dodge": { label:"Esquive absolue", desc:"Esquive toutes les attaques.", color:"#88ccff", power:9 },
-    "stealth": { label:"Furtivité", desc:"Invisible, buffs sous furtivité actifs.", color:"#9966cc", power:8 },
-    "stealth_shield": { label:"Bouclier invisible", desc:"Bouclier combiné à l'invisibilité.", color:"#cc99ff", power:9 },
-    "count_shield": { label:"Bouclier à compte", desc:"Absorbe un nombre défini de coups.", color:"#5588ff", power:7 },
-    "move_spd_up": { label:"Vit. déplacement ↑", desc:"Augmente la vitesse de déplacement.", color:"#55eebb", power:5 },
-    "cd_reset": { label:"Reset CD", desc:"Réinitialise les temps de recharge.", color:"#44aacc", power:9 },
-    "skill_accel": { label:"Accél. compétences", desc:"Réduit le temps de recharge des compétences.", color:"#44ccff", power:7 },
-    "bleed": { label:"Saignement", desc:"DoT % PV max ennemis.", color:"#cc0033", power:7 },
-    "frost_trace": { label:"Trace de givre", desc:"Détection de faiblesse – Trace de givre.", color:"#aaeeff", power:7 },
-    "freeze_weak": { label:"Faiblesse gel", desc:"Détection de point faible – Congélation.", color:"#66ccff", power:7 },
-    "triple_hit": { label:"Coup triple ↑", desc:"Augmente le taux de coups triples.", color:"#dd88ff", power:8 },
-    "double_hit": { label:"Coup double ↑", desc:"Augmente le taux de coups doubles.", color:"#ff99cc", power:8 },
-    "buff_scaling": { label:"Dég. / buffs", desc:"Dégâts bonus selon le nombre de buffs actifs.", color:"#ffdd44", power:8 },
-    "debuff_scaling": { label:"Dég. / debuffs", desc:"Dégâts bonus selon les debuffs sur la cible.", color:"#ff8844", power:8 },
-    "cc_boost": { label:"Contrôle ↑", desc:"Augmente l'efficacité des effets de contrôle.", color:"#ffaa44", power:7 },
-    "petrify_dmg": { label:"Dég. pétrification", desc:"Dégâts augmentés sur cibles pétrifiées.", color:"#bbaa66", power:7 },
-    "aoe_dmg_recv": { label:"Dég. zone reçus ↑", desc:"Dégâts de zone reçus augmentés (ennemi).", color:"#ff6633", power:6 },
-    "crit_recv_up": { label:"Dég. crit reçus ↑", desc:"Dégâts critiques reçus augmentés (ennemi).", color:"#ffaa33", power:7 },
-  };
-
-  const AWK3 = { level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: ["cd_reset"], pvp: true, pve: true };
-
-  const MONSTERS = {
-    "Craka": { type: "melee", awakenings: [AWK3, {level:5, desc:"Début combat: ATQ +10% (cumul) + Réduc dégâts distance -30%. Saignement accorde Faiblesse Saignement.", buffs:["atk_up","def_up","bleed"], pvp:true}, {level:7, desc:"Saignement 15% (permanent). Dégâts infligés +20%.", buffs:["bleed","dmg_up"], pvp:true}] },
-    "Mago": { type: "melee", awakenings: [AWK3, {level:5, desc:"Début: Esquive 3s. ATQ +10%. Sous Furtivité: Taux Critique +10%.", buffs:["dodge","atk_up","stealth","crit_up"], pvp:true}, {level:7, desc:"Sous Furtivité: Dégâts +150% (3s). Critique +20%. Dégâts +20%.", buffs:["dmg_up","crit_dmg_up","stealth"], pvp:true}] },
-    "Grogen": { type: "range", awakenings: [AWK3, {level:5, desc:"Coup puissant: Accélération CD +20% (2s).", buffs:["skill_accel"], pvp:true, pve:true}, {level:7, desc:"Efficacité contrôle +20%. Dégâts sur cibles pétrifiées +20%. Dégâts globaux +20%.", buffs:["cc_boost","petrify_dmg","dmg_up"], pvp:true}] },
-    "Sabrina": { type: "range", awakenings: [AWK3, {level:5, desc:"Portée +3 et Vitesse d'attaque +15%.", buffs:["range_up","atk_spd_up"], pvp:true, pve:true}, {level:7, desc:"Coup triple +10% (10s). Dégâts +20%.", buffs:["triple_hit","dmg_up"], pvp:true, pve:true}] },
-    "Jagger": { type: "melee", awakenings: [AWK3, {level:5, desc:"Bouclier invisibilité + Vitesse déplace. +200% (3s). ATQ/DEF/Réduc distance.", buffs:["stealth_shield","move_spd_up","atk_up","def_up"], pvp:true}, {level:7, desc:"Dégâts crit +20%. Bonus selon nombre de buffs (max 30). Dégâts +20%.", buffs:["crit_dmg_up","buff_scaling","dmg_up"], pvp:true}] },
-    "Theomars": { type: "range", awakenings: [AWK3, {level:5, desc:"Portée +3. Chaque effet cumulé sur ennemi: Dégâts crit +10%.", buffs:["range_up","crit_dmg_up"], pvp:true, pve:true}, {level:7, desc:"Alliés: Trace de givre 15% + Taux Critique +10%. Dégâts +20%.", buffs:["frost_trace","crit_up","dmg_up"], pvp:true}] },
-    "Laima": { type: "range", awakenings: [AWK3, {level:5, desc:"Portée +3 et Accélération compétences +15%.", buffs:["range_up","skill_accel"], pvp:true, pve:true}, {level:7, desc:"Taux Crit +10% and Dégâts Crit +20%. Dégâts +20%.", buffs:["crit_up","crit_dmg_up","dmg_up"], pvp:true, pve:true}] },
-    "Trinity": { type: "melee", awakenings: [AWK3, {level:5, desc:"Bouclier à compte (5) + Dégâts Crit +20%. Dégâts zone reçus +10% sur ennemi.", buffs:["count_shield","crit_dmg_up","aoe_dmg_recv"], pvp:true}, {level:7, desc:"Dégâts Crit reçus +10% sur ennemi. Scaling selon debuffs cible. Dégâts +20%.", buffs:["crit_recv_up","debuff_scaling","dmg_up"], pvp:true}] },
-    "Anavel": { type: "range", awakenings: [AWK3, {level:5, desc:"Portée +3 et Taux critique +10%.", buffs:["range_up","crit_up"], pvp:true, pve:true}, {level:7, desc:"Accorde Faiblesse Congélation 10% aux alliés. Dégâts +20%.", buffs:["range_up","crit_up","freeze_weak","dmg_up"], pvp:true, pve:true}] },
-    "Melissa": { type: "melee", awakenings: [AWK3, {level:5, desc:"Vit. Attaque +15% + Bouclier à compte (5).", buffs:["atk_spd_up","count_shield"], pvp:true}, {level:7, desc:"Taux coup double +15%. Dégâts +20%.", buffs:["double_hit","dmg_up"], pvp:true}] }
-  };
-
-  // --- LOGIC ---
-  let selectedRole = null;
-  let selection = { left: null, right: null };
-  let currentSlot = 'left';
-
-  function getAwkScore(awk) {
-    return (awk.buffs || []).reduce((sum, b) => sum + (BUFFS[b]?.power || 0), 0);
-  }
-
-  function getTotalScore(name) {
-    return MONSTERS[name].awakenings.reduce((sum, awk) => sum + getAwkScore(awk), 0);
-  }
-
-  function setRole(role) {
-    selectedRole = role === 'all' ? 'all' : role;
-    document.querySelectorAll('.f-btn').forEach(b => b.classList.toggle('active', b.dataset.role === role));
-    updateList();
-  }
-
-  function updateList() {
-    const search = document.getElementById('mSearch').value.toLowerCase();
-    const listDiv = document.getElementById('mList');
-    listDiv.innerHTML = '';
-
-    if (!selectedRole && !search) {
-        listDiv.innerHTML = '<div class="empty-state" style="font-size: 0.7rem;">Choisissez un rôle ou recherchez un nom</div>';
-        return;
-    }
-
-    const filtered = Object.keys(MONSTERS).filter(name => {
-      const m = MONSTERS[name];
-      const matchRole = (selectedRole === 'all' || m.type === selectedRole);
-      const matchSearch = name.toLowerCase().includes(search);
-      return (selectedRole ? matchRole : true) && matchSearch;
-    });
-
-    filtered.forEach(name => {
-      const m = MONSTERS[name];
-      const div = document.createElement('div');
-      div.className = `m-item ${selection.left === name ? 'sel-left' : ''} ${selection.right === name ? 'sel-right' : ''}`;
-      div.innerHTML = `
-        <div class="m-img" style="background:#1a1e33; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--gold)">${name[0]}</div>
-        <div style="flex:1">
-          <div class="m-name">${name}</div>
-          <span class="m-role-tag" style="color:var(--${m.type})">${m.type}</span>
-        </div>
-        <div style="font-size:0.7rem; font-weight:700; color:var(--gold)">⚡ ${getTotalScore(name)}</div>
-      `;
-      div.onclick = () => selectMonster(name);
-      listDiv.appendChild(div);
-    });
-  }
-
-  function selectMonster(name) {
-    if (selection.left === name) { selection.left = null; }
-    else if (selection.right === name) { selection.right = null; }
-    else {
-      selection[currentSlot] = name;
-      currentSlot = currentSlot === 'left' ? 'right' : 'left';
-    }
-    renderComparison();
-    updateList();
-  }
-
-  function renderHero(name, side) {
-    if (!name) return `<div class="empty-state">Sélectionnez le ${side === 'left' ? '1er' : '2ème'} combattant</div>`;
-    const m = MONSTERS[name];
-    const score = getTotalScore(name);
-    
-    return `
-      <div class="hero-header">
-        <div class="hero-img" style="background:#1a1e33; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; color:var(--gold)">${name[0]}</div>
-        <div class="hero-title">
-          <h2>${name}</h2>
-          <span class="m-role-tag" style="color:var(--${m.type})">${m.type}</span>
-          <div class="score-badge" style="background:rgba(212,168,67,0.1); color:var(--gold); border:1px solid var(--gold)">Score: ${score} pts</div>
-        </div>
-      </div>
-      ${m.awakenings.map(awk => `
-        <div class="awk-card lvl${awk.level}">
-          <div class="awk-header">
-            <span class="awk-lvl">Éveil Niveau ${awk.level}</span>
-            <span style="font-size:0.7rem; font-weight:700; color:var(--muted)">⚡ ${getAwkScore(awk)} pts</span>
-          </div>
-          <div class="awk-desc">${awk.desc}</div>
-          <div class="buff-list">
-            ${awk.buffs.map(b => `<span class="buff-tag" style="color:${BUFFS[b].color}; border-color:${BUFFS[b].color}44; background:${BUFFS[b].color}11">${BUFFS[b].label}</span>`).join('')}
-          </div>
-        </div>
-      `).join('')}
-    `;
-  }
-
-  function renderComparison() {
-    document.getElementById('slot-left').innerHTML = renderHero(selection.left, 'left');
-    document.getElementById('slot-right').innerHTML = renderHero(selection.right, 'right');
-
-    const bar = document.getElementById('bottomBar');
-    if (selection.left && selection.right) {
-      bar.style.display = 'flex';
-      const sL = getTotalScore(selection.left);
-      const sR = getTotalScore(selection.right);
-      const total = sL + sR;
-      document.getElementById('bar-l').style.width = (sL / total * 100) + '%';
-      document.getElementById('bar-r').style.width = (sR / total * 100) + '%';
-      document.getElementById('name-l').innerText = selection.left;
-      document.getElementById('name-r').innerText = selection.right;
-    } else {
-      bar.style.display = 'none';
-    }
-  }
-
-  // Initialisation
-  updateList();
+  // Initialisation par défaut
+  renderCompare();
 </script>
 
 </body>
