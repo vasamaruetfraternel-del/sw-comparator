@@ -146,30 +146,14 @@ const BUFFS = {
   "petrify_dmg":   { label:"Dég. pétrification",    desc:"Dégâts augmentés sur cibles pétrifiées.",     color:"#bbaa66", power:7 },
   "aoe_dmg_recv":  { label:"Dég. zone reçus ↑",    desc:"Dégâts de zone reçus augmentés (ennemi).",    color:"#ff6633", power:6 },
   "crit_recv_up":  { label:"Dég. crit reçus ↑",    desc:"Dégâts critiques reçus augmentés (ennemi).",  color:"#ffaa33", power:7 },
+  "double_hit": { label:"Coup double ↑", desc:"Augmente le taux de coups doubles.", color:"#ff99cc", power:8 },
 };
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  ⚡ ÉVEIL 3 COMMUN — identique pour tous les monstres           ║
-// ╚══════════════════════════════════════════════════════════════════╝
 const AWK3 = {
   level: 3,
   desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.",
   buffs: ["cd_reset"], pvp: true, pve: true,
 };
-
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  👾 MONSTRES                                                     ║
-// ║  type : "melee" | "tank" | "range" | "support"                  ║
-// ║  TEMPLATE :                                                      ║
-// ║  "Nom": {                                                        ║
-// ║    image: "",                                                    ║
-// ║    type: "melee",                                                ║
-// ║    awakenings: [ AWK3,                                           ║
-// ║      { level:5, desc:"...", buffs:["id"], pvp:true, pve:false }, ║
-// ║      { level:7, desc:"...", buffs:["id"], pvp:true, pve:false }, ║
-// ║    ],                                                            ║
-// ║  },                                                              ║
-// ╚══════════════════════════════════════════════════════════════════╝
 const MONSTERS = {
 
   "Craka": {
@@ -333,7 +317,24 @@ const MONSTERS = {
       },
     ],
   },
-
+  
+  "Melissa": {
+  image: "", type: "melee",
+  awakenings: [ AWK3,
+    {
+      level: 5,
+      desc: "Début de combat : Vitesse d'attaque +15% (suppression impossible, cumulable) + bouclier à compte (5 fois).",
+      buffs: ["atk_spd_up", "count_shield"],
+      pvp: true, pve: false,
+    },
+    {
+      level: 7,
+      desc: "Attaque réussie : « Taux de coups doubles +15% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).",
+      buffs: ["double_hit", "dmg_up"],
+      pvp: true, pve: false,
+    },
+  ],
+},
   // ← Ajoutez vos monstres ici
 
 };
