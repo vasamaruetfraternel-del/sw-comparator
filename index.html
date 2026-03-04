@@ -117,36 +117,32 @@
 <script>
 const IMAGES_PATH = "./images/";
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  📖 EFFETS / BUFFS  — power : puissance de l'effet (1-10)       ║
-// ║  TEMPLATE : "id": { label:"", desc:"", color:"#hex", power:5 }, ║
-// ╚══════════════════════════════════════════════════════════════════╝
 const BUFFS = {
-  "atk_up":        { label:"ATQ ↑",               desc:"Augmente l'ATQ.",                              color:"#e05555", power:6 },
-  "atk_spd_up":    { label:"Vit. ATQ ↑",           desc:"Augmente la vitesse d'attaque.",               color:"#ff8c42", power:5 },
-  "crit_up":       { label:"Coup puissant ↑",      desc:"Augmente le taux de coup puissant.",           color:"#ffcc00", power:6 },
-  "crit_dmg_up":   { label:"Dég. puissants ↑",     desc:"Augmente les dégâts des coups puissants.",     color:"#ffd966", power:7 },
-  "dmg_up":        { label:"Dégâts ↑",             desc:"Augmente les dégâts infligés.",                color:"#ff6644", power:8 },
-  "def_up":        { label:"DEF ↑",                desc:"Augmente la DEF.",                            color:"#4a90d9", power:5 },
-  "range_up":      { label:"Portée ↑",             desc:"Augmente la portée d'attaque.",                color:"#66ddaa", power:6 },
-  "dodge":         { label:"Esquive absolue",       desc:"Esquive toutes les attaques.",                 color:"#88ccff", power:9 },
-  "stealth":       { label:"Furtivité",             desc:"Invisible, buffs sous furtivité actifs.",      color:"#9966cc", power:8 },
-  "stealth_shield":{ label:"Bouclier invisible",    desc:"Bouclier combiné à l'invisibilité.",           color:"#cc99ff", power:9 },
-  "count_shield":  { label:"Bouclier à compte",     desc:"Absorbe un nombre défini de coups.",           color:"#5588ff", power:7 },
-  "move_spd_up":   { label:"Vit. déplacement ↑",   desc:"Augmente la vitesse de déplacement.",          color:"#55eebb", power:5 },
-  "cd_reset":      { label:"Reset CD",              desc:"Réinitialise les temps de recharge.",          color:"#44aacc", power:9 },
-  "skill_accel":   { label:"Accél. compétences",    desc:"Réduit le temps de recharge des compétences.", color:"#44ccff", power:7 },
-  "bleed":         { label:"Saignement",            desc:"DoT % PV max ennemis.",                       color:"#cc0033", power:7 },
-  "frost_trace":   { label:"Trace de givre",        desc:"Détection de faiblesse – Trace de givre.",    color:"#aaeeff", power:7 },
-  "freeze_weak":   { label:"Faiblesse gel",         desc:"Détection de point faible – Congélation.",    color:"#66ccff", power:7 },
-  "triple_hit":    { label:"Coup triple ↑",         desc:"Augmente le taux de coups triples.",           color:"#dd88ff", power:8 },
-  "buff_scaling":  { label:"Dég. / buffs",          desc:"Dégâts bonus selon le nombre de buffs actifs.",color:"#ffdd44", power:8 },
-  "debuff_scaling":{ label:"Dég. / debuffs",        desc:"Dégâts bonus selon les debuffs sur la cible.", color:"#ff8844", power:8 },
-  "cc_boost":      { label:"Contrôle ↑",            desc:"Augmente l'efficacité des effets de contrôle.",color:"#ffaa44", power:7 },
-  "petrify_dmg":   { label:"Dég. pétrification",    desc:"Dégâts augmentés sur cibles pétrifiées.",     color:"#bbaa66", power:7 },
-  "aoe_dmg_recv":  { label:"Dég. zone reçus ↑",    desc:"Dégâts de zone reçus augmentés (ennemi).",    color:"#ff6633", power:6 },
-  "crit_recv_up":  { label:"Dég. crit reçus ↑",    desc:"Dégâts critiques reçus augmentés (ennemi).",  color:"#ffaa33", power:7 },
-  "double_hit": { label:"Coup double ↑", desc:"Augmente le taux de coups doubles.", color:"#ff99cc", power:8 },
+  "atk_up":         { label:"ATQ ↑",                 desc:"Augmente l'ATQ.",                                    color:"#e05555", power:6 },
+  "atk_spd_up":     { label:"Vit. ATQ ↑",            desc:"Augmente la vitesse d'attaque.",                     color:"#ff8c42", power:5 },
+  "crit_up":        { label:"Coup puissant ↑",      desc:"Augmente le taux de coup puissant.",                 color:"#ffcc00", power:6 },
+  "crit_dmg_up":    { label:"Dég. puissants ↑",     desc:"Augmente les dégâts des coups puissants.",     color:"#ffd966", power:7 },
+  "dmg_up":         { label:"Dégâts ↑",             desc:"Augmente les dégâts infligés.",                color:"#ff6644", power:8 },
+  "def_up":         { label:"DEF ↑",                desc:"Augmente la DEF.",                            color:"#4a90d9", power:5 },
+  "range_up":       { label:"Portée ↑",             desc:"Augmente la portée d'attaque.",                color:"#66ddaa", power:6 },
+  "dodge":          { label:"Esquive absolue",       desc:"Esquive toutes les attaques.",                 color:"#88ccff", power:9 },
+  "stealth":        { label:"Furtivité",             desc:"Invisible, buffs sous furtivité actifs.",      color:"#9966cc", power:8 },
+  "stealth_shield": { label:"Bouclier invisible",    desc:"Bouclier combiné à l'invisibilité.",           color:"#cc99ff", power:9 },
+  "count_shield":   { label:"Bouclier à compte",     desc:"Absorbe un nombre défini de coups.",           color:"#5588ff", power:7 },
+  "move_spd_up":    { label:"Vit. déplacement ↑",   desc:"Augmente la vitesse de déplacement.",          color:"#55eebb", power:5 },
+  "cd_reset":       { label:"Reset CD",              desc:"Réinitialise les temps de recharge.",          color:"#44aacc", power:9 },
+  "skill_accel":    { label:"Accél. compétences",    desc:"Réduit le temps de recharge des compétences.", color:"#44ccff", power:7 },
+  "bleed":          { label:"Saignement",            desc:"DoT % PV max ennemis.",                       color:"#cc0033", power:7 },
+  "frost_trace":    { label:"Trace de givre",        desc:"Détection de faiblesse – Trace de givre.",    color:"#aaeeff", power:7 },
+  "freeze_weak":    { label:"Faiblesse gel",         desc:"Détection de point faible – Congélation.",    color:"#66ccff", power:7 },
+  "triple_hit":     { label:"Coup triple ↑",         desc:"Augmente le taux de coups triples.",           color:"#dd88ff", power:8 },
+  "buff_scaling":   { label:"Dég. / buffs",          desc:"Dégâts bonus selon le nombre de buffs actifs.",color:"#ffdd44", power:8 },
+  "debuff_scaling": { label:"Dég. / debuffs",        desc:"Dégâts bonus selon les debuffs sur la cible.", color:"#ff8844", power:8 },
+  "cc_boost":       { label:"Contrôle ↑",            desc:"Augmente l'efficacité des effets de contrôle.",color:"#ffaa44", power:7 },
+  "petrify_dmg":    { label:"Dég. pétrification",    desc:"Dégâts augmentés sur cibles pétrifiées.",     color:"#bbaa66", power:7 },
+  "aoe_dmg_recv":   { label:"Dég. zone reçus ↑",    desc:"Dégâts de zone reçus augmentés (ennemi).",    color:"#ff6633", power:6 },
+  "crit_recv_up":   { label:"Dég. crit reçus ↑",    desc:"Dégâts critiques reçus augmentés (ennemi).",  color:"#ffaa33", power:7 },
+  "double_hit":     { label:"Coup double ↑",         desc:"Augmente le taux de coups doubles.",           color:"#ff99cc", power:8 },
 };
 
 const AWK3 = {
@@ -154,8 +150,8 @@ const AWK3 = {
   desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.",
   buffs: ["cd_reset"], pvp: true, pve: true,
 };
-const MONSTERS = {
 
+const MONSTERS = {
   "Craka": {
     image: "", type: "melee",
     awakenings: [ AWK3,
@@ -173,7 +169,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Mago": {
     image: "", type: "melee",
     awakenings: [ AWK3,
@@ -191,7 +186,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Grogen": {
     image: "", type: "range",
     awakenings: [ AWK3,
@@ -209,7 +203,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Sabrina": {
     image: "", type: "range",
     awakenings: [ AWK3,
@@ -227,7 +220,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Jagger": {
     image: "", type: "melee",
     awakenings: [ AWK3,
@@ -245,7 +237,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Theomars": {
     image: "", type: "range",
     awakenings: [ AWK3,
@@ -263,7 +254,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Laima": {
     image: "", type: "range",
     awakenings: [ AWK3,
@@ -281,7 +271,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Trinity": {
     image: "", type: "melee",
     awakenings: [ AWK3,
@@ -299,7 +288,6 @@ const MONSTERS = {
       },
     ],
   },
-
   "Anavel": {
     image: "", type: "range",
     awakenings: [ AWK3,
@@ -317,26 +305,23 @@ const MONSTERS = {
       },
     ],
   },
-  
   "Melissa": {
-  image: "", type: "melee",
-  awakenings: [ AWK3,
-    {
-      level: 5,
-      desc: "Début de combat : Vitesse d'attaque +15% (suppression impossible, cumulable) + bouclier à compte (5 fois).",
-      buffs: ["atk_spd_up", "count_shield"],
-      pvp: true, pve: false,
-    },
-    {
-      level: 7,
-      desc: "Attaque réussie : « Taux de coups doubles +15% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).",
-      buffs: ["double_hit", "dmg_up"],
-      pvp: true, pve: false,
-    },
-  ],
-},
-  // ← Ajoutez vos monstres ici
-
+    image: "", type: "melee",
+    awakenings: [ AWK3,
+      {
+        level: 5,
+        desc: "Début de combat : Vitesse d'attaque +15% (suppression impossible, cumulable) + bouclier à compte (5 fois).",
+        buffs: ["atk_spd_up", "count_shield"],
+        pvp: true, pve: false,
+      },
+      {
+        level: 7,
+        desc: "Attaque réussie : « Taux de coups doubles +15% » pendant 10s (cumulable). Dégâts infligés +20% (suppression impossible, cumulable).",
+        buffs: ["double_hit", "dmg_up"],
+        pvp: true, pve: false,
+      },
+    ],
+  },
 };
 </script>
 
@@ -395,10 +380,10 @@ const MONSTERS = {
 <script>
 let selected={left:null,right:null}, nextSlot='left';
 const ROLE={
-  melee:  {label:'Mêlée',  cls:'role-melee'},
-  tank:   {label:'Tank',   cls:'role-tank'},
-  range:  {label:'Range',  cls:'role-range'},
-  support:{label:'Support',cls:'role-support'},
+  melee:   {label:'Mêlée',   cls:'role-melee'},
+  tank:    {label:'Tank',    cls:'role-tank'},
+  range:   {label:'Range',   cls:'role-range'},
+  support: {label:'Support', cls:'role-support'},
 };
 function hexRgb(h){return`${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`}
 function awkScore(a){return(a.buffs||[]).reduce((s,id)=>s+(BUFFS[id]?BUFFS[id].power:0),0)}
