@@ -107,6 +107,7 @@ header {
 .m-row-info { min-width: 0; flex: 1; }
 .m-row-name { font-size: .78rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
 .m-row-sub { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+.m-row-score { font-size: .6rem; font-weight: 600; margin-left: auto; flex-shrink: 0; }
 
 /* Role pills */
 .pill { font-size: .58rem; font-weight: 700; padding: 1px 6px; border-radius: 20px; border: 1px solid; white-space: nowrap; }
@@ -344,7 +345,7 @@ const MONSTERS = {
     <span class="logo-text">SW RUSH · COMPARATEUR</span>
   </div>
   <div class="logo-sep"></div>
-  <span class="header-hint">Cliquez sur un monstre pour le sélectionner, si deux monstres sont déjà sélectionnés, le troisième remplacera le premier et ainsi de suite.</span>
+  <span class="header-hint">Cliquez un monstre → gauche · Re-cliquez → droite</span>
 </header>
 
 <div class="layout">
@@ -426,16 +427,17 @@ function chips(ids){
 }
 
 function renderCard(name){
-  const m=MONSTERS[name], role=ROLE[m.type]||{label:m.type,cls:''};
+  const m=MONSTERS[name], tot=totalPts(m), max=maxPts(m), r=tot/max;
+  const c=col(r), g=grad(r), role=ROLE[m.type]||{label:m.type,cls:''};
   const src=`${IMAGES_PATH}${name}.png`;
   let awHTML='';
-
   (m.awakenings||[]).forEach(a=>{
-    const ch=chips(a.buffs||[]);
+    const pts=awkPts(a), ar=pts/30, ac=col(ar), ag=grad(ar), ch=chips(a.buffs||[]);
     awHTML+=`
       <div class="awk">
         <div class="awk-head">
           <span class="awk-lv">Éveil ${a.level}</span>
+          <span class="awk-score" style="color:${ac};border-color:${ac};background:rgba(${rgb(ac)},.1)">⚡ ${pts} pts</span>
           <div class="awk-modes">
             ${a.pvp?'<span class="mode-pvp">PvP</span>':''}
             ${a.pve?'<span class="mode-pve">PvE</span>':''}
@@ -443,16 +445,27 @@ function renderCard(name){
         </div>
         <div class="awk-desc">${a.desc}</div>
         ${ch?`<div class="buff-list">${ch}</div>`:''}
+        <div class="awk-bar">
+          <div class="awk-bar-track"><div class="awk-bar-fill" style="width:${Math.min(ar*100,100)}%;background:${ag}"></div></div>
+          <span class="awk-bar-val" style="color:${ac}">${pts}/30</span>
+        </div>
       </div>`;
   });
-
   return `
     <div class="card-head">
       <img class="card-portrait" src="${src}" alt="${name}" onerror="this.outerHTML='<div class=card-portrait-ph>${name}</div>'">
       <div class="card-meta">
         <div class="card-name">${name}</div>
         <span class="pill ${role.cls}">${role.label}</span>
+        <div class="card-score-row">
+          <span class="card-score-label">Score total</span>
+          <span class="card-score-val" style="color:${c}">${tot}</span>
+          <span style="font-size:.65rem;color:var(--text2)">/ ${max}</span>
+        </div>
       </div>
+    </div>
+    <div class="score-bar">
+      <div class="score-bar-track"><div class="score-bar-fill" style="width:${Math.min(r*100,100)}%;background:${g}"></div></div>
     </div>
     <div class="sec-label">Éveils · ${(m.awakenings||[]).length}</div>
     ${awHTML}`;
