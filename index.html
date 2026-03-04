@@ -251,6 +251,60 @@ line-height: 1.6;
 color: var(--text3);
 margin-bottom: 8px;
 }
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto; /* Permet le scroll global sur mobile */
+        height: auto;
+    }
+
+    .layout {
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border2);
+    }
+
+    .monster-list {
+        display: flex;
+        flex-direction: row; /* Liste horizontale défilante pour les icônes */
+        overflow-x: auto;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .m-row {
+        flex-direction: column;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .m-row-info, .m-row-score {
+        display: none;
+    }
+        /* On cache les détails dans la liste mobile */
+
+    .compare-cols {
+        flex-direction: column;
+    }
+
+    .col {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow: visible;
+    }
+
+    .bottom {
+        position: sticky;
+        bottom: 0;
+        z-index: 100;
+    }
+}
 </style>
 </head>
 <body>
