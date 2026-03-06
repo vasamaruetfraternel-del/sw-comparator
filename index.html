@@ -1,1385 +1,631 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SW Rush – Comparateur</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap');
-
-    :root {
-      --bg: #111827;
-      --surface: #1a2537;
-      --surface2: #1f2d42;
-      --surface3: #243350;
-      --border: #2a3a54;
-      --border2: #334460;
-      --gold: #d4a44a;
-      --gold-lt: #ecc46a;
-      --gold-glow: rgba(212, 164, 74, .18);
-      --text: #d8e4f8;
-      --text2: #7a90b8;
-      --text3: #a0b4d0;
-      --left: #4d7fff;
-      --right: #ff5e2e;
-      --melee: #e05555;
-      --tank: #4d8fd6;
-      --range: #d49828;
-      --support: #52b86a;
-      --pvp: #c04040;
-      --pve: #2e9898;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column
-    }
-
-    /* ── Header ── */
-    header {
-      height: 46px;
-      flex-shrink: 0;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border2);
-      display: flex;
-      align-items: center;
-      padding: 0 14px;
-      gap: 10px
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px
-    }
-
-    .logo svg {
-      color: var(--gold)
-    }
-
-    .logo-text {
-      font-family: 'Cinzel', serif;
-      font-size: .92rem;
-      color: var(--gold-lt);
-      letter-spacing: 2px
-    }
-
-    .hsep {
-      width: 1px;
-      height: 22px;
-      background: var(--border2)
-    }
-
-    .hhint {
-      font-size: .75rem;
-      color: var(--text2)
-    }
-
-    /* ── Layout ── */
-    .layout {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      min-height: 0
-    }
-
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 200px;
-      flex-shrink: 0;
-      background: var(--surface);
-      border-right: 1px solid var(--border2);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden
-    }
-
-    .search-box {
-      padding: 8px;
-      border-bottom: 1px solid var(--border)
-    }
-
-    .search-inner {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      border-radius: 8px;
-      padding: 6px 10px;
-      transition: border-color .2s
-    }
-
-    .search-inner:focus-within {
-      border-color: var(--gold)
-    }
-
-    .search-inner svg {
-      flex-shrink: 0;
-      color: var(--text2)
-    }
-
-    .search-inner input {
-      background: none;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: .8rem;
-      width: 100%
-    }
-
-    .search-inner input::placeholder {
-      color: var(--text2)
-    }
-
-    .type-filter {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3px;
-      padding: 6px 8px;
-      border-bottom: 1px solid var(--border)
-    }
-
-    .tf {
-      font-size: .65rem;
-      font-weight: 700;
-      padding: 5px 3px;
-      border-radius: 6px;
-      border: 1px solid var(--border2);
-      background: transparent;
-      color: var(--text2);
-      cursor: pointer;
-      transition: all .15s;
-      text-align: center
-    }
-
-    .tf:hover {
-      color: var(--text);
-      background: var(--surface2)
-    }
-
-    .tf.all {
-      grid-column: 1/-1
-    }
-
-    .tf.active-all {
-      border-color: var(--gold);
-      color: var(--gold-lt);
-      background: var(--gold-glow)
-    }
-
-    .tf.active-melee {
-      border-color: var(--melee);
-      color: var(--melee);
-      background: rgba(224, 85, 85, .1)
-    }
-
-    .tf.active-tank {
-      border-color: var(--tank);
-      color: var(--tank);
-      background: rgba(77, 143, 214, .1)
-    }
-
-    .tf.active-range {
-      border-color: var(--range);
-      color: var(--range);
-      background: rgba(212, 152, 40, .1)
-    }
-
-    .tf.active-support {
-      border-color: var(--support);
-      color: var(--support);
-      background: rgba(82, 184, 106, .1)
-    }
-
-    /* Portrait grid */
-    .monster-grid {
-      flex: 1;
-      overflow-y: auto;
-      padding: 6px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-      align-content: start
-    }
-
-    .monster-grid::-webkit-scrollbar {
-      width: 3px
-    }
-
-    .monster-grid::-webkit-scrollbar-thumb {
-      background: var(--border2);
-      border-radius: 2px
-    }
-
-    .m-tile {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 7px 4px;
-      border-radius: 9px;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all .15s;
-      text-align: center
-    }
-
-    .m-tile:hover {
-      background: var(--surface2);
-      border-color: var(--border2)
-    }
-
-    .m-tile.sel-l {
-      background: rgba(77, 127, 255, .12);
-      border-color: rgba(77, 127, 255, .6);
-      box-shadow: 0 0 10px rgba(77, 127, 255, .15)
-    }
-
-    .m-tile.sel-r {
-      background: rgba(255, 94, 46, .12);
-      border-color: rgba(255, 94, 46, .6);
-      box-shadow: 0 0 10px rgba(255, 94, 46, .15)
-    }
-
-    .m-img {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid var(--border2)
-    }
-
-    .m-img-ph {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      background: var(--surface3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .42rem;
-      color: var(--text2);
-      border: 1px solid var(--border);
-      line-height: 1.3;
-      padding: 3px;
-      text-align: center
-    }
-
-    .m-name {
-      font-size: .68rem;
-      font-weight: 600;
-      color: var(--text3);
-      line-height: 1.2;
-      max-width: 80px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap
-    }
-
-    .m-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      flex-shrink: 0
-    }
-
-    .sel-badge {
-      font-size: .55rem;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 4px;
-      line-height: 1.4
-    }
-
-    /* ── Pills ── */
-    .pill {
-      font-size: .62rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 20px;
-      border: 1px solid;
-      white-space: nowrap
-    }
-
-    .pill-melee {
-      color: var(--melee);
-      border-color: rgba(224, 85, 85, .4);
-      background: rgba(224, 85, 85, .1)
-    }
-
-    .pill-tank {
-      color: var(--tank);
-      border-color: rgba(77, 143, 214, .4);
-      background: rgba(77, 143, 214, .1)
-    }
-
-    .pill-range {
-      color: var(--range);
-      border-color: rgba(212, 152, 40, .4);
-      background: rgba(212, 152, 40, .1)
-    }
-
-    .pill-support {
-      color: var(--support);
-      border-color: rgba(82, 184, 106, .4);
-      background: rgba(82, 184, 106, .1)
-    }
-
-    /* ── Compare area ── */
-    .compare {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      min-width: 0;
-      min-height: 0
-    }
-
-    /* Empty */
-    .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: var(--text2);
-      font-size: .9rem
-    }
-
-    .empty-ring {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 1.5px dashed var(--border2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: .4
-    }
-
-    /* ── Monster header strip ── */
-    .heads {
-      display: flex;
-      flex-shrink: 0;
-      padding: 14px 16px 0;
-      gap: 12px
-    }
-
-    .hcard {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      position: relative;
-      overflow: hidden
-    }
-
-    .hcard::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px
-    }
-
-    .hcard.side-l::before {
-      background: linear-gradient(90deg, transparent, var(--left), transparent)
-    }
-
-    .hcard.side-r::before {
-      background: linear-gradient(90deg, transparent, var(--right), transparent)
-    }
-
-    .hcard.winner {
-      border-color: rgba(82, 184, 106, .45);
-      box-shadow: 0 0 18px rgba(82, 184, 106, .1)
-    }
-
-    .hport {
-      width: 52px;
-      height: 52px;
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border: 1px solid var(--border2)
-    }
-
-    .hport-ph {
-      width: 52px;
-      height: 52px;
-      border-radius: 8px;
-      background: var(--surface3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .58rem;
-      color: var(--text2);
-      border: 1px solid var(--border);
-      flex-shrink: 0;
-      text-align: center
-    }
-
-    .hname {
-      font-family: 'Cinzel', serif;
-      font-size: .95rem;
-      color: var(--gold-lt);
-      letter-spacing: 1px;
-      margin-bottom: 4px
-    }
-
-    .hscore-num {
-      font-size: 1.6rem;
-      font-weight: 700;
-      line-height: 1
-    }
-
-    .hscore-den {
-      font-size: .7rem;
-      color: var(--text2);
-      margin-left: 3px
-    }
-
-    .hbar {
-      height: 4px;
-      background: var(--surface3);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 6px;
-      width: 100%
-    }
-
-    .hbar-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width .7s cubic-bezier(.4, 0, .2, 1)
-    }
-
-    .winner-badge {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      font-size: .62rem;
-      font-weight: 700;
-      color: #52b86a;
-      background: rgba(82, 184, 106, .15);
-      border: 1px solid rgba(82, 184, 106, .3);
-      border-radius: 20px;
-      padding: 1px 8px
-    }
-
-    /* ── Bilan ── */
-    .bilan {
-      margin: 10px 16px 8px;
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: 12px;
-      overflow: hidden;
-      flex-shrink: 0
-    }
-
-    .bilan-verdict {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, .015)
-    }
-
-    .bilan-verdict-txt {
-      font-size: .83rem;
-      line-height: 1.4;
-      color: var(--text)
-    }
-
-    .bilan-grid {
-      display: grid;
-      grid-template-columns: 1fr 1px 88px 1px 1fr
-    }
-
-    .bilan-divider {
-      background: var(--border)
-    }
-
-    .bilan-col {
-      padding: 10px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px
-    }
-
-    .bilan-center {
-      padding: 10px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center
-    }
-
-    .bilan-row {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-wrap: wrap
-    }
-
-    .bilan-row-r {
-      justify-content: flex-end
-    }
-
-    .bilan-row-c {
-      justify-content: center;
-      text-align: center
-    }
-
-    .bilan-lbl {
-      font-size: .62rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      color: var(--text2);
-      white-space: nowrap
-    }
-
-    .bilan-pts {
-      font-size: .9rem;
-      font-weight: 700
-    }
-
-    .bilan-awk-lv {
-      font-family: 'Cinzel', serif;
-      font-size: .62rem;
-      color: var(--gold);
-      border: 1px solid rgba(212, 164, 74, .3);
-      background: var(--gold-glow);
-      border-radius: 5px;
-      padding: 1px 7px;
-      white-space: nowrap
-    }
-
-    /* ── Buff chip ── */
-    .buff-chip {
-      font-size: .6rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-      border: 1px solid;
-      cursor: default
-    }
-
-    /* ── Awakenings ── */
-    .awk-area {
-      flex: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      padding: 0 16px 14px
-    }
-
-    .awk-sec-label {
-      font-size: .6rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--text2);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 0 8px
-    }
-
-    .awk-sec-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border)
-    }
-
-    .awk-pairs {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 0
-    }
-
-    .awk-pairs::-webkit-scrollbar {
-      width: 3px
-    }
-
-    .awk-pairs::-webkit-scrollbar-thumb {
-      background: var(--border2);
-      border-radius: 2px
-    }
-
-    .awk-pair-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      align-items: stretch
-    }
-
-    .awk {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      position: relative;
-      overflow: hidden
-    }
-
-    .awk::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px
-    }
-
-    .awk.lv3::before {
-      background: #4466aa
-    }
-
-    .awk.lv5::before {
-      background: var(--gold)
-    }
-
-    .awk.lv7::before {
-      background: #cc3355
-    }
-
-    .awk-head {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 9px;
-      flex-wrap: wrap
-    }
-
-    .awk-lv {
-      font-family: 'Cinzel', serif;
-      font-size: .62rem;
-      font-weight: 700;
-      color: var(--gold);
-      border: 1px solid rgba(212, 164, 74, .35);
-      background: var(--gold-glow);
-      border-radius: 5px;
-      padding: 2px 8px
-    }
-
-    .awk-score {
-      font-size: .65rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 5px;
-      border: 1px solid
-    }
-
-    .awk-modes {
-      display: flex;
-      gap: 3px;
-      margin-left: auto
-    }
-
-    .mode-pvp {
-      font-size: .6rem;
-      padding: 2px 6px;
-      border-radius: 5px;
-      font-weight: 700;
-      color: var(--pvp);
-      background: rgba(192, 64, 64, .12);
-      border: 1px solid rgba(192, 64, 64, .3)
-    }
-
-    .mode-pve {
-      font-size: .6rem;
-      padding: 2px 6px;
-      border-radius: 5px;
-      font-weight: 700;
-      color: var(--pve);
-      background: rgba(46, 152, 152, .12);
-      border: 1px solid rgba(46, 152, 152, .3)
-    }
-
-    .awk-desc {
-      white-space: pre-line;
-      font-size: .79rem;
-      line-height: 1.7;
-      color: var(--text3);
-      margin-bottom: 8px
-    }
-
-    .awk-desc .vp {
-      color: var(--text);
-      font-weight: 700
-    }
-
-    .awk-desc .vm {
-      color: #ff8855;
-      font-weight: 700
-    }
-
-    .buff-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-bottom: 8px
-    }
-
-    .awk-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px
-    }
-
-    .awk-bar-track {
-      flex: 1;
-      height: 4px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden
-    }
-
-    .awk-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width .6s ease
-    }
-
-    .awk-bar-val {
-      font-size: .62rem;
-      font-weight: 700;
-      width: 50px;
-      text-align: right
-    }
-
-    /* ── Bottom bar ── */
-    .bottom {
-      height: 42px;
-      flex-shrink: 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border2);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      gap: 10px
-    }
-
-    .bottom-label {
-      font-size: .65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text2);
-      flex-shrink: 0
-    }
-
-    .bottom-hint {
-      font-size: .78rem;
-      color: var(--text2);
-      flex: 1;
-      text-align: center
-    }
-
-    .bottom-name {
-      font-size: .75rem;
-      font-weight: 700;
-      min-width: 80px;
-      flex-shrink: 0
-    }
-
-    .bottom-name.l {
-      color: var(--left);
-      text-align: right
-    }
-
-    .bottom-name.r {
-      color: var(--right)
-    }
-
-    .bottom-bars {
-      flex: 1;
-      display: flex;
-      gap: 2px;
-      align-items: center
-    }
-
-    .bar-l {
-      height: 10px;
-      border-radius: 2px 0 0 2px;
-      background: var(--left);
-      opacity: .85;
-      transition: width .5s
-    }
-
-    .bar-r {
-      height: 10px;
-      border-radius: 0 2px 2px 0;
-      background: var(--right);
-      opacity: .85;
-      transition: width .5s
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SW Rush – Comparateur</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+:root {
+  --bg:#111827;--surface:#1a2537;--surface2:#1f2d42;--surface3:#243350;
+  --border:#2a3a54;--border2:#334460;
+  --gold:#d4a44a;--gold-lt:#ecc46a;--gold-glow:rgba(212,164,74,.18);
+  --text:#d8e4f8;--text2:#7a90b8;--text3:#a0b4d0;
+  --left:#4d7fff;--right:#ff5e2e;
+  --melee:#e05555;--tank:#4d8fd6;--range:#d49828;--support:#52b86a;
+  --pvp:#c04040;--pve:#2e9898;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* ── Header ── */
+header{height:46px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border2);display:flex;align-items:center;padding:0 14px;gap:10px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo svg{color:var(--gold)}
+.logo-text{font-family:'Cinzel',serif;font-size:.92rem;color:var(--gold-lt);letter-spacing:2px}
+.hsep{width:1px;height:22px;background:var(--border2)}
+.hhint{font-size:.75rem;color:var(--text2)}
+.toggle-btn{display:none;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:5px 10px;color:var(--text3);font-family:'Inter',sans-serif;font-size:.73rem;font-weight:600;cursor:pointer;margin-left:auto;transition:all .15s}
+.toggle-btn:hover{border-color:var(--gold);color:var(--gold-lt)}
+.toggle-btn .arr{transition:transform .25s}
+.toggle-btn.open .arr{transform:rotate(180deg)}
+
+/* ── Layout ── */
+.layout{display:flex;flex:1;overflow:hidden;min-height:0}
+
+/* ── Sidebar ── */
+.sidebar{width:200px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden}
+.search-box{padding:8px;border-bottom:1px solid var(--border)}
+.search-inner{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:6px 10px;transition:border-color .2s}
+.search-inner:focus-within{border-color:var(--gold)}
+.search-inner svg{flex-shrink:0;color:var(--text2)}
+.search-inner input{background:none;border:none;outline:none;color:var(--text);font-family:'Inter',sans-serif;font-size:.8rem;width:100%}
+.search-inner input::placeholder{color:var(--text2)}
+.type-filter{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:6px 8px;border-bottom:1px solid var(--border)}
+.tf{font-size:.65rem;font-weight:700;padding:5px 3px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;text-align:center}
+.tf:hover{color:var(--text);background:var(--surface2)}
+.tf.all{grid-column:1/-1}
+.tf.active-all{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-glow)}
+.tf.active-melee{border-color:var(--melee);color:var(--melee);background:rgba(224,85,85,.1)}
+.tf.active-tank{border-color:var(--tank);color:var(--tank);background:rgba(77,143,214,.1)}
+.tf.active-range{border-color:var(--range);color:var(--range);background:rgba(212,152,40,.1)}
+.tf.active-support{border-color:var(--support);color:var(--support);background:rgba(82,184,106,.1)}
+.monster-grid{flex:1;overflow-y:auto;padding:6px;display:grid;grid-template-columns:1fr 1fr;gap:5px;align-content:start}
+.monster-grid::-webkit-scrollbar{width:3px}
+.monster-grid::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.m-tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;border-radius:9px;cursor:pointer;border:1px solid transparent;transition:all .15s;text-align:center}
+.m-tile:hover{background:var(--surface2);border-color:var(--border2)}
+.m-tile.sel-l{background:rgba(77,127,255,.12);border-color:rgba(77,127,255,.6);box-shadow:0 0 10px rgba(77,127,255,.15)}
+.m-tile.sel-r{background:rgba(255,94,46,.12);border-color:rgba(255,94,46,.6);box-shadow:0 0 10px rgba(255,94,46,.15)}
+.m-img{width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--border2)}
+.m-img-ph{width:48px;height:48px;border-radius:8px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:.42rem;color:var(--text2);border:1px solid var(--border);line-height:1.3;padding:3px;text-align:center}
+.m-name{font-size:.68rem;font-weight:600;color:var(--text3);line-height:1.2;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sel-badge{font-size:.55rem;font-weight:700;padding:1px 5px;border-radius:4px;line-height:1.4}
+
+/* ── Pills ── */
+.pill{font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid;white-space:nowrap}
+.pill-melee{color:var(--melee);border-color:rgba(224,85,85,.4);background:rgba(224,85,85,.1)}
+.pill-tank{color:var(--tank);border-color:rgba(77,143,214,.4);background:rgba(77,143,214,.1)}
+.pill-range{color:var(--range);border-color:rgba(212,152,40,.4);background:rgba(212,152,40,.1)}
+.pill-support{color:var(--support);border-color:rgba(82,184,106,.4);background:rgba(82,184,106,.1)}
+
+/* ── Compare area ── */
+.compare{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:0}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--text2);font-size:.9rem}
+.empty-ring{width:64px;height:64px;border-radius:50%;border:1.5px dashed var(--border2);display:flex;align-items:center;justify-content:center;opacity:.4}
+
+/* ── Monster header strip ── */
+.heads{display:flex;flex-shrink:0;padding:14px 16px 0;gap:12px}
+.hcard{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden}
+.hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.hcard.side-l::before{background:linear-gradient(90deg,transparent,var(--left),transparent)}
+.hcard.side-r::before{background:linear-gradient(90deg,transparent,var(--right),transparent)}
+.hcard.winner{border-color:rgba(82,184,106,.45);box-shadow:0 0 18px rgba(82,184,106,.1)}
+.hport{width:52px;height:52px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border2)}
+.hport-ph{width:52px;height:52px;border-radius:8px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:.58rem;color:var(--text2);border:1px solid var(--border);flex-shrink:0;text-align:center}
+.hname{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold-lt);letter-spacing:1px;margin-bottom:4px}
+.hscore-num{font-size:1.6rem;font-weight:700;line-height:1}
+.hscore-den{font-size:.7rem;color:var(--text2);margin-left:3px}
+.hbar{height:4px;background:var(--surface3);border-radius:3px;overflow:hidden;margin-top:6px;width:100%}
+.hbar-fill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.winner-badge{position:absolute;top:8px;right:10px;font-size:.62rem;font-weight:700;color:#52b86a;background:rgba(82,184,106,.15);border:1px solid rgba(82,184,106,.3);border-radius:20px;padding:1px 8px}
+
+/* ── Bilan v2 ── */
+.bilan{margin:10px 16px 8px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;overflow:hidden;flex-shrink:0}
+.bilan-verdict{padding:9px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.015)}
+.bilan-verdict-txt{font-size:.82rem;line-height:1.4;color:var(--text)}
+.bilan-sec{border-top:1px solid var(--border)}
+.bilan-sec-hd{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);padding:6px 14px 0}
+.bilan-3col{display:grid;grid-template-columns:1fr 68px 1fr;padding:5px 14px 8px;gap:4px 6px;align-items:center}
+.bc-l{display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.bc-c{display:flex;align-items:center;justify-content:center}
+.bc-r{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.mode-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:2px 8px;border-radius:20px;border:1px solid;white-space:nowrap}
+.mode-lbl-pvp{color:var(--pvp);border-color:rgba(192,64,64,.3);background:rgba(192,64,64,.08)}
+.mode-lbl-pve{color:var(--pve);border-color:rgba(46,152,152,.3);background:rgba(46,152,152,.08)}
+.mode-score-row{display:flex;align-items:center;gap:5px;width:100%}
+.mode-bar-wrap{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.mode-bar-fill{height:100%;border-radius:2px}
+.mode-pts{font-size:.78rem;font-weight:700;white-space:nowrap}
+.mode-na{font-size:.72rem;color:var(--text2)}
+.bilan-shared{padding:5px 14px 8px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.shared-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-right:4px;white-space:nowrap}
+
+/* ── Buff chip ── */
+.buff-chip{font-size:.6rem;font-weight:600;padding:2px 8px;border-radius:20px;border:1px solid;cursor:default;display:inline-flex;align-items:center;gap:4px}
+.team-badge{font-size:.48rem;font-weight:900;background:rgba(255,255,255,.18);border-radius:3px;padding:1px 3px;letter-spacing:.4px}
+
+/* ── Awakenings ── */
+.awk-area{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;padding:0 16px 14px}
+.awk-sec-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);display:flex;align-items:center;gap:8px;padding:8px 0}
+.awk-sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.awk-pairs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;min-height:0}
+.awk-pairs::-webkit-scrollbar{width:3px}
+.awk-pairs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.awk-pair-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:stretch}
+.awk{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden}
+.awk::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.awk.lv5::before{background:var(--gold)}
+.awk.lv7::before{background:#cc3355}
+.awk-head{display:flex;align-items:center;gap:6px;margin-bottom:9px;flex-wrap:wrap}
+.awk-lv{font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;color:var(--gold);border:1px solid rgba(212,164,74,.35);background:var(--gold-glow);border-radius:5px;padding:2px 8px}
+.awk-score{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid}
+.awk-modes{display:flex;gap:3px;margin-left:auto}
+.mode-pvp{font-size:.6rem;padding:2px 6px;border-radius:5px;font-weight:700;color:var(--pvp);background:rgba(192,64,64,.12);border:1px solid rgba(192,64,64,.3)}
+.mode-pve{font-size:.6rem;padding:2px 6px;border-radius:5px;font-weight:700;color:var(--pve);background:rgba(46,152,152,.12);border:1px solid rgba(46,152,152,.3)}
+.awk-desc{white-space:pre-line;font-size:.79rem;line-height:1.7;color:var(--text3);margin-bottom:8px}
+.awk-desc .vp{color:var(--text);font-weight:700}
+.awk-desc .vm{color:#ff8855;font-weight:700}
+.buff-list{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.awk-bar{display:flex;align-items:center;gap:8px}
+.awk-bar-track{flex:1;height:4px;background:var(--border);border-radius:3px;overflow:hidden}
+.awk-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.awk-bar-val{font-size:.62rem;font-weight:700;width:50px;text-align:right}
+
+/* ── Bottom bar ── */
+.bottom{height:42px;flex-shrink:0;background:var(--surface);border-top:1px solid var(--border2);display:flex;align-items:center;padding:0 16px;gap:10px}
+.bottom-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);flex-shrink:0}
+.bottom-hint{font-size:.78rem;color:var(--text2);flex:1;text-align:center}
+.bottom-name{font-size:.75rem;font-weight:700;min-width:80px;flex-shrink:0}
+.bottom-name.l{color:var(--left);text-align:right}
+.bottom-name.r{color:var(--right)}
+.bottom-bars{flex:1;display:flex;gap:2px;align-items:center}
+.bar-l{height:10px;border-radius:2px 0 0 2px;background:var(--left);opacity:.85;transition:width .5s}
+.bar-r{height:10px;border-radius:0 2px 2px 0;background:var(--right);opacity:.85;transition:width .5s}
+
+/* ── Mobile ── */
+@media(max-width:640px){
+  body{height:auto;overflow-y:auto}
+  .toggle-btn{display:flex}
+  .hhint{display:none}
+  .hsep{display:none}
+  .layout{flex-direction:column;overflow:visible}
+  .sidebar{width:100%;border-right:none;border-bottom:1px solid var(--border2);max-height:0;overflow:hidden;transition:max-height .32s ease;flex-shrink:0}
+  .sidebar.open{max-height:310px}
+  .monster-grid{grid-template-columns:repeat(4,1fr)}
+  .compare{overflow:visible;min-height:0}
+  .awk-area{overflow:visible;padding:0 10px 10px}
+  .awk-pairs{overflow:visible}
+  .heads{flex-direction:column;padding:10px 10px 0;gap:8px}
+  .hcard{max-width:100%!important}
+  .bilan{margin:8px 10px 6px}
+  .awk-pair-row{gap:6px}
+  .awk{padding:8px 10px}
+  .awk-desc{font-size:.72rem;line-height:1.5}
+  .bottom{height:auto;flex-wrap:wrap;padding:8px 12px;gap:5px}
+  .bottom-bars{min-width:100%;order:3}
+  .bottom-name.l{order:1;min-width:0;flex:1}
+  .bottom-name.r{order:2;min-width:0;flex:1;text-align:right}
+  .bilan-3col{padding:4px 10px 8px;gap:3px 4px}
+  .bilan-sec-hd{padding:6px 10px 0}
+  .bilan-shared{padding:4px 10px 8px}
+  .bilan-verdict{padding:8px 10px}
+}
+</style>
 </head>
-
 <body>
-  <script>
-    const IMAGES_PATH = "./images/";
-    const BUFFS = {
-      // --- OFFENSIF : ATK & DÉGÂTS ---
-      "atk_10": { label: "ATQ +10%", color: "#e05555", power: 10 },
-      "atk_25": { label: "ATQ +25%", color: "#ff4444", power: 22 },
-      "atk_100": { label: "ATQ +100% (Yang)", color: "#ff0000", power: 50 },
-      "dmg_20": { label: "Dégâts +20%", color: "#d06030", power: 18 },
-      "dmg_150": { label: "Dégâts +150% (Mago)", color: "#ff6600", power: 45 },
-      "dmg_aoe_scaling": { label: "Scaling Zone (Sekhmet)", color: "#ddaa66", power: 35 },
-      "dmg_buff_scaling": { label: "Dégâts / Nb Buffs", color: "#c8a830", power: 20 },
-      "dmg_debuff_scaling": { label: "Dégâts / Nb Debuffs", color: "#d07030", power: 20 },
-      "dmg_unique_target": { label: "Dégâts Cible Unique", color: "#cc5030", power: 15 },
 
-      // --- OFFENSIF : CRITS & COUPS ---
-      "crit_rate_10": { label: "Taux Crit +10%", color: "#c8a830", power: 10 },
-      "crit_dmg_10": { label: "Dég. Crit +10%", color: "#c8b840", power: 12 },
-      "crit_dmg_20": { label: "Dég. Crit +20%", color: "#c8b840", power: 18 },
-      "crush_rate_10": { label: "Coup Puissant +10%", color: "#e0a020", power: 12 },
-      "crush_dmg_20": { label: "Dég. Coup Puissant +20%", color: "#e0a020", power: 18 },
-      "double_hit_10": { label: "Coup Double +10%", color: "#cc70bb", power: 15 },
-      "double_hit_15": { label: "Coup Double +15%", color: "#cc70bb", power: 18 },
-      "triple_hit_10": { label: "Coup Triple +10%", color: "#aa60ee", power: 22 },
-      "no_crit_cd": { label: "Reset CD Attaque Crit", color: "#e0a020", power: 25 },
+<script>
+const IMAGES_PATH="./images/";
+const BUFFS={
+  // Offensif – ATQ & Dégâts
+  "atk_10":{label:"ATQ +10%",color:"#e05555",power:8},
+  "atk_25":{label:"ATQ +25%",color:"#ff4444",power:18},
+  "atk_100":{label:"ATQ +100% (Yang)",color:"#ff0000",power:42},
+  "dmg_20":{label:"Dégâts +20%",color:"#d06030",power:12},
+  "dmg_150":{label:"Dégâts +150% (Mago)",color:"#ff6600",power:50},
+  "dmg_aoe_scaling":{label:"Scaling Zone (Sekhmet)",color:"#ddaa66",power:32},
+  "dmg_buff_scaling":{label:"Dégâts / Nb Buffs",color:"#c8a830",power:22},
+  "dmg_debuff_scaling":{label:"Dégâts / Nb Debuffs",color:"#d07030",power:50},
+  "dmg_unique_target":{label:"Dégâts Cible Unique",color:"#cc5030",power:14},
+  // Crits & Coups
+  "crit_rate_10":{label:"Taux Crit +10%",color:"#c8a830",power:10},
+  "crit_dmg_10":{label:"Dég. Crit +10%",color:"#c8b840",power:10},
+  "crit_dmg_20":{label:"Dég. Crit +20%",color:"#c8b840",power:16},
+  "crush_rate_10":{label:"Coup Puissant +10%",color:"#e0a020",power:10},
+  "crush_dmg_20":{label:"Dég. Coup Puissant +20%",color:"#e0a020",power:16},
+  "double_hit_10":{label:"Coup Double +10%",color:"#cc70bb",power:14},
+  "double_hit_15":{label:"Coup Double +15%",color:"#cc70bb",power:18},
+  "triple_hit_10":{label:"Coup Triple +10%",color:"#aa60ee",power:22},
+  "no_crit_cd":{label:"Reset CD Attaque Crit",color:"#e0a020",power:30},
+  // Vitesse & Portée
+  "spd_10":{label:"Vit. ATQ +10%",color:"#e07832",power:8},
+  "spd_15":{label:"Vit. ATQ +15%",color:"#e07832",power:12},
+  "spd_30":{label:"Vit. ATQ +30%",color:"#e07832",power:22},
+  "spd_40":{label:"Vit. ATQ +40%",color:"#ff8800",power:28},
+  "spd_team_20":{label:"Vit. ATQ ALLIÉS +20%",color:"#ffcc33",power:40,team:true},
+  "range_3":{label:"Portée +3",color:"#50b890",power:18},
+  "range_6":{label:"Ultra Portée +6",color:"#22ccaa",power:32},
+  "aoe_range_30":{label:"Rayon Zone +30%",color:"#66ddaa",power:20},
+  "self_speed_up_200":{label:"Vit. Déplacement +200% (3s)",color:"#4488cc",power:18},
+  // Survie & Protection
+  "def_15":{label:"DEF +15%",color:"#4d8fd6",power:8},
+  "res_lp_30":{label:"Résist. Longue Portée -30%",color:"#4488aa",power:14},
+  "dmg_resist_10":{label:"Résist. Dégâts +10%",color:"#5588cc",power:17},
+  "dmg_resist_20_team":{label:"Résist. Dégâts ALLIÉS +20%",color:"#33ccff",power:35,team:true},
+  "dmg_resist_80":{label:"Résist. Dégâts +80% (God)",color:"#0044ff",power:42},
+  "shield_hits_3_team":{label:"Bouclier (3) ALLIÉS",color:"#6688ff",power:30,team:true},
+  "shield_hits_5":{label:"Bouclier (5)",color:"#4466cc",power:20},
+  "stealth_shield":{label:"Bouclier Invincible 3s",color:"#aa66dd",power:50},
+  "endurance_3s":{label:"Endurance (Anti-mort)",color:"#ff44aa",power:50},
+  "dodge_3s":{label:"Esquive Absolue 3s",color:"#60aaee",power:20},
+  // Utilitaire & Mécaniques
+  "cc_immune_team_30":{label:"Immunité CC ALLIÉS (30s)",color:"#44ddaa",power:55,team:true},
+  "cd_reset_start":{label:"Reset CD (Début)",color:"#3098c0",power:22},
+  "cd_reset_proc":{label:"Reset CD (Conditionnel)",color:"#00ffff",power:28},
+  "skill_accel_15":{label:"Accél. Compétences +15%",color:"#30b0d0",power:14},
+  "skill_accel_20":{label:"Accél. Compétences +20%",color:"#30b0d0",power:18},
+  "fox_fire":{label:"Feu du renard (Charge)",color:"#ff8c42",power:12},
+  "fox_fire_burst":{label:"Feu du renard (Burst x2)",color:"#ff6820",power:28},
+  "stealth":{label:"Furtivité",color:"#8855cc",power:16},
+  "strip_shield":{label:"Suppr. Bouclier ennemi",color:"#ee4444",power:18},
+  // Debuffs & Synergies
+  "bleed":{label:"Saignement",color:"#b02020",power:10},
+  "weak_point_detect":{label:"Détection Point Faible",color:"#ffaa44",power:14},
+  "weakness_element":{label:"Faiblesse Élémentaire",color:"#50aaee",power:16}
+};
 
-      // --- VITESSE & PORTÉE ---
-      "spd_10": { label: "Vit. ATQ +10%", color: "#e07832", power: 10 },
-      "spd_15": { label: "Vit. ATQ +15%", color: "#e07832", power: 14 },
-      "spd_30": { label: "Vit. ATQ +30%", color: "#e07832", power: 25 },
-      "spd_40": { label: "Vit. ATQ +40%", color: "#ff8800", power: 32 },
-      "spd_team_20": { label: "Vit. ATQ ALLIÉS +20%", color: "#ffcc33", power: 35 },
-      "range_3": { label: "Portée +3", color: "#50b890", power: 12 },
-      "range_6": { label: "Ultra Portée +6", color: "#22ccaa", power: 24 },
-      "aoe_range_30": { label: "Rayon Zone +30%", color: "#66ddaa", power: 18 },
+const AWK3={level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true,power:0};
 
-      // --- SURVIE & PROTECTION ---
-      "def_15": { label: "DEF +15%", color: "#4d8fd6", power: 10 },
-      "res_lp_30": { label: "Résist. Longue Portée -30%", color: "#4488aa", power: 15 },
-      "dmg_resist_10": { label: "Résist. Dégâts +10%", color: "#5588cc", power: 12 },
-      "dmg_resist_20_team": { label: "Résist. Dégâts ALLIÉS +20%", color: "#33ccff", power: 30 },
-      "dmg_resist_80": { label: "Résist. Dégâts +80% (God)", color: "#0044ff", power: 45 },
-      "shield_hits_3_team": { label: "Bouclier (3) ALLIÉS", color: "#6688ff", power: 28 },
-      "shield_hits_5": { label: "Bouclier (5)", color: "#4466cc", power: 15 },
-      "stealth_shield": { label: "Bouclier Invincible", color: "#aa66dd", power: 25 },
-      "endurance_3s": { label: "Endurance (Anti-mort)", color: "#ff44aa", power: 24 },
-      "dodge_3s": { label: "Esquive Absolue 3s", color: "#60aaee", power: 22 },
+const MONSTERS={
+  "Craka":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- ATQ +10% (cumulable). \n- Réduc. dégâts longue portée -30% (suppression impossible, cumulable). \n- Chaque application de saignement accorde à un allié « Détection point faible – Saignement 10% » pendant 10s (cumulable).",buffs:["atk_10","res_lp_30","bleed","weak_point_detect"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie : \n- Applique « Point faible – Saignement 15% » 10s (suppression impossible, cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["bleed","dmg_20"],pvp:true,pve:false}]},
+  "Mago":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Esquive absolue 3s. \n- ATQ +10% (suppression impossible, cumulable). \n- Sous Furtivité : Taux de coup puissant +10% pendant 3s (suppression impossible, cumulable).",buffs:["dodge_3s","atk_10","stealth","crush_rate_10"],pvp:true,pve:false},
+    {level:7,desc:"Sous Furtivité : \n- Dégâts infligés +150% pendant 3s (suppression impossible, cumulable). \n- Attaque réussie : Dégâts des coups puissants +20% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["dmg_150","crush_dmg_20","dmg_20","stealth"],pvp:true,pve:false}]},
+  "Grogen":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Coup puissant réussi : \n- Accélération des compétences +20% pendant 2s (cumulable).",buffs:["skill_accel_20"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie : \n- Efficacité des effets de contrôle +20% et Dégâts sur cibles pétrifiées +20% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["dmg_20"],pvp:true,pve:false}]},
+  "Sabrina":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Portée +3 et Vitesse d'attaque +15% (suppression impossible, cumulable).",buffs:["range_3","spd_15"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie : \n- Taux de coups triples +10% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["triple_hit_10","dmg_20"],pvp:true,pve:true}]},
+  "Jagger":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Bouclier d'invincibilité + Vit. déplacement +200% pendant 3s (cumulable). \n- ATQ +10%, DEF +15%, Réduc. dégâts longue portée -30% (suppression impossible, cumulable).",buffs:["stealth_shield","atk_10","def_15","res_lp_30"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie : \n- Dégâts critiques +20% pendant 10s (cumulable). \n- Dégâts bonus selon le nombre de buffs actifs (max 30). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["crit_dmg_20","dmg_buff_scaling","dmg_20"],pvp:true,pve:false}]},
+  "Theomars":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Portée +3 (suppression impossible, cumulable). \n- Chaque effet cumulable appliqué à un ennemi : Dégâts critiques +10% pendant 20s (cumulable).",buffs:["range_3","crit_dmg_10"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie : \n- Accorde aux alliés Trace de givre 15% pendant 10s + Taux de coups puissants +10% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["weakness_element","crush_rate_10","dmg_20"],pvp:true,pve:false}]},
+  "Laima":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Portée +3 et Accélération compétences +15% (suppression impossible, cumulable).",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie : \n- Taux critique +10% et Dégâts critiques +20% pendant 5s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["crit_rate_10","crit_dmg_20","dmg_20"],pvp:true,pve:true}]},
+  "Trinity":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Bouclier à compte (5 fois) + Dégâts critiques +20% (suppression impossible, cumulable). \n- Coup puissant réussi : Dégâts de zone reçus +10% sur l'ennemi pendant 2s (cumulable).",buffs:["shield_hits_5","crit_dmg_20"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie : \n- Dégâts critiques reçus +10% sur l'ennemi pendant 10s (cumulable). \n- Dégâts bonus selon le nombre de debuffs sur la cible (max 15). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["dmg_debuff_scaling","dmg_20"],pvp:true,pve:false}]},
+  "Anavel":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Portée +3 et Taux critique +10% (suppression impossible, cumulable).",buffs:["range_3","crit_rate_10"],pvp:true,pve:true},
+    {level:7,desc:"Début de combat : \n- Portée +3 et Taux critique +10% (suppression impossible, cumulable). \n- Attaque réussie : Accorde aux alliés Faiblesse Congélation 10% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["range_6","crit_rate_10","weakness_element","dmg_20"],pvp:true,pve:true}]},
+  "Melissa":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat : \n- Vitesse d'attaque +15% (suppression impossible, cumulable). \n- Bouclier à compte (5 fois).",buffs:["spd_15","shield_hits_5"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie : \n- Taux de coups doubles +15% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["double_hit_15","dmg_20"],pvp:true,pve:false}]},
+  "Soha":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Au début du combat, attribue à soi-même un effet bénéfique d'augmentation de la portée de 3 et d'augmentation des dégâts critiques de 20%. (Suppression impossible, effet cumulable)\nEn cas de coup puissant réussi, charge 1 Feu du renard.",buffs:["range_3","crit_dmg_20","fox_fire"],pvp:true,pve:false},
+    {level:7,desc:"En cas d'attaque réussie :\n- Augmentation du taux de coups puissants de 10% à soi-même pendant 10 sec. (Effet cumulable)\n- À chaque coup réussi, charge un Feu du renard durant 10 sec. Lorsque 20 charges sont accumulées, utilise la compétence critique 2 fois.\n- Les dégâts infligés par le monstre augmentent de 20%. (Suppression impossible, effet cumulable)",buffs:["crush_rate_10","dmg_20","fox_fire_burst"],pvp:true,pve:false}]},
+  "Artamiel":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- ATQ +10% pendant 10s (cumulable).\n- 10s après le début du combat : ATQ +25% supplémentaires pendant 10s (cumulable).",buffs:["atk_10","atk_25"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie :\n- Résistance aux dégâts +80% pendant 2s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["dmg_resist_80","dmg_20"],pvp:true,pve:false}]},
+  "Tsuyuha":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Lors de dégâts mortels : Bouclier Endurance 3s (CD : 30s).\nDébut de combat :\n- Taux de coups puissants +10% (suppression impossible, cumulable).\n- Coup puissant réussi : Réduit le temps de pause de la compétence exclusive de 10% (1 fois / 2s).",buffs:["endurance_3s","crush_rate_10"],pvp:true,pve:false},
+    {level:7,desc:"Si la cible subit une réduction de DEF : Réinitialise le temps de pause de la compétence exclusive.\nAttaque réussie :\n- Taux de coups puissants +10% pendant 5s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["cd_reset_proc","crush_rate_10","dmg_20"],pvp:true,pve:false}]},
+  "Barbara":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Esquive absolue + Giclée pendant 3s.\n- Taux critique +10% (suppression impossible, cumulable).",buffs:["dodge_3s","crit_rate_10"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie :\n- Supprime les effets de bouclier ennemis.\n- Vitesse d'attaque +40% pendant 1s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["strip_shield","spd_40","dmg_20"],pvp:true,pve:false}]},
+  "Brandia":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Portée +3 et Taux de coups puissants +10% (suppression impossible, cumulable).",buffs:["range_3","crush_rate_10"],pvp:true,pve:true},
+    {level:7,desc:"Inflige des dégâts supplémentaires aux cibles uniques.\nAttaque réussie :\n- Dégâts des coups puissants +20% pendant 10s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["dmg_unique_target","crush_dmg_20","dmg_20"],pvp:true,pve:true}]},
+  "Zeratu":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Taux de coups puissants +10% (suppression impossible, cumulable).\n- Vitesse d'attaque +30% pendant 15s (cumulable).",buffs:["crush_rate_10","spd_30"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie :\n- Supprime le temps de pause des attaques critiques pendant 4s.\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["no_crit_cd","dmg_20"],pvp:true,pve:false}]},
+  "Astar":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Réduc. dégâts longue portée -30% et Vitesse d'attaque +10% (suppression impossible, cumulable).\n- Coup puissant réussi : Charge 1 cumul de Happy box pendant 20s (CD : 2s).",buffs:["res_lp_30","spd_10"],pvp:true,pve:true},
+    {level:7,desc:"À chaque coup porté : Charge 1 cumul de Merry box pendant 20s. À 5 cumuls : confère aux alliés Coup puissant +10%, Dég. puissants +10% et ATQ +10% pendant 4s (cumulable).\nCoup puissant réussi : Charge 1 cumul de Happy box pendant 20s (CD : 2s).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["atk_10","crush_rate_10","crush_dmg_20","dmg_20"],pvp:true,pve:true}]},
+  "Dusky":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Portée +3 et Taux de coups doubles +10% (suppression impossible, cumulable).\n- À chaque application de Brûlure : Accorde à un allié Détection de point faible – Brûlure 10% pendant 10s (cumulable).",buffs:["range_3","double_hit_10","weak_point_detect"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie :\n- Applique Faiblesse aux brûlures pendant 10s sur l'ennemi.\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["weakness_element","dmg_20"],pvp:true,pve:false}]},
+  "Belle":{image:"",type:"melee",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Rockstar I (suppression impossible).\n- Bouclier d'invincibilité pendant 3s.",buffs:["stealth_shield"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie :\n- Vitesse d'attaque des alliés +20% pendant 2s (cumulable).\n- Lorsqu'elle reçoit Rockstar II alors qu'elle le possède déjà : Rockstar III pendant 2s.\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["spd_team_20","dmg_20"],pvp:true,pve:false}]},
+  "Shazam":{image:"",type:"tank",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Accorde à tous les alliés un Bouclier à compte (3 fois).\n- Résistance aux dégâts +10% à soi-même (suppression impossible, cumulable).",buffs:["shield_hits_3_team","dmg_resist_10"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie :\n- Applique Dégâts critiques reçus niv.5 +10% sur l'ennemi pendant 10s.\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["dmg_20"],pvp:true,pve:false}]},
+  "Elenoa":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Portée +3 et Taux critique +10% (suppression impossible, cumulable).\n- À chaque application d'Empoisonnement : Accorde à un allié Détection de point faible – Empoisonnement 10% pendant 10s (cumulable).",buffs:["range_3","crit_rate_10","weak_point_detect"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie :\n- Applique Faiblesse à l'empoisonnement 15% pendant 10s sur l'ennemi (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["weakness_element","dmg_20"],pvp:true,pve:false}]},
+  "Harmonia":{image:"",type:"support",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Immunité aux contrôles aux alliés pendant 30s.",buffs:["cc_immune_team_30"],pvp:true,pve:false},
+    {level:7,desc:"Attaque réussie :\n- Taux critique +10% à soi-même pendant 10s (cumulable).\n- Résistance aux dégâts +20% aux alliés pendant 10s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["crit_rate_10","dmg_resist_20_team","dmg_20"],pvp:true,pve:false}]},
+  "Seimei":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Portée +3 et Accélération compétences +15% (suppression impossible, cumulable).",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},
+    {level:7,desc:"À chaque attaque : Charge 1 cumul d'Énergie Yang pendant 20s. À 10 cumuls : ATQ +100% pendant 4s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["atk_100","dmg_20"],pvp:true,pve:false}]},
+  "Sekhmet":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Portée +3 et Rayon des dégâts de zone +30% (suppression impossible, cumulable).",buffs:["range_3","aoe_range_30"],pvp:false,pve:true},
+    {level:7,desc:"Attaque réussie :\n- Accélération compétences +15% pendant 10s (cumulable).\n- Dégâts +30% par ennemi touché (max 10 ennemis).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["skill_accel_15","dmg_aoe_scaling","dmg_20"],pvp:false,pve:true}]},
+  "Zeta-06":{image:"",type:"range",awakenings:[AWK3,
+    {level:5,desc:"Début de combat :\n- Portée +3 et Accélération compétences +15% (suppression impossible, cumulable).",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},
+    {level:7,desc:"Attaque réussie :\n- Dégâts des coups puissants +20% (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).",buffs:["crush_dmg_20","dmg_20"],pvp:true,pve:false}]}
+};
+</script>
 
-      // --- UTILITAIRE & MÉCANIQUES ---
-      "cc_immune_team_30": { label: "Immunité CC ALLIÉS (30s)", color: "#44ddaa", power: 55 },
-      "cd_reset_start": { label: "Reset CD (Début)", color: "#3098c0", power: 25 },
-      "cd_reset_proc": { label: "Reset CD (Conditionnel)", color: "#00ffff", power: 30 },
-      "skill_accel_15": { label: "Accél. Compétences +15%", color: "#30b0d0", power: 15 },
-      "skill_accel_20": { label: "Accél. Compétences +20%", color: "#30b0d0", power: 20 },
-      "fox_fire": { label: "Feu du renard (Charge)", color: "#ff8c42", power: 15 },
-      "fox_fire_burst": { label: "Feu du renard (Burst x2)", color: "#ff6820", power: 35 },
-      "stealth": { label: "Furtivité", color: "#8855cc", power: 18 },
-      "strip_shield": { label: "Suppr. Bouclier ennemi", color: "#ee4444", power: 20 },
+<header>
+  <div class="logo">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 2L8 8H2l5 4-2 7 7-4 7 4-2-7 5-4h-6z"/>
+    </svg>
+    <span class="logo-text">SW RUSH · COMPARATEUR</span>
+  </div>
+  <div class="hsep"></div>
+  <span class="hhint">Sélectionnez deux monstres pour les comparer</span>
+  <button class="toggle-btn" id="toggleSidebar" onclick="toggleSidebar()">
+    <svg class="arr" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    <span id="toggleLbl">Sélectionner</span>
+  </button>
+</header>
 
-      // --- DEBUFFS & SYNERGIES ---
-      "bleed": { label: "Saignement", color: "#b02020", power: 12 },
-      "weak_point_detect": { label: "Détection Point Faible", color: "#ffaa44", power: 15 },
-      "weakness_element": { label: "Faiblesse Elémentaire", color: "#50aaee", power: 18 }
-    };
-    const AWK3 = { level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: ["cd_reset"], pvp: true, pve: true, power : 50 };
-    const MONSTERS = {
-      "Craka": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- ATQ +10% (cumulable). \n- Réduc. dégâts longue portée -30% (suppression impossible, cumulable). \n- Chaque application de saignement accorde à un allié « Détection point faible – Saignement 10% » pendant 10s (cumulable).", buffs: ["atk_10", "res_lp_30", "bleed", "weak_point_detect"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie : \n- Applique « Point faible – Saignement 15% » 10s (suppression impossible, cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["bleed", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Mago": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Esquive absolue 3s. \n- ATQ +10% (suppression impossible, cumulable). \n- Sous Furtivité : Taux de coup puissant +10% pendant 3s (suppression impossible, cumulable).", buffs: ["dodge_3s", "atk_10", "stealth", "crush_rate_10"], pvp: true, pve: false },
-          { level: 7, desc: "Sous Furtivité : \n- Dégâts infligés +150% pendant 3s (suppression impossible, cumulable). \n- Attaque réussie : Dégâts des coups puissants +20% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["dmg_150", "crush_dmg_20", "dmg_20", "stealth"], pvp: true, pve: false }
-        ]
-      },
-      "Grogen": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Coup puissant réussi : \n- Accélération des compétences +20% pendant 2s (cumulable).", buffs: ["skill_accel_20"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie : \n- Efficacité des effets de contrôle +20% et Dégâts sur cibles pétrifiées +20% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Sabrina": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Portée +3 et Vitesse d'attaque +15% (suppression impossible, cumulable).", buffs: ["range_3", "spd_15"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie : \n- Taux de coups triples +10% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["triple_hit_10", "dmg_20"], pvp: true, pve: true }
-        ]
-      },
-      "Jagger": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Bouclier d'invincibilité + Vit. déplacement +200% pendant 3s (cumulable). \n- ATQ +10%, DEF +15%, Réduc. dégâts longue portée -30% (suppression impossible, cumulable).", buffs: ["stealth_shield", "atk_10", "def_15", "res_lp_30"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie : \n- Dégâts critiques +20% pendant 10s (cumulable). \n- Dégâts bonus selon le nombre de buffs actifs (max 30). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["crit_dmg_20", "dmg_buff_scaling", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Theomars": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Portée +3 (suppression impossible, cumulable). \n- Chaque effet cumulable appliqué à un ennemi : Dégâts critiques +10% pendant 20s (cumulable).", buffs: ["range_3", "crit_dmg_10"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie : \n- Accorde aux alliés Trace de givre 15% pendant 10s + Taux de coups puissants +10% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["weakness_element", "crush_rate_10", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Laima": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Portée +3 et Accélération compétences +15% (suppression impossible, cumulable).", buffs: ["range_3", "skill_accel_15"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie : \n- Taux critique +10% et Dégâts critiques +20% pendant 5s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["crit_rate_10", "crit_dmg_20", "dmg_20"], pvp: true, pve: true }
-        ]
-      },
-      "Trinity": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Bouclier à compte (5 fois) + Dégâts critiques +20% (suppression impossible, cumulable). \n- Coup puissant réussi : Dégâts de zone reçus +10% sur l'ennemi pendant 2s (cumulable).", buffs: ["shield_hits_5", "crit_dmg_20"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie : \n- Dégâts critiques reçus +10% sur l'ennemi pendant 10s (cumulable). \n- Dégâts bonus selon le nombre de debuffs sur la cible (max 15). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["dmg_debuff_scaling", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Anavel": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Portée +3 et Taux critique +10% (suppression impossible, cumulable).", buffs: ["range_3", "crit_rate_10"], pvp: true, pve: true },
-          { level: 7, desc: "Début de combat : \n- Portée +3 et Taux critique +10% (suppression impossible, cumulable). \n- Attaque réussie : Accorde aux alliés Faiblesse Congélation 10% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["range_6", "crit_rate_10", "weakness_element", "dmg_20"], pvp: true, pve: true }
-        ]
-      },
-      "Melissa": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat : \n- Vitesse d'attaque +15% (suppression impossible, cumulable). \n- Bouclier à compte (5 fois).", buffs: ["spd_15", "shield_hits_5"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie : \n- Taux de coups doubles +15% pendant 10s (cumulable). \n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["double_hit_15", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Soha": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Au début du combat, attribue à soi-même un effet bénéfique d'augmentation de la portée de 3 et d'augmentation des dégâts critiques de 20%. (Suppression impossible, effet cumulable)\nEn cas de coup puissant réussi, charge 1 Feu du renard.", buffs: ["range_3", "crit_dmg_20", "fox_fire"], pvp: true, pve: false },
-          { level: 7, desc: "En cas d'attaque réussie :\n- Augmentation du taux de coups puissants de 10% à soi-même pendant 10 sec. (Effet cumulable)\n- À chaque coup réussi, charge un Feu du renard durant 10 sec. Lorsque 20 charges sont accumulées, utilise la compétence critique 2 fois.\n- Les dégâts infligés par le monstre augmentent de 20%. (Suppression impossible, effet cumulable)", buffs: ["crush_rate_10", "dmg_20", "fox_fire_burst"], pvp: true, pve: false }
-        ]
-      },
-      "Artamiel": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- ATQ +10% pendant 10s (cumulable).\n- 10s après le début du combat : ATQ +25% supplémentaires pendant 10s (cumulable).", buffs: ["atk_10", "atk_25"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie :\n- Résistance aux dégâts +80% pendant 2s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["dmg_resist_80", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Tsuyuha": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Lors de dégâts mortels : Bouclier Endurance 3s (CD : 30s).\nDébut de combat :\n- Taux de coups puissants +10% (suppression impossible, cumulable).\n- Coup puissant réussi : Réduit le temps de pause de la compétence exclusive de 10% (1 fois / 2s).", buffs: ["endurance_3s", "crush_rate_10"], pvp: true, pve: false },
-          { level: 7, desc: "Si la cible subit une réduction de DEF : Réinitialise le temps de pause de la compétence exclusive.\nAttaque réussie :\n- Taux de coups puissants +10% pendant 5s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["cd_reset_proc", "crush_rate_10", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Barbara": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Esquive absolue + Giclée pendant 3s.\n- Taux critique +10% (suppression impossible, cumulable).", buffs: ["dodge_3s", "crit_rate_10"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie :\n- Supprime les effets de bouclier ennemis.\n- Vitesse d'attaque +40% pendant 1s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["strip_shield", "spd_40", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Brandia": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Portée +3 et Taux de coups puissants +10% (suppression impossible, cumulable).", buffs: ["range_3", "crush_rate_10"], pvp: true, pve: true },
-          { level: 7, desc: "Inflige des dégâts supplémentaires aux cibles uniques.\nAttaque réussie :\n- Dégâts des coups puissants +20% pendant 10s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["dmg_unique_target", "crush_dmg_20", "dmg_20"], pvp: true, pve: true }
-        ]
-      },
-      "Zeratu": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Taux de coups puissants +10% (suppression impossible, cumulable).\n- Vitesse d'attaque +30% pendant 15s (cumulable).", buffs: ["crush_rate_10", "spd_30"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie :\n- Supprime le temps de pause des attaques critiques pendant 4s.\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["no_crit_cd", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Astar": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Réduc. dégâts longue portée -30% et Vitesse d'attaque +10% (suppression impossible, cumulable).\n- Coup puissant réussi : Charge 1 cumul de Happy box pendant 20s (CD : 2s).", buffs: ["res_lp_30", "spd_10"], pvp: true, pve: true },
-          { level: 7, desc: "À chaque coup porté : Charge 1 cumul de Merry box pendant 20s. À 5 cumuls : confère aux alliés Coup puissant +10%, Dég. puissants +10% et ATQ +10% pendant 4s (cumulable).\nCoup puissant réussi : Charge 1 cumul de Happy box pendant 20s (CD : 2s).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["atk_10", "crush_rate_10", "crush_dmg_20", "dmg_20"], pvp: true, pve: true }
-        ]
-      },
-      "Dusky": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Portée +3 et Taux de coups doubles +10% (suppression impossible, cumulable).\n- À chaque application de Brûlure : Accorde à un allié Détection de point faible – Brûlure 10% pendant 10s (cumulable).", buffs: ["range_3", "double_hit_10", "weak_point_detect"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie :\n- Applique Faiblesse aux brûlures pendant 10s sur l'ennemi.\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["weakness_element", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Belle": {
-        image: "", type: "melee",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Rockstar I (suppression impossible).\n- Bouclier d'invincibilité pendant 3s.", buffs: ["stealth_shield"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie :\n- Vitesse d'attaque des alliés +20% pendant 2s (cumulable).\n- Lorsqu'elle reçoit Rockstar II alors qu'elle le possède déjà : Rockstar III pendant 2s.\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["spd_team_20", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Shazam": {
-        image: "", type: "tank",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Accorde à tous les alliés un Bouclier à compte (3 fois).\n- Résistance aux dégâts +10% à soi-même (suppression impossible, cumulable).", buffs: ["shield_hits_3_team", "dmg_resist_10"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie :\n- Applique Dégâts critiques reçus niv.5 +10% sur l'ennemi pendant 10s.\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Elenoa": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Portée +3 et Taux critique +10% (suppression impossible, cumulable).\n- À chaque application d'Empoisonnement : Accorde à un allié Détection de point faible – Empoisonnement 10% pendant 10s (cumulable).", buffs: ["range_3", "crit_rate_10", "weak_point_detect"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie :\n- Applique Faiblesse à l'empoisonnement 15% pendant 10s sur l'ennemi (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["weakness_element", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Harmonia": {
-        image: "", type: "support",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Immunité aux contrôles aux alliés pendant 30s.", buffs: ["cc_immune_team_30"], pvp: true, pve: false },
-          { level: 7, desc: "Attaque réussie :\n- Taux critique +10% à soi-même pendant 10s (cumulable).\n- Résistance aux dégâts +20% aux alliés pendant 10s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["crit_rate_10", "dmg_resist_20_team", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Seimei": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Portée +3 et Accélération compétences +15% (suppression impossible, cumulable).", buffs: ["range_3", "skill_accel_15"], pvp: true, pve: true },
-          { level: 7, desc: "À chaque attaque : Charge 1 cumul d'Énergie Yang pendant 20s. À 10 cumuls : ATQ +100% pendant 4s (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["atk_100", "dmg_20"], pvp: true, pve: false }
-        ]
-      },
-      "Sekhmet": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Portée +3 et Rayon des dégâts de zone +30% (suppression impossible, cumulable).", buffs: ["range_3", "aoe_range_30"], pvp: false, pve: true },
-          { level: 7, desc: "Attaque réussie :\n- Accélération compétences +15% pendant 10s (cumulable).\n- Dégâts +30% par ennemi touché (max 10 ennemis).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["skill_accel_15", "dmg_aoe_scaling", "dmg_20"], pvp: false, pve: true }
-        ]
-      },
-      "Zeta-06": {
-        image: "", type: "range",
-        awakenings: [AWK3,
-          { level: 5, desc: "Début de combat :\n- Portée +3 et Accélération compétences +15% (suppression impossible, cumulable).", buffs: ["range_3", "skill_accel_15"], pvp: true, pve: true },
-          { level: 7, desc: "Attaque réussie :\n- Dégâts des coups puissants +20% (cumulable).\n- Dégâts infligés +20% (suppression impossible, cumulable).", buffs: ["crush_dmg_20", "dmg_20"], pvp: true, pve: false }
-        ]
-      }
-    };
-  </script>
-
-  <header>
-    <div class="logo">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 2L8 8H2l5 4-2 7 7-4 7 4-2-7 5-4h-6z" />
-      </svg>
-      <span class="logo-text">SW RUSH · COMPARATEUR</span>
-    </div>
-    <div class="hsep"></div>
-    <span class="hhint">Sélectionnez deux monstres pour les comparer</span>
-  </header>
-
-  <div class="layout">
-    <div class="sidebar">
-      <div class="search-box">
-        <div class="search-inner">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <input id="searchInput" type="text" placeholder="Rechercher…" oninput="buildGrid()">
-        </div>
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="search-box">
+      <div class="search-inner">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="text" placeholder="Rechercher…" oninput="buildGrid()">
       </div>
-      <div class="type-filter" id="typeFilter">
-        <button class="tf all active-all" data-type="">Tous</button>
-        <button class="tf" data-type="melee">Mêlée</button>
-        <button class="tf" data-type="tank">Tank</button>
-        <button class="tf" data-type="range">Range</button>
-        <button class="tf" data-type="support">Support</button>
-      </div>
-      <div class="monster-grid" id="monsterGrid"></div>
     </div>
-
-    <div class="compare" id="compare">
-      <div class="empty-state">
-        <div class="empty-ring"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="1.5">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="16" />
-            <line x1="8" y1="12" x2="16" y2="12" />
-          </svg></div>
-        Sélectionnez un monstre dans la grille
-      </div>
-      <div class="bottom" id="bottom"><span class="bottom-hint">Sélectionnez deux monstres pour comparer</span></div>
+    <div class="type-filter" id="typeFilter">
+      <button class="tf all active-all" data-type="">Tous</button>
+      <button class="tf" data-type="melee">Mêlée</button>
+      <button class="tf" data-type="tank">Tank</button>
+      <button class="tf" data-type="range">Range</button>
+      <button class="tf" data-type="support">Support</button>
     </div>
+    <div class="monster-grid" id="monsterGrid"></div>
   </div>
 
-  <script>
-    // ── Score helpers ───────────────────────────────────────────
-    function rgb(h) { return `${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)}` }
-    function awkRaw(a) { return (a.buffs || []).reduce((s, id) => s + (BUFFS[id] ? BUFFS[id].power : 0), 0) }
-    const MAX_AWK = Math.max(...Object.values(MONSTERS).flatMap(m => (m.awakenings || []).map(a => awkRaw(a))));
-    function awkPts(a) { return Math.round(awkRaw(a) / MAX_AWK * 100) }
-    function totalPts(m) { return (m.awakenings || []).reduce((s, a) => s + awkPts(a), 0) }
-    const MAX_TOTAL = 300;
-    function scoreCol(r) { return r >= .7 ? '#52b86a' : r >= .4 ? '#d4a44a' : '#c44040' }
-    function scoreGrad(r) { return r >= .7 ? 'linear-gradient(90deg,#287030,#52b86a)' : r >= .4 ? 'linear-gradient(90deg,#7a5010,#d4a44a)' : 'linear-gradient(90deg,#702020,#c44040)' }
-    function hDesc(t) { return t.replace(/(\+\d+(?:,\d+)?%)/g, '<span class="vp">$1</span>').replace(/(-\d+(?:,\d+)?%)/g, '<span class="vm">$1</span>') }
-    function chips(ids) { return (ids || []).map(id => { const b = BUFFS[id]; if (!b) return ''; return `<span class="buff-chip" style="color:${b.color};border-color:${b.color};background:rgba(${rgb(b.color)},.12)">${b.label}</span>` }).join('') }
-    function allBuffsOf(name) { const s = new Set(), o = []; (MONSTERS[name].awakenings || []).forEach(a => (a.buffs || []).forEach(b => { if (BUFFS[b] && !s.has(b)) { s.add(b); o.push(b); } })); return o; }
-    const ROLE = { melee: { label: 'Mêlée', cls: 'pill-melee' }, tank: { label: 'Tank', cls: 'pill-tank' }, range: { label: 'Range', cls: 'pill-range' }, support: { label: 'Support', cls: 'pill-support' } };
-    const ROLE_DESC = { melee: 'Corps-à-corps', tank: 'Ligne de front', range: 'À distance', support: 'Soutien' };
-    function lvCls(lv) { return lv === 3 ? 'lv3' : lv === 5 ? 'lv5' : 'lv7' }
-    function chk(col) { return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${col}" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` }
+  <div class="compare" id="compare">
+    <div class="empty-state">
+      <div class="empty-ring"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+      Sélectionnez un monstre dans la grille
+    </div>
+    <div class="bottom" id="bottom"><span class="bottom-hint">Sélectionnez deux monstres pour comparer</span></div>
+  </div>
+</div>
 
-    // ── State ───────────────────────────────────────────────────
-    let sel = { left: null, right: null }, nextSlot = 'left', activeType = '';
+<script>
+// ── Score helpers ───────────────────────────────────────────
+function rgb(h){return`${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`}
 
-    // ── Render ──────────────────────────────────────────────────
-    function renderContent() {
-      const cmp = document.getElementById('compare');
-      const bot = document.getElementById('bottom');
-      if (!sel.left && !sel.right) {
-        cmp.innerHTML = `<div class="empty-state"><div class="empty-ring"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>Sélectionnez un monstre dans la grille</div><div class="bottom" id="bottom"><span class="bottom-hint">Sélectionnez deux monstres pour comparer</span></div>`;
-        return;
-      }
-      if (sel.left && !sel.right) { cmp.innerHTML = renderSingle(sel.left) + '<div class="bottom" id="bottom"><span class="bottom-hint">Sélectionnez un 2ème monstre</span></div>'; return; }
-      if (!sel.left && sel.right) { cmp.innerHTML = renderSingle(sel.right) + '<div class="bottom" id="bottom"><span class="bottom-hint">Sélectionnez un 2ème monstre</span></div>'; return; }
-      cmp.innerHTML = renderDuo(sel.left, sel.right);
-      // bottom bar
-      const lp = totalPts(MONSTERS[sel.left]), rp = totalPts(MONSTERS[sel.right]);
-      const mx = Math.max(lp, rp) || 1, lw = Math.round(lp / mx * 46), rw = Math.round(rp / mx * 46);
-      document.getElementById('bottom').innerHTML = `<span class="bottom-label">Score</span>
-    <span class="bottom-name l">${sel.left} <span style="font-size:.62rem;opacity:.6;font-weight:400">${lp} pts</span></span>
-    <div class="bottom-bars"><div class="bar-l" style="width:${lw}%"></div><div class="bar-r" style="width:${rw}%"></div></div>
-    <span class="bottom-name r">${sel.right} <span style="font-size:.62rem;opacity:.6;font-weight:400">${rp} pts</span></span>`;
-    }
+// Exclude AWK3 everywhere
+function awkRaw(a){return(a.buffs||[]).reduce((s,id)=>s+(BUFFS[id]?BUFFS[id].power:0),0)}
+const MAX_AWK=Math.max(...Object.values(MONSTERS).flatMap(m=>(m.awakenings||[]).filter(a=>a.level!==3).map(awkRaw)));
+function awkPts(a){return Math.round(awkRaw(a)/MAX_AWK*100)}
+function totalPts(m){return(m.awakenings||[]).filter(a=>a.level!==3).reduce((s,a)=>s+awkPts(a),0)}
+const MAX_TOTAL=200;
 
-    function renderSingle(name) {
-      const m = MONSTERS[name], tot = totalPts(m), r = tot / MAX_TOTAL, c = scoreCol(r), g = scoreGrad(r), role = ROLE[m.type] || { label: m.type, cls: '' };
-      let awks = ''; (m.awakenings || []).forEach(a => {
-        const pts = awkPts(a), ar = pts / 100, ac = scoreCol(ar), ag = scoreGrad(ar);
-        awks += `<div class="awk ${lvCls(a.level)}">
-      <div class="awk-head"><span class="awk-lv">Éveil ${a.level}</span><span class="awk-score" style="color:${ac};border-color:${ac};background:rgba(${rgb(ac)},.1)">⚡ ${pts} pts</span><div class="awk-modes">${a.pvp ? '<span class="mode-pvp">PvP</span>' : ''}${a.pve ? '<span class="mode-pve">PvE</span>' : ''}</div></div>
+function modeScore(m,mode){return(m.awakenings||[]).filter(a=>a.level!==3&&a[mode]).reduce((s,a)=>s+awkPts(a),0)}
+
+function scoreCol(r){return r>=.7?'#52b86a':r>=.4?'#d4a44a':'#c44040'}
+function scoreGrad(r){return r>=.7?'linear-gradient(90deg,#287030,#52b86a)':r>=.4?'linear-gradient(90deg,#7a5010,#d4a44a)':'linear-gradient(90deg,#702020,#c44040)'}
+function hDesc(t){return t.replace(/(\+\d+(?:,\d+)?%)/g,'<span class="vp">$1</span>').replace(/(-\d+(?:,\d+)?%)/g,'<span class="vm">$1</span>')}
+
+function chips(ids){
+  return(ids||[]).map(id=>{
+    const b=BUFFS[id];if(!b)return'';
+    const team=b.team?'<span class="team-badge">TEAM</span>':'';
+    return`<span class="buff-chip" style="color:${b.color};border-color:${b.color};background:rgba(${rgb(b.color)},.12)">${b.label}${team}</span>`
+  }).join('')
+}
+
+function allBuffsOf(name){
+  const s=new Set(),o=[];
+  (MONSTERS[name].awakenings||[]).filter(a=>a.level!==3).forEach(a=>(a.buffs||[]).forEach(b=>{if(BUFFS[b]&&!s.has(b)){s.add(b);o.push(b)}}));
+  return o;
+}
+
+const ROLE={melee:{label:'Mêlée',cls:'pill-melee'},tank:{label:'Tank',cls:'pill-tank'},range:{label:'Range',cls:'pill-range'},support:{label:'Support',cls:'pill-support'}};
+const ROLE_DESC={melee:'Corps-à-corps',tank:'Ligne de front',range:'À distance',support:'Soutien'};
+function lvCls(lv){return lv===5?'lv5':'lv7'}
+function chk(col){return`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${col}" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`}
+
+// ── Mobile toggle ───────────────────────────────────────────
+function toggleSidebar(){
+  const s=document.getElementById('sidebar'),b=document.getElementById('toggleSidebar');
+  s.classList.toggle('open');b.classList.toggle('open');
+}
+function updateToggleLbl(){
+  const n=(sel.left?1:0)+(sel.right?1:0);
+  const el=document.getElementById('toggleLbl');
+  if(el)el.textContent=n>0?`${n}/2 sélectionnés`:'Sélectionner';
+}
+
+// ── State ───────────────────────────────────────────────────
+let sel={left:null,right:null},nextSlot='left',activeType='';
+
+// ── Rendering ──────────────────────────────────────────────
+function renderContent(){
+  const cmp=document.getElementById('compare');
+  if(!sel.left&&!sel.right){
+    cmp.innerHTML=`<div class="empty-state"><div class="empty-ring"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>Sélectionnez un monstre dans la grille</div><div class="bottom" id="bottom"><span class="bottom-hint">Sélectionnez deux monstres pour comparer</span></div>`;
+    return;
+  }
+  const single=sel.left||sel.right;
+  if(!sel.left||!sel.right){cmp.innerHTML=renderSingle(single)+'<div class="bottom" id="bottom"><span class="bottom-hint">Sélectionnez un 2ᵉ monstre</span></div>';return;}
+  cmp.innerHTML=renderDuo(sel.left,sel.right);
+  const lp=totalPts(MONSTERS[sel.left]),rp=totalPts(MONSTERS[sel.right]);
+  const mx=Math.max(lp,rp)||1,lw=Math.round(lp/mx*46),rw=Math.round(rp/mx*46);
+  document.getElementById('bottom').innerHTML=`<span class="bottom-label">Score</span>
+  <span class="bottom-name l">${sel.left} <span style="font-size:.62rem;opacity:.6;font-weight:400">${lp} pts</span></span>
+  <div class="bottom-bars"><div class="bar-l" style="width:${lw}%"></div><div class="bar-r" style="width:${rw}%"></div></div>
+  <span class="bottom-name r">${sel.right} <span style="font-size:.62rem;opacity:.6;font-weight:400">${rp} pts</span></span>`;
+}
+
+function renderSingle(name){
+  const m=MONSTERS[name],tot=totalPts(m),r=tot/MAX_TOTAL,c=scoreCol(r),g=scoreGrad(r),role=ROLE[m.type]||{label:m.type,cls:''};
+  const awks=(m.awakenings||[]).filter(a=>a.level!==3).map(a=>{
+    const pts=awkPts(a),ar=pts/100,ac=scoreCol(ar),ag=scoreGrad(ar);
+    return`<div class="awk ${lvCls(a.level)}">
+      <div class="awk-head"><span class="awk-lv">Éveil ${a.level}</span><span class="awk-score" style="color:${ac};border-color:${ac};background:rgba(${rgb(ac)},.1)">⚡ ${pts} pts</span><div class="awk-modes">${a.pvp?'<span class="mode-pvp">PvP</span>':''}${a.pve?'<span class="mode-pve">PvE</span>':''}</div></div>
       <div class="awk-desc">${hDesc(a.desc)}</div>
-      ${chips(a.buffs) ? `<div class="buff-list">${chips(a.buffs)}</div>` : ''}
-      <div class="awk-bar"><div class="awk-bar-track"><div class="awk-bar-fill" style="width:${Math.min(ar * 100, 100)}%;background:${ag}"></div></div><span class="awk-bar-val" style="color:${ac}">${pts}/100</span></div>
-    </div>`;
-      });
-      return `<div class="heads"><div class="hcard side-l" style="max-width:420px">
+      ${chips(a.buffs)?`<div class="buff-list">${chips(a.buffs)}</div>`:''}
+      <div class="awk-bar"><div class="awk-bar-track"><div class="awk-bar-fill" style="width:${Math.min(ar*100,100)}%;background:${ag}"></div></div><span class="awk-bar-val" style="color:${ac}">${pts}/100</span></div>
+    </div>`
+  }).join('');
+  return`<div class="heads"><div class="hcard side-l" style="max-width:420px">
     <img class="hport" src="${IMAGES_PATH}${name}.png" alt="${name}" onerror="this.outerHTML='<div class=hport-ph>${name}</div>'">
     <div style="flex:1;min-width:0">
       <div class="hname">${name}</div>
       <span class="pill ${role.cls}">${role.label}</span>
       <div style="display:flex;align-items:baseline;gap:4px;margin-top:6px"><span class="hscore-num" style="color:${c}">${tot}</span><span class="hscore-den">/ ${MAX_TOTAL}</span></div>
-      <div class="hbar"><div class="hbar-fill" style="width:${Math.min(r * 100, 100)}%;background:${g}"></div></div>
+      <div class="hbar"><div class="hbar-fill" style="width:${Math.min(r*100,100)}%;background:${g}"></div></div>
     </div></div></div>
   <div class="awk-area">
-    <div class="awk-sec-label">Éveils</div>
+    <div class="awk-sec-label">Éveils (hors Éveil 3 commun)</div>
     <div class="awk-pairs" style="display:flex;flex-direction:column;gap:10px">${awks}</div>
-  </div>
-  <div class="bottom" id="bottom"></div>`;
-    }
-
-    function renderDuo(nL, nR) {
-      const mL = MONSTERS[nL], mR = MONSTERS[nR];
-      const totL = totalPts(mL), totR = totalPts(mR);
-      const rL = totL / MAX_TOTAL, rR = totR / MAX_TOTAL;
-      const winL = totL > totR, winR = totR > totL;
-      const wColor = winL ? 'var(--left)' : winR ? 'var(--right)' : 'var(--gold)';
-      const diff = Math.abs(totL - totR);
-      const wName = winL ? nL : winR ? nR : null;
-
-      // verdict
-      let vtxt = '';
-      if (!wName) vtxt = `Scores identiques — les deux monstres sont équivalents.`;
-      else if (diff < 15) vtxt = `<span style="color:${wColor};font-weight:700">${wName}</span> est légèrement supérieur (+${diff} pts).`;
-      else if (diff < 35) vtxt = `<span style="color:${wColor};font-weight:700">${wName}</span> prend l'avantage avec <strong>+${diff} pts</strong>.`;
-      else vtxt = `<span style="color:${wColor};font-weight:700">${wName}</span> domine clairement (+<strong>${diff} pts</strong>).`;
-
-      // bilan : score par éveil + rôle + buffs — tout en une seule table 3 colonnes
-      const awL = mL.awakenings || [], awR = mR.awakenings || [];
-      const levs = [...new Set([...awL, ...awR].map(a => a.level))].sort((a, b) => a - b);
-      const rowH = `<div style="height:1px;background:var(--border);grid-column:1/-1"></div>`;
-
-      // Score rows per éveil
-      let scoreRows = '';
-      levs.forEach(lv => {
-        const aL = awL.find(a => a.level === lv), aR = awR.find(a => a.level === lv);
-        const pL = aL ? awkPts(aL) : null, pR = aR ? awkPts(aR) : null;
-        const win = pL !== null && pR !== null ? (pL > pR ? 'L' : pR > pL ? 'R' : '=') : pL !== null ? 'L' : 'R';
-        const lvc = lv === 3 ? '#4466aa' : lv === 5 ? 'var(--gold)' : '#cc3355';
-        scoreRows += `
-      <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;padding:5px 0">
-        ${pL !== null ? `${win === 'L' ? chk('var(--left)') : '<div style="width:13px"></div>'}<span style="font-size:.88rem;font-weight:700;color:${win === 'L' ? 'var(--left)' : win === '=' ? 'var(--gold)' : 'var(--text2)'}">${pL} pts</span>` : `<span style="color:var(--text2);font-size:.78rem">—</span>`}
-      </div>
-      <div style="display:flex;align-items:center;justify-content:center;padding:5px 0">
-        <span style="font-family:'Cinzel',serif;font-size:.62rem;color:${lvc};border:1px solid ${lvc}55;background:${lvc}18;border-radius:5px;padding:2px 8px;white-space:nowrap">Éveil ${lv}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:5px;padding:5px 0">
-        ${pR !== null ? `<span style="font-size:.88rem;font-weight:700;color:${win === 'R' ? 'var(--right)' : win === '=' ? 'var(--gold)' : 'var(--text2)'}">${pR} pts</span>${win === 'R' ? chk('var(--right)') : '<div style="width:13px"></div>'}` : `<span style="color:var(--text2);font-size:.78rem">—</span>`}
-      </div>`;
-      });
-
-      // Rôle row
-      const tL = mL.type, tR = mR.type, sameType = tL === tR;
-      const roleRow = `
-    <div style="height:1px;background:var(--border2);grid-column:1/-1"></div>
-    <div style="padding:7px 0;display:flex;justify-content:flex-end;align-items:center;gap:6px">
-      <span class="pill pill-${tL}">${ROLE[tL]?.label || tL}</span>
-      <span style="font-size:.72rem;color:var(--text3)">${ROLE_DESC[tL] || ''}</span>
-    </div>
-    <div style="padding:7px 0;display:flex;align-items:center;justify-content:center">
-      <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)">Rôle</span>
-      ${!sameType ? `<span style="margin-left:6px;font-size:.7rem" title="Types différents">⚠️</span>` : ''}
-    </div>
-    <div style="padding:7px 0;display:flex;align-items:center;gap:6px">
-      <span class="pill pill-${tR}">${ROLE[tR]?.label || tR}</span>
-      <span style="font-size:.72rem;color:var(--text3)">${ROLE_DESC[tR] || ''}</span>
-    </div>`;
-
-      // Buffs row
-      const bL = allBuffsOf(nL), bR = allBuffsOf(nR);
-      const buffRow = `
-    <div style="height:1px;background:var(--border2);grid-column:1/-1"></div>
-    <div style="padding:7px 0;display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end">${bL.map(b => { const bf = BUFFS[b]; return `<span class="buff-chip" style="color:${bf.color};border-color:${bf.color};background:rgba(${rgb(bf.color)},.1)">${bf.label}</span>`; }).join('') || '<span style="color:var(--text2);font-size:.72rem">—</span>'}</div>
-    <div style="padding:7px 0;display:flex;align-items:flex-start;justify-content:center;padding-top:9px">
-      <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)">Buffs</span>
-    </div>
-    <div style="padding:7px 0;display:flex;flex-wrap:wrap;gap:4px">${bR.map(b => { const bf = BUFFS[b]; return `<span class="buff-chip" style="color:${bf.color};border-color:${bf.color};background:rgba(${rgb(bf.color)},.1)">${bf.label}</span>`; }).join('') || '<span style="color:var(--text2);font-size:.72rem">—</span>'}</div>`;
-
-      // awakenings pairs
-      const maxA = Math.max(awL.length, awR.length);
-      let pairRows = '';
-      for (let i = 0; i < maxA; i++) {
-        const aL = awL[i], aR = awR[i], lv = aL ? aL.level : aR.level;
-        pairRows += `<div class="awk-pair-row">
-      <div>${aL ? awkCard(aL) : `<div class="awk ${lvCls(lv)}" style="opacity:.22;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.8rem">—</div>`}</div>
-      <div>${aR ? awkCard(aR) : `<div class="awk ${lvCls(lv)}" style="opacity:.22;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.8rem">—</div>`}</div>
-    </div>`;
-      }
-
-      return `
-  <div class="heads">
-    <div class="hcard side-l${winL ? ' winner' : ''}">
-      ${winL ? `<div class="winner-badge">★ Meilleur score</div>` : ''}
-      <img class="hport" src="${IMAGES_PATH}${nL}.png" onerror="this.outerHTML='<div class=hport-ph>${nL}</div>'">
-      <div style="flex:1;min-width:0">
-        <div class="hname">${nL}</div>
-        <span class="pill ${ROLE[tL]?.cls || ''}">${ROLE[tL]?.label || tL}</span>
-        <div style="display:flex;align-items:baseline;gap:4px;margin-top:5px"><span class="hscore-num" style="color:${scoreCol(rL)}">${totL}</span><span class="hscore-den">/ ${MAX_TOTAL}</span></div>
-        <div class="hbar"><div class="hbar-fill" style="width:${Math.min(rL * 100, 100)}%;background:${scoreGrad(rL)}"></div></div>
-      </div>
-    </div>
-    <div class="hcard side-r${winR ? ' winner' : ''}">
-      ${winR ? `<div class="winner-badge">★ Meilleur score</div>` : ''}
-      <img class="hport" src="${IMAGES_PATH}${nR}.png" onerror="this.outerHTML='<div class=hport-ph>${nR}</div>'">
-      <div style="flex:1;min-width:0">
-        <div class="hname">${nR}</div>
-        <span class="pill ${ROLE[tR]?.cls || ''}">${ROLE[tR]?.label || tR}</span>
-        <div style="display:flex;align-items:baseline;gap:4px;margin-top:5px"><span class="hscore-num" style="color:${scoreCol(rR)}">${totR}</span><span class="hscore-den">/ ${MAX_TOTAL}</span></div>
-        <div class="hbar"><div class="hbar-fill" style="width:${Math.min(rR * 100, 100)}%;background:${scoreGrad(rR)}"></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bilan">
-    <div class="bilan-verdict">
-      <span style="font-size:1rem">⚖️</span>
-      <span class="bilan-verdict-txt">${vtxt}</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 88px 1fr;padding:4px 14px 8px">
-      <div style="padding:6px 0 2px;text-align:right;font-size:.68rem;font-weight:700;color:var(--left)">${nL}</div>
-      <div></div>
-      <div style="padding:6px 0 2px;font-size:.68rem;font-weight:700;color:var(--right)">${nR}</div>
-      ${scoreRows}
-      ${roleRow}
-      ${buffRow}
-    </div>
-  </div>
-
-  <div class="awk-area">
-    <div class="awk-sec-label">Éveils comparés</div>
-    <div class="awk-pairs">${pairRows}</div>
-  </div>
-  <div class="bottom" id="bottom"></div>`;
-    }
-
-    function awkCard(a) {
-      const pts = awkPts(a), ar = pts / 100, ac = scoreCol(ar), ag = scoreGrad(ar);
-      return `<div class="awk ${lvCls(a.level)}">
-    <div class="awk-head"><span class="awk-lv">Éveil ${a.level}</span><span class="awk-score" style="color:${ac};border-color:${ac};background:rgba(${rgb(ac)},.1)">⚡ ${pts} pts</span><div class="awk-modes">${a.pvp ? '<span class="mode-pvp">PvP</span>' : ''}${a.pve ? '<span class="mode-pve">PvE</span>' : ''}</div></div>
-    <div class="awk-desc">${hDesc(a.desc)}</div>
-    ${chips(a.buffs) ? `<div class="buff-list">${chips(a.buffs)}</div>` : ''}
-    <div class="awk-bar"><div class="awk-bar-track"><div class="awk-bar-fill" style="width:${Math.min(ar * 100, 100)}%;background:${ag}"></div></div><span class="awk-bar-val" style="color:${ac}">${pts}/100</span></div>
   </div>`;
-    }
+}
 
-    // ── Grid ────────────────────────────────────────────────────
-    function buildGrid() {
-      const g = document.getElementById('monsterGrid'), q = document.getElementById('searchInput').value.toLowerCase();
-      g.innerHTML = '';
-      const names = Object.keys(MONSTERS).filter(n => (!activeType || MONSTERS[n].type === activeType) && n.toLowerCase().includes(q));
-      if (!names.length) { g.innerHTML = `<div style="grid-column:1/-1;color:var(--text2);font-size:.75rem;padding:16px;text-align:center">Aucun résultat</div>`; return; }
-      const TCOL = { melee: 'var(--melee)', tank: 'var(--tank)', range: 'var(--range)', support: 'var(--support)' };
-      names.forEach(name => {
-        const m = MONSTERS[name], el = document.createElement('div');
-        el.className = 'm-tile'; el.dataset.name = name;
-        if (sel.left === name) el.classList.add('sel-l');
-        if (sel.right === name) el.classList.add('sel-r');
-        const dot = `<div class="m-dot" style="background:${TCOL[m.type] || 'var(--text2)'}"></div>`;
-        const badge = sel.left === name ? `<span class="sel-badge" style="background:rgba(77,127,255,.2);color:var(--left);border:1px solid rgba(77,127,255,.4)">①</span>` : sel.right === name ? `<span class="sel-badge" style="background:rgba(255,94,46,.2);color:var(--right);border:1px solid rgba(255,94,46,.4)">②</span>` : '';
-        el.innerHTML = `<div style="position:relative">
+function renderDuo(nL,nR){
+  const mL=MONSTERS[nL],mR=MONSTERS[nR];
+  const totL=totalPts(mL),totR=totalPts(mR);
+  const rL=totL/MAX_TOTAL,rR=totR/MAX_TOTAL;
+  const winL=totL>totR,winR=totR>totL,diff=Math.abs(totL-totR);
+  const wColor=winL?'var(--left)':winR?'var(--right)':'var(--gold)';
+  const wName=winL?nL:winR?nR:null;
+  const tL=mL.type,tR=mR.type;
+
+  // Verdict
+  let vtxt='';
+  if(!wName) vtxt=`Scores identiques — les deux monstres sont équivalents.`;
+  else if(diff<15) vtxt=`<span style="color:${wColor};font-weight:700">${wName}</span> est légèrement supérieur <strong>(+${diff} pts)</strong>.`;
+  else if(diff<35) vtxt=`<span style="color:${wColor};font-weight:700">${wName}</span> prend l'avantage avec <strong>+${diff} pts</strong>.`;
+  else vtxt=`<span style="color:${wColor};font-weight:700">${wName}</span> domine clairement avec <strong>+${diff} pts</strong>.`;
+
+  // Mode scores (excl. AWK3)
+  const pvpL=modeScore(mL,'pvp'),pvpR=modeScore(mR,'pvp');
+  const pveL=modeScore(mL,'pve'),pveR=modeScore(mR,'pve');
+
+  function modeRow(sL,sR,lblHtml,lblCls){
+    const mx=Math.max(sL,sR,1);
+    const wL=sL>sR,wR=sR>sL;
+    const naStyle=`<span class="mode-na">—</span>`;
+    const leftCell=sL>0?`<div class="mode-score-row" style="justify-content:flex-end">
+      ${wL?chk('var(--left)'):'<div style="width:12px"></div>'}
+      <span class="mode-pts" style="color:${wL?'var(--left)':'var(--text3)'}">${sL}p</span>
+      <div class="mode-bar-wrap" style="max-width:60px"><div class="mode-bar-fill" style="width:${sL/mx*100}%;background:var(--left)"></div></div>
+    </div>`:naStyle;
+    const rightCell=sR>0?`<div class="mode-score-row">
+      <div class="mode-bar-wrap" style="max-width:60px"><div class="mode-bar-fill" style="width:${sR/mx*100}%;background:var(--right)"></div></div>
+      <span class="mode-pts" style="color:${wR?'var(--right)':'var(--text3)'}">${sR}p</span>
+      ${wR?chk('var(--right)'):'<div style="width:12px"></div>'}
+    </div>`:naStyle;
+    return`<div class="bc-l">${leftCell}</div>
+    <div class="bc-c"><span class="mode-lbl ${lblCls}">${lblHtml}</span></div>
+    <div class="bc-r">${rightCell}</div>`;
+  }
+
+  // Unique / shared buffs
+  const bL=allBuffsOf(nL),bR=allBuffsOf(nR);
+  const setR=new Set(bR),setL=new Set(bL);
+  const uniL=bL.filter(b=>!setR.has(b));
+  const uniR=bR.filter(b=>!setL.has(b));
+  const shared=bL.filter(b=>setR.has(b));
+
+  function chipSet(ids,side){
+    if(!ids.length)return`<span style="color:var(--text2);font-size:.72rem;font-style:italic">Aucun exclusif</span>`;
+    return ids.map(id=>{const b=BUFFS[id];const team=b.team?'<span class="team-badge">TEAM</span>':'';return`<span class="buff-chip" style="color:${b.color};border-color:${b.color};background:rgba(${rgb(b.color)},.12)">${b.label}${team}</span>`}).join('');
+  }
+
+  // Awakening pairs (excl. AWK3)
+  const awL=(mL.awakenings||[]).filter(a=>a.level!==3);
+  const awR=(mR.awakenings||[]).filter(a=>a.level!==3);
+  const maxA=Math.max(awL.length,awR.length);
+  let pairRows='';
+  for(let i=0;i<maxA;i++){
+    const aL=awL[i],aR=awR[i],lv=aL?aL.level:aR.level;
+    pairRows+=`<div class="awk-pair-row">
+      <div>${aL?awkCard(aL):`<div class="awk ${lvCls(lv)}" style="opacity:.22;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.8rem">—</div>`}</div>
+      <div>${aR?awkCard(aR):`<div class="awk ${lvCls(lv)}" style="opacity:.22;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.8rem">—</div>`}</div>
+    </div>`;
+  }
+
+  return`
+<div class="heads">
+  <div class="hcard side-l${winL?' winner':''}">
+    ${winL?`<div class="winner-badge">★ Meilleur score</div>`:''}
+    <img class="hport" src="${IMAGES_PATH}${nL}.png" onerror="this.outerHTML='<div class=hport-ph>${nL}</div>'">
+    <div style="flex:1;min-width:0">
+      <div class="hname">${nL}</div>
+      <span class="pill ${ROLE[tL]?.cls||''}">${ROLE[tL]?.label||tL}</span>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-top:5px"><span class="hscore-num" style="color:${scoreCol(rL)}">${totL}</span><span class="hscore-den">/ ${MAX_TOTAL}</span></div>
+      <div class="hbar"><div class="hbar-fill" style="width:${Math.min(rL*100,100)}%;background:${scoreGrad(rL)}"></div></div>
+    </div>
+  </div>
+  <div class="hcard side-r${winR?' winner':''}">
+    ${winR?`<div class="winner-badge">★ Meilleur score</div>`:''}
+    <img class="hport" src="${IMAGES_PATH}${nR}.png" onerror="this.outerHTML='<div class=hport-ph>${nR}</div>'">
+    <div style="flex:1;min-width:0">
+      <div class="hname">${nR}</div>
+      <span class="pill ${ROLE[tR]?.cls||''}">${ROLE[tR]?.label||tR}</span>
+      <div style="display:flex;align-items:baseline;gap:4px;margin-top:5px"><span class="hscore-num" style="color:${scoreCol(rR)}">${totR}</span><span class="hscore-den">/ ${MAX_TOTAL}</span></div>
+      <div class="hbar"><div class="hbar-fill" style="width:${Math.min(rR*100,100)}%;background:${scoreGrad(rR)}"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="bilan">
+  <div class="bilan-verdict"><span style="font-size:1rem">⚖️</span><span class="bilan-verdict-txt">${vtxt}</span></div>
+
+  <div class="bilan-sec">
+    <div class="bilan-sec-hd">Avantages exclusifs</div>
+    <div class="bilan-3col">
+      <div class="bc-l" style="flex-wrap:wrap;gap:4px;display:flex;justify-content:flex-end">${chipSet(uniL,'l')}</div>
+      <div class="bc-c"><span style="font-size:.65rem;color:var(--text2)">VS</span></div>
+      <div class="bc-r" style="flex-wrap:wrap;gap:4px;display:flex">${chipSet(uniR,'r')}</div>
+    </div>
+  </div>
+
+  ${shared.length?`<div class="bilan-sec">
+    <div class="bilan-shared"><span class="shared-lbl">Commun</span>${shared.map(id=>{const b=BUFFS[id];const t=b.team?'<span class="team-badge">TEAM</span>':'';return`<span class="buff-chip" style="color:${b.color};border-color:${b.color};background:rgba(${rgb(b.color)},.08);opacity:.7">${b.label}${t}</span>`}).join('')}</div>
+  </div>`:''}
+</div>
+
+<div class="awk-area">
+  <div class="awk-sec-label">Éveils comparés (hors Éveil 3 commun)</div>
+  <div class="awk-pairs">${pairRows}</div>
+</div>
+<div class="bottom" id="bottom"></div>`;
+}
+
+function awkCard(a){
+  const pts=awkPts(a),ar=pts/100,ac=scoreCol(ar),ag=scoreGrad(ar);
+  return`<div class="awk ${lvCls(a.level)}">
+  <div class="awk-head"><span class="awk-lv">Éveil ${a.level}</span><span class="awk-score" style="color:${ac};border-color:${ac};background:rgba(${rgb(ac)},.1)">⚡ ${pts} pts</span><div class="awk-modes">${a.pvp?'<span class="mode-pvp">PvP</span>':''}${a.pve?'<span class="mode-pve">PvE</span>':''}</div></div>
+  <div class="awk-desc">${hDesc(a.desc)}</div>
+  ${chips(a.buffs)?`<div class="buff-list">${chips(a.buffs)}</div>`:''}
+  <div class="awk-bar"><div class="awk-bar-track"><div class="awk-bar-fill" style="width:${Math.min(ar*100,100)}%;background:${ag}"></div></div><span class="awk-bar-val" style="color:${ac}">${pts}/100</span></div>
+</div>`;
+}
+
+// ── Grid ────────────────────────────────────────────────────
+function buildGrid(){
+  const g=document.getElementById('monsterGrid'),q=document.getElementById('searchInput').value.toLowerCase();
+  g.innerHTML='';
+  const names=Object.keys(MONSTERS).filter(n=>(!activeType||MONSTERS[n].type===activeType)&&n.toLowerCase().includes(q));
+  if(!names.length){g.innerHTML=`<div style="grid-column:1/-1;color:var(--text2);font-size:.75rem;padding:16px;text-align:center">Aucun résultat</div>`;return;}
+  const TCOL={melee:'var(--melee)',tank:'var(--tank)',range:'var(--range)',support:'var(--support)'};
+  names.forEach(name=>{
+    const m=MONSTERS[name],el=document.createElement('div');
+    el.className='m-tile';el.dataset.name=name;
+    if(sel.left===name)el.classList.add('sel-l');
+    if(sel.right===name)el.classList.add('sel-r');
+    const dot=`<div class="m-dot" style="background:${TCOL[m.type]||'var(--text2)'}"></div>`;
+    const badge=sel.left===name?`<span class="sel-badge" style="background:rgba(77,127,255,.2);color:var(--left);border:1px solid rgba(77,127,255,.4)">①</span>`:sel.right===name?`<span class="sel-badge" style="background:rgba(255,94,46,.2);color:var(--right);border:1px solid rgba(255,94,46,.4)">②</span>`:'';
+    el.innerHTML=`<div style="position:relative">
       <img class="m-img" src="${IMAGES_PATH}${name}.png" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <div class="m-img-ph" style="display:none">${name}</div>
-      ${badge ? `<div style="position:absolute;top:-4px;right:-4px">${badge}</div>` : ''}
+      ${badge?`<div style="position:absolute;top:-4px;right:-4px">${badge}</div>`:''}
     </div>
-    <div class="m-name">${name}</div>
-    ${dot}`;
-        el.onclick = () => pick(name);
-        g.appendChild(el);
-      });
-    }
+    <div class="m-name">${name}</div>${dot}`;
+    el.onclick=()=>pick(name);
+    g.appendChild(el);
+  });
+}
 
-    function pick(name) {
-      if (sel.left === name) { sel.left = null; nextSlot = 'left'; }
-      else if (sel.right === name) { sel.right = null; nextSlot = 'right'; }
-      else { sel[nextSlot] = name; nextSlot = nextSlot === 'left' ? 'right' : 'left'; }
-      buildGrid(); renderContent();
-    }
+function pick(name){
+  if(sel.left===name){sel.left=null;nextSlot='left';}
+  else if(sel.right===name){sel.right=null;nextSlot='right';}
+  else{sel[nextSlot]=name;nextSlot=nextSlot==='left'?'right':'left';}
+  updateToggleLbl();
+  buildGrid();renderContent();
+}
 
-    document.getElementById('typeFilter').addEventListener('click', e => {
-      const btn = e.target.closest('.tf'); if (!btn) return;
-      document.querySelectorAll('.tf').forEach(b => { b.className = 'tf' + (b.classList.contains('all') ? ' all' : '') });
-      activeType = btn.dataset.type;
-      btn.classList.add(activeType ? `active-${activeType}` : 'active-all');
-      buildGrid();
-    });
+document.getElementById('typeFilter').addEventListener('click',e=>{
+  const btn=e.target.closest('.tf');if(!btn)return;
+  document.querySelectorAll('.tf').forEach(b=>{b.className='tf'+(b.classList.contains('all')?' all':'')});
+  activeType=btn.dataset.type;
+  btn.classList.add(activeType?`active-${activeType}`:'active-all');
+  buildGrid();
+});
 
-    buildGrid();
-  </script>
+buildGrid();
+</script>
 </body>
-
 </html>
