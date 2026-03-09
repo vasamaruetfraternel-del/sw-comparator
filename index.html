@@ -639,23 +639,41 @@ function renderTeam(){
     });
   });
 
+  const catOrder=(b)=>b.team?0:b.cond?2:1;
   const sorted=Object.entries(agg).sort(([aid,ad],[bid,bd])=>{
+    const ba=BUFFS[aid],bb=BUFFS[bid];
+    const ca=catOrder(ba||{}),cb=catOrder(bb||{});
+    if(ca!==cb)return ca-cb;
     if(bd.count!==ad.count)return bd.count-ad.count;
-    return (BUFFS[bid]?.power||0)-(BUFFS[aid]?.power||0);
+    return(bb?.power||0)-(ba?.power||0);
   });
 
-  document.getElementById('tbBuffs').innerHTML=sorted.map(([id,{count,monsters}])=>{
-    const b=BUFFS[id];if(!b)return'';
-    const src=monsters.slice(0,4).join(', ')+(monsters.length>4?` +${monsters.length-4}`:'');
-    return`<div class="bagg-row${b.cond?' iscond':''}">
-      <div class="bagg-dot" style="background:${b.color}"></div>
-      <div class="bagg-info">
-        <div class="bagg-lbl">${b.label}</div>
-        <div class="bagg-sub">${b.team?'<span class="btag bt-team">TEAM</span>':''}${b.cond?'<span class="btag bt-cond">COND</span>':''}<span>${src}</span></div>
-      </div>
-      <div class="bagg-cnt" style="color:${b.color}">×${count}</div>
-    </div>`;
-  }).join('');
+  const cats=[
+    {key:0,label:'Buffs Équipe (TEAM)',color:'#ffcc44',entries:[]},
+    {key:1,label:'Buffs Personnels',color:'var(--tx3)',entries:[]},
+    {key:2,label:'Buffs Conditionnels (COND)',color:'#ccaa44',entries:[]},
+  ];
+  sorted.forEach(e=>{const b=BUFFS[e[0]];if(!b)return;cats[catOrder(b)].entries.push(e);});
+
+  document.getElementById('tbBuffs').innerHTML=cats.filter(c=>c.entries.length).map(cat=>`
+    <div style="grid-column:1/-1;display:flex;align-items:center;gap:8px;margin:6px 0 3px">
+      <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:${cat.color}">${cat.label}</span>
+      <div style="flex:1;height:1px;background:var(--bd2)"></div>
+      <span style="font-size:.62rem;color:var(--tx2)">${cat.entries.length} buff${cat.entries.length>1?'s':''}</span>
+    </div>
+    ${cat.entries.map(([id,{count,monsters}])=>{
+      const b=BUFFS[id];if(!b)return'';
+      const src=monsters.slice(0,4).join(', ')+(monsters.length>4?` +${monsters.length-4}`:'');
+      return`<div class="bagg-row${b.cond?' iscond':''}">
+        <div class="bagg-dot" style="background:${b.color}"></div>
+        <div class="bagg-info">
+          <div class="bagg-lbl">${b.label}</div>
+          <div class="bagg-sub">${b.team?'<span class="btag bt-team">TEAM</span>':''}${b.cond?'<span class="btag bt-cond">COND</span>':''}<span>${src}</span></div>
+        </div>
+        <div class="bagg-cnt" style="color:${b.color}">×${count}</div>
+      </div>`;
+    }).join('')}
+  `).join('');
 
   const totalScore=selTeam.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
   const avg=Math.round(totalScore/n);
@@ -666,11 +684,79 @@ function removeTb(name){selTeam=selTeam.filter(n=>n!==name);renderTeam();buildLi
 
 // ── Export ────────────────────────────────────────────────────
 async function exportTeam(){
-  const el=document.getElementById('tbExport');
+  // Build a self-contained export container
+  const totalScore=selTeam.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
+  const avg=Math.round(totalScore/selTeam.length);
+
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:fixed;left:-9999px;top:0;width:900px;background:#131e2e;padding:24px;font-family:Segoe UI,Inter,system-ui,sans-serif;color:#d8e4f8;border-radius:0';
+
+  // Header
+  wrap.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #253a5e">
+    <div style="font-size:1rem;font-weight:800;letter-spacing:2px;color:#ecc46a">⭐ SW RUSH — Team Builder</div>
+    <div style="font-size:.82rem;color:#6a82aa">${selTeam.length} monstres · Score total : <strong style="color:#ecc46a">${totalScore}</strong> · Moyenne : <strong style="color:#9ab0cc">${avg}/${MAX_T}</strong></div>
+  </div>`;
+
+  // Grid
+  const gDiv=document.createElement('div');
+  gDiv.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-bottom:20px';
+  selTeam.forEach(nm=>{
+    const m=MONSTERS[nm];
+    const c=document.createElement('div');
+    c.style.cssText='background:#182436;border:1px solid #253a5e;border-radius:10px;padding:10px 6px 8px;text-align:center';
+    c.innerHTML=`<div style="font-size:.65rem;font-weight:600;color:#9ab0cc;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nm}</div><div style="font-size:.6rem;color:${RD[m.type]||'#6a82aa'};margin-top:2px">${RL[m.type]||m.type} · ${totPts(m)}pts</div>`;
+    // img
+    const img=document.createElement('img');
+    img.src=`${IP}${nm}.png`;img.style.cssText='width:56px;height:56px;border-radius:9px;object-fit:cover;border:1px solid #253a5e;display:block;margin:0 auto';
+    c.insertBefore(img,c.firstChild);
+    gDiv.appendChild(c);
+  });
+  wrap.appendChild(gDiv);
+
+  // Buffs recap
+  const agg={};
+  selTeam.forEach(nm=>{
+    const m=MONSTERS[nm];const seen=new Set();
+    (m.awakenings||[]).filter(a=>a.level!==3).forEach(a=>{
+      (a.buffs||[]).forEach(bid=>{if(!seen.has(bid)){seen.add(bid);if(!agg[bid]){agg[bid]={count:0,monsters:[]};} agg[bid].count++;agg[bid].monsters.push(nm);}});
+    });
+  });
+  const catOrder=b=>b.team?0:b.cond?2:1;
+  const cats=[{key:0,label:'Buffs Équipe (TEAM)',color:'#ffcc44',entries:[]},{key:1,label:'Buffs Personnels',color:'#9ab0cc',entries:[]},{key:2,label:'Buffs Conditionnels (COND)',color:'#ccaa44',entries:[]}];
+  Object.entries(agg).sort(([ai,ad],[bi,bd])=>{const ba=BUFFS[ai],bb=BUFFS[bi];const ca=catOrder(ba||{}),cb=catOrder(bb||{});if(ca!==cb)return ca-cb;if(bd.count!==ad.count)return bd.count-ad.count;return(bb?.power||0)-(ba?.power||0);}).forEach(e=>{const b=BUFFS[e[0]];if(b)cats[catOrder(b)].entries.push(e);});
+
+  const bDiv=document.createElement('div');
+  bDiv.style.cssText='display:flex;flex-direction:column;gap:4px';
+  const hTitle=document.createElement('div');
+  hTitle.style.cssText='font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#6a82aa;margin-bottom:8px';
+  hTitle.textContent='Récapitulatif des buffs';
+  bDiv.appendChild(hTitle);
+
+  cats.filter(c=>c.entries.length).forEach(cat=>{
+    const sep=document.createElement('div');
+    sep.style.cssText='display:flex;align-items:center;gap:8px;margin:6px 0 3px';
+    sep.innerHTML=`<span style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:${cat.color}">${cat.label}</span><div style="flex:1;height:1px;background:#253a5e"></div>`;
+    bDiv.appendChild(sep);
+    const grid=document.createElement('div');
+    grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:4px';
+    cat.entries.forEach(([id,{count,monsters}])=>{
+      const b=BUFFS[id];if(!b)return;
+      const row=document.createElement('div');
+      row.style.cssText=`display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:7px;border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.02);${b.cond?'border-style:dashed;opacity:.85':''}`;
+      row.innerHTML=`<div style="width:8px;height:8px;border-radius:50%;background:${b.color};flex-shrink:0"></div><div style="flex:1;font-size:.78rem;color:#9ab0cc">${b.label}<div style="font-size:.6rem;color:#6a82aa;margin-top:2px">${monsters.slice(0,3).join(', ')}${monsters.length>3?` +${monsters.length-3}`:''}</div></div><div style="font-size:.95rem;font-weight:700;color:${b.color}">×${count}</div>`;
+      grid.appendChild(row);
+    });
+    bDiv.appendChild(grid);
+  });
+  wrap.appendChild(bDiv);
+
+  document.body.appendChild(wrap);
   try{
-    const c=await html2canvas(el,{backgroundColor:'#131e2e',scale:2,allowTaint:true,useCORS:true,logging:false});
-    const a=document.createElement('a');a.download='sw-rush-team.png';a.href=c.toDataURL('image/png');a.click();
-  }catch(e){alert('Erreur export — vérifiez que les images sont accessibles.');}
+    await new Promise(r=>setTimeout(r,200));
+    const cv=await html2canvas(wrap,{backgroundColor:'#131e2e',scale:2,allowTaint:true,useCORS:true,logging:false});
+    const a=document.createElement('a');a.download='sw-rush-team.png';a.href=cv.toDataURL('image/png');a.click();
+  }catch(e){alert('Erreur export.');}
+  document.body.removeChild(wrap);
 }
 
 // ── Init ──────────────────────────────────────────────────────
