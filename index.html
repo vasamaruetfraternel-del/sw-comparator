@@ -395,7 +395,7 @@ function awkRaw(a){return(a.buffs||[]).reduce((s,id)=>s+bVal(id),0)}
 const MAX_AWK=Math.max(...Object.values(MONSTERS).flatMap(m=>(m.awakenings||[]).filter(a=>a.level!==3).map(awkRaw)));
 function awkPts(a){return Math.round(awkRaw(a)/MAX_AWK*100)}
 function totPts(m){return(m.awakenings||[]).filter(a=>a.level!==3).reduce((s,a)=>s+awkPts(a),0)}
-const MAX_T=Math.max(...Object.values(MONSTERS).map(totPts));
+const MAX_T= 200;
 function sCol(r){return r>=.7?'#52b86a':r>=.4?'#d4a44a':'#c44040'}
 function sGrad(r){return r>=.7?'linear-gradient(90deg,#1e5528,#52b86a)':r>=.4?'linear-gradient(90deg,#6a4010,#d4a44a)':'linear-gradient(90deg,#601818,#c44040)'}
 function hD(t){return t.replace(/(\+\d+(?:[,.]\d+)?%)/g,'<span class="vp">$1</span>').replace(/(-\d+(?:[,.]\d+)?%)/g,'<span class="vm">$1</span>')}
