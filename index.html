@@ -253,6 +253,10 @@ const BUFFS={
   "debuff_aoe_taken_10":{label:"Dégâts Zone reçus +10% (ennemi)",color:"#dd6644",power:12,cond:true},
   "debuff_crit_taken_10":{label:"Dég. Crit reçus +10% (ennemi)",color:"#dd6644",power:14},
   "lifesteal_15_cond":{label:"Aspiration Dégâts +15% (2s)",color:"#cc4488",power:18,cond:true},
+  "double_hit_10_cond":{label:"Coup Double +10% (2s, sur attaque)",color:"#cc70bb",power:14,cond:true},
+  "dmg_resist_15_cond":{label:"Résist. Dégâts +15% (10s)",color:"#5588cc",power:20,cond:true},
+  "dmg_sleeping_20":{label:"Dégâts +20% (cibles Endormies)",color:"#8866cc",power:22},
+  "dmg_dot_50":{label:"Dégâts +50% (cibles sous DoT)",color:"#cc6644",power:34,cond:true},
 };
 
 const AWK3={level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true};
@@ -273,6 +277,9 @@ const MONSTERS={
   "Feng Yan":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Résist. Critique +10% / 2s.",buffs:["crit_res_10_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Taux Crit +10% / 10s.\n- Dégâts +20%.",buffs:["crit_rate_10","dmg_20"],pvp:true,pve:false}]},
   "Qitian Dasheng":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur CC reçu :\n- Supprime les CCs, Immunité CC 2s.\n- Reset CD compétence exclusive.",buffs:["cc_immune_self_react","cd_reset_proc"],pvp:true,pve:false},{level:7,desc:"Dégâts +50% sur cibles sous DEF réduite.\n- Dégâts +20%.",buffs:["dmg_def_down_50","dmg_20"],pvp:true,pve:true}]},
   "Mei Hou Wang":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Taux Crit +10% / 2s.",buffs:["crit_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Dégâts +50% sur cibles sous contrôle.\n- Dégâts +20%.",buffs:["dmg_cc_50","dmg_20"],pvp:true,pve:true}]},
+  "Lapis":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Aspiration dégâts +15% / 2s.",buffs:["lifesteal_15_cond"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Coup double +10% / 2s.\n- Dégâts +20%.",buffs:["double_hit_10_cond","dmg_20"],pvp:true,pve:false}]},
+  "Galleon":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Taux Crit +10% / 2s.",buffs:["crit_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Dégâts +50% sur cibles sous DoT.\n- Dégâts +20%.",buffs:["dmg_dot_50","dmg_20"],pvp:false,pve:true}]},
+  "Ophilia":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup létal :\n- Endurance 5s (CD : 30s).",buffs:["endurance_cond"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Résist. dégâts +15% / 10s.\n- Dégâts +20%.",buffs:["dmg_resist_15_cond","dmg_20"],pvp:true,pve:true}]},
   "Shazam":{type:"tank",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Bouclier ×3 à tous les ALLIÉS.\n- Résist. dégâts +10%.",buffs:["shield_hits_3_team","dmg_resist_10"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Dég. Crit reçus +10% sur ennemi / 10s.\n- Dégâts +20%.",buffs:["debuff_crit_taken_10","dmg_20"],pvp:true,pve:false}]},
   "Ariel":{type:"tank",awakenings:[AWK3,{level:5,desc:"Sur obtention de Bouclier :\n- Résist. dégâts +20% / 5s.",buffs:["dmg_resist_20_cond"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- PV MAX +15% / 10s.\n- Dégâts +20%.",buffs:["hp_max_15_cond","dmg_20"],pvp:true,pve:true}]},
   "Grogen":{type:"range",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Accél. compétences +20% / 2s.",buffs:["skill_accel_20_cond"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Efficacité CC +20% et Dégâts sur Pétrifiés +20% / 10s.\n- Dégâts +20%.",buffs:["cc_eff_20","dmg_petrified_20","dmg_20"],pvp:true,pve:false}]},
@@ -295,8 +302,10 @@ const MONSTERS={
   "Tesarion":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Rayon Zone +30%.",buffs:["aoe_range_30"],pvp:false,pve:true},{level:7,desc:"Attaque réussie :\n- Dégâts +20% (cibles Brûlées) / 10s.\n- Dégâts +20%.",buffs:["dmg_burned_20","dmg_20"],pvp:false,pve:true}]},
   "Charlotte":{type:"range",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Faiblesse Empoisonnement sur ennemi / 2s.",buffs:["weakness_poison_enemy"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Empoisonnement sur ennemi / 10s.\n- Dégâts +20%.",buffs:["dot_poison","dmg_20"],pvp:true,pve:true}]},
   "Chasun":{type:"range",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Accél. compétences +20% / 2s.",buffs:["skill_accel_20_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Taux Crit +10% / 10s.\n- Dégâts +20%.",buffs:["crit_rate_10","dmg_20"],pvp:true,pve:true}]},
+  "Delphoi":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Dégâts +20% (cibles Endormies).",buffs:["dmg_sleeping_20"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Efficacité CC +20% / 10s.\n- Dégâts +20%.",buffs:["cc_eff_20","dmg_20"],pvp:true,pve:false}]},
   "Harmonia":{type:"support",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Immunité CC ALLIÉS / 30s.",buffs:["cc_immune_team_30"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Taux Crit +10% / 10s.\n- Résist. dégâts ALLIÉS +20% / 10s.\n- Dégâts +20%.",buffs:["crit_rate_10","dmg_resist_20_team","dmg_20"],pvp:true,pve:false}]},
   "Rina":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Taux Crit +10% / 2s.",buffs:["crit_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Coup puissant +10% et ATQ +20% / 10s.\n- Dégâts +20%.",buffs:["crush_rate_10","atk_20","dmg_20"],pvp:true,pve:false}]},
+  "Tetra":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Taux Crit +10% / 2s.",buffs:["crit_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Coup puissant +10% / 10s.\n- Dégâts +20%.",buffs:["crush_rate_10","dmg_20"],pvp:true,pve:false}]},
   "Celestia":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Accél. compétences +20% / 2s.",buffs:["skill_accel_20_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Rayon Zone +30% / 10s.\n- Dégâts +20%.",buffs:["aoe_range_30_cond","dmg_20"],pvp:false,pve:true}]},
 };
 </script>
