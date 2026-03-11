@@ -257,6 +257,7 @@ const BUFFS={
   "dmg_resist_15_cond":{label:"Résist. Dégâts +15% (10s)",color:"#5588cc",power:20,cond:true},
   "dmg_sleeping_20":{label:"Dégâts +20% (cibles Endormies)",color:"#8866cc",power:22},
   "dmg_dot_50":{label:"Dégâts +50% (cibles sous DoT)",color:"#cc6644",power:34,cond:true},
+  "block_shield":{label:"Détection Bouclier (cible)",color:"#5588cc",power:36},
 };
 
 const AWK3={level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true};
@@ -307,6 +308,7 @@ const MONSTERS={
   "Rina":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Taux Crit +10% / 2s.",buffs:["crit_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Coup puissant +10% et ATQ +20% / 10s.\n- Dégâts +20%.",buffs:["crush_rate_10","atk_20","dmg_20"],pvp:true,pve:false}]},
   "Tetra":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Taux Crit +10% / 2s.",buffs:["crit_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Coup puissant +10% / 10s.\n- Dégâts +20%.",buffs:["crush_rate_10","dmg_20"],pvp:true,pve:false}]},
   "Celestia":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Accél. compétences +20% / 2s.",buffs:["skill_accel_20_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Rayon Zone +30% / 10s.\n- Dégâts +20%.",buffs:["aoe_range_30_cond","dmg_20"],pvp:false,pve:true}]},
+  "Katarina":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Taux Crit +10%.",buffs:["range_3","crit_rate_10"],pvp:true,pve:true},{level:7,desc:"Détection faiblesse :\n- Dégâts subis sous shield de 15% (cible) /10s.\n- Dégâts +20%.",buffs:["block_shield","dmg_20"],pvp:true,pve:true}]},
 };
 </script>
 
