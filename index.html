@@ -239,7 +239,7 @@ const BUFFS={
   "cc_immune_team_30":{label:"Immunité CC ALLIÉS (30s)",color:"#44ddaa",power:52,team:true},
   "cc_immune_self_react":{label:"Immunité CC 2s (réactif) + Reset CD Excl.",color:"#44ddaa",power:36,cond:true},
   "debuff_immune_self":{label:"Immunité aux Affaiblissements (passif)",color:"#44ccbb",power:28},
-  "fran_blessing_team":{label:"Bénédiction de Fran ALLIÉS (Immunité 10s)",color:"#88aaff",power:44,team:true,cond:true},
+  "fran_blessing_team":{label:"Bénédiction de Fran ALLIÉS (Immunité débuffs + Dégâts +15%, 10s)",color:"#88aaff",power:48,team:true,cond:true},
   "cd_reset_proc":{label:"Reset CD Compétence (conditionnel)",color:"#00ffff",power:22,cond:true},
   "cd_skill_cond":{label:"Réduction CD Compétence Excl.",color:"#30c0d0",power:14,cond:true},
   "fox_fire_cond":{label:"Feu du renard (sur Coup Puissant)",color:"#ff8c42",power:12,cond:true},
@@ -312,8 +312,8 @@ const MONSTERS={
   "Tetra":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Taux Crit +10% / 2s.",buffs:["crit_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Coup puissant +10% / 10s.\n- Dégâts +20%.",buffs:["crush_rate_10","dmg_20"],pvp:true,pve:false}]},
   "Celestia":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Accél. compétences +20% / 2s.",buffs:["skill_accel_20_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Rayon Zone +30% / 10s.\n- Dégâts +20%.",buffs:["aoe_range_30_cond","dmg_20"],pvp:false,pve:true}]},
   "Fran":{type:"range",awakenings:[AWK3,
-    {level:5,desc:"Début de combat :\n- Portée +3.\n- Accél. Compétences +15%.",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},
-    {level:7,desc:"Attaque réussie → ALLIÉS :\n- Bénédiction de Fran (Immunité 10s).\n- Dégâts +20%.\n\nPassif permanent :\n- Immunité aux Affaiblissements.\n- Dégâts +15%.\n- Dégâts +20%.",buffs:["fran_blessing_team","debuff_immune_self","dmg_15","dmg_20"],pvp:true,pve:true}
+  {level:5,desc:"Début de combat :\n- Portée +3.\n- Accél. Compétences +15%.",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},
+  {level:7,desc:"Attaque réussie → ALLIÉS :\n- Bénédiction de Fran (Immunité débuffs + Dégâts +15% / 10s).\n- Dégâts +20%.\n\nPassif permanent :\n- Immunité aux Affaiblissements.\n- Dégâts +15%.\n- Dégâts +20%.",buffs:["fran_blessing_team","debuff_immune_self","dmg_15","dmg_20"],pvp:true,pve:true}
   ]},
   "Katarina":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Taux Crit +10%.",buffs:["range_3","crit_rate_10"],pvp:true,pve:true},{level:7,desc:"Détection faiblesse :\n- Dégâts subis sous shield de 15% (cible) /10s.\n- Dégâts +20%.",buffs:["block_shield","dmg_20"],pvp:true,pve:true}]},
 };
