@@ -4,193 +4,232 @@
 :root{
   --bg:#0d1520;--sf:#131e2e;--sf2:#182436;--sf3:#1d2a3e;
   --bd:#1e3050;--bd2:#253a5e;
-  --gold:#d4a44a;--gl:#ecc46a;--gg:rgba(212,164,74,.15);
+  --gold:#d4a44a;--gl:#ecc46a;--gg:rgba(212,164,74,.18);
   --tx:#d8e4f8;--tx2:#6a82aa;--tx3:#9ab0cc;
   --mel:#e05555;--tnk:#4d8fd6;--rng:#d49828;--sup:#52b86a;
+  --rad:12px;--rad-sm:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',Inter,system-ui,sans-serif;font-size:13px;height:100dvh;overflow:hidden;display:flex;flex-direction:column}
-::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
 
 /* HEADER */
-header{height:50px;background:var(--sf);border-bottom:1px solid var(--bd2);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0;z-index:20}
-.logo{font-weight:800;font-size:.78rem;letter-spacing:2px;color:var(--gl);flex-shrink:0}
-.hsep{width:1px;height:20px;background:var(--bd2)}
-.tabs{display:flex;gap:3px}
-.tab{padding:5px 14px;border-radius:7px;border:1px solid transparent;background:none;color:var(--tx2);font-size:.74rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;letter-spacing:.5px}
+header{height:54px;background:var(--sf);border-bottom:1px solid var(--bd2);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0}
+.logo{font-weight:900;font-size:.8rem;letter-spacing:2.5px;color:var(--gl);flex-shrink:0;display:flex;align-items:center;gap:7px}
+.logo-star{font-size:18px;line-height:1}
+.hsep{width:1px;height:22px;background:var(--bd2)}
+.tabs{display:flex;gap:4px}
+.tab{padding:6px 16px;border-radius:20px;border:1.5px solid transparent;background:none;color:var(--tx2);font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;letter-spacing:.3px;display:flex;align-items:center;gap:6px}
 .tab:hover{background:var(--sf2);color:var(--tx)}
-.tab.on{background:var(--gg);border-color:rgba(212,164,74,.3);color:var(--gl)}
+.tab.on{background:var(--gg);border-color:rgba(212,164,74,.4);color:var(--gl)}
+.tab-icon{font-size:15px}
 
 /* LAYOUT */
 .layout{flex:1;display:flex;overflow:hidden;min-height:0}
 
 /* SIDEBAR */
-.sidebar{width:260px;background:var(--sf);border-right:1px solid var(--bd2);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
-.sb-head{padding:10px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:7px}
-.sb-sinp{display:flex;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd2);border-radius:8px;padding:7px 10px}
+.sidebar{width:270px;background:var(--sf);border-right:1px solid var(--bd2);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;transition:width .2s}
+.sb-head{padding:12px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:8px}
+.sb-sinp{display:flex;align-items:center;gap:8px;background:var(--sf2);border:1.5px solid var(--bd2);border-radius:20px;padding:8px 12px;transition:border-color .15s}
 .sb-sinp:focus-within{border-color:var(--gold)}
+.sb-sinp svg{flex-shrink:0;opacity:.5}
 .sb-sinp input{flex:1;background:none;border:none;outline:none;color:var(--tx);font-size:.82rem;font-family:inherit}
 .sb-sinp input::placeholder{color:var(--tx2)}
+.type-row{display:flex;gap:4px;flex-wrap:wrap}
+.tf{font-size:.67rem;font-weight:700;padding:5px 10px;border-radius:20px;border:1.5px solid var(--bd2);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .14s}
+.tf:hover{background:var(--sf2);border-color:var(--bd)}
+.tf.aa{border-color:rgba(212,164,74,.5);color:var(--gl);background:var(--gg)}
+.tf.am{border-color:rgba(224,85,85,.5);color:var(--mel);background:rgba(224,85,85,.12)}
+.tf.at{border-color:rgba(77,143,214,.5);color:var(--tnk);background:rgba(77,143,214,.12)}
+.tf.ar{border-color:rgba(212,152,40,.5);color:var(--rng);background:rgba(212,152,40,.12)}
+.tf.as{border-color:rgba(82,184,106,.5);color:var(--sup);background:rgba(82,184,106,.12)}
 
-/* Type filter */
-.type-row{display:flex;gap:3px;flex-wrap:wrap}
-.tf{font-size:.65rem;font-weight:700;padding:4px 8px;border-radius:5px;border:1px solid var(--bd2);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .12s}
-.tf:hover{background:var(--sf2)}
-.tf.aa{border-color:var(--gold);color:var(--gl);background:var(--gg)}
-.tf.am{border-color:var(--mel);color:var(--mel);background:rgba(224,85,85,.1)}
-.tf.at{border-color:var(--tnk);color:var(--tnk);background:rgba(77,143,214,.1)}
-.tf.ar{border-color:var(--rng);color:var(--rng);background:rgba(212,152,40,.1)}
-.tf.as{border-color:var(--sup);color:var(--sup);background:rgba(82,184,106,.1)}
-
-/* Buff filter chips */
-.buff-filter-wrap{padding:8px 10px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:5px}
-.bf-title{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2)}
-.bf-cats{display:flex;flex-wrap:wrap;gap:3px}
-.bfc{font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid var(--bd2);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .1s}
+/* Buff filter */
+.buff-filter-wrap{padding:8px 12px 10px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:6px}
+.bf-title{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx2)}
+.bf-cats{display:flex;flex-wrap:wrap;gap:4px}
+.bfc{font-size:.63rem;font-weight:700;padding:4px 9px;border-radius:20px;border:1.5px solid var(--bd2);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .12s}
 .bfc:hover{background:var(--sf2)}
-.bfc.on{background:var(--sf3);border-color:var(--bd2);color:var(--tx)}
-.bfc.cat-atk.on{border-color:var(--mel);color:var(--mel);background:rgba(224,85,85,.1)}
-.bfc.cat-crit.on{border-color:#e8c020;color:#e8c020;background:rgba(232,192,32,.08)}
-.bfc.cat-spd.on{border-color:#e07832;color:#e07832;background:rgba(224,120,50,.1)}
-.bfc.cat-range.on{border-color:var(--sup);color:var(--sup);background:rgba(82,184,106,.1)}
-.bfc.cat-def.on{border-color:var(--tnk);color:var(--tnk);background:rgba(77,143,214,.1)}
-.bfc.cat-cc.on{border-color:#cc70bb;color:#cc70bb;background:rgba(204,112,187,.1)}
-.bfc.cat-team.on{border-color:#ffcc44;color:#ffcc44;background:rgba(255,204,68,.08)}
-.bfc.cat-dot.on{border-color:#88bb30;color:#88bb30;background:rgba(136,187,48,.08)}
+.bfc.on{background:var(--sf3)}
+.bfc.cat-atk.on{border-color:var(--mel);color:var(--mel);background:rgba(224,85,85,.12)}
+.bfc.cat-crit.on{border-color:#e8c020;color:#e8c020;background:rgba(232,192,32,.1)}
+.bfc.cat-spd.on{border-color:#e07832;color:#e07832;background:rgba(224,120,50,.12)}
+.bfc.cat-range.on{border-color:var(--sup);color:var(--sup);background:rgba(82,184,106,.12)}
+.bfc.cat-def.on{border-color:var(--tnk);color:var(--tnk);background:rgba(77,143,214,.12)}
+.bfc.cat-cc.on{border-color:#cc70bb;color:#cc70bb;background:rgba(204,112,187,.12)}
+.bfc.cat-team.on{border-color:#ffcc44;color:#ffcc44;background:rgba(255,204,68,.1)}
+.bfc.cat-dot.on{border-color:#88bb30;color:#88bb30;background:rgba(136,187,48,.1)}
 
-.sb-list{flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:2px}
-.sitem{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:all .12s}
+/* Monster list */
+.sb-list{flex:1;overflow-y:auto;padding:8px}
+.sitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--rad-sm);cursor:pointer;border:1.5px solid transparent;transition:all .15s;position:relative}
 .sitem:hover{background:var(--sf2)}
-.si-img{width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--bd2);flex-shrink:0;background:var(--sf3)}
+.sitem.sel-cmp{border-color:rgba(77,143,214,.5);background:rgba(77,143,214,.08)}
+.sitem.sel-team{border-color:rgba(212,164,74,.45);background:rgba(212,164,74,.07)}
+.si-img-wrap{position:relative;flex-shrink:0}
+.si-img{width:44px;height:44px;border-radius:var(--rad-sm);object-fit:cover;border:1px solid var(--bd2);display:block;background:var(--sf3)}
+.si-badge{position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:900;border:1.5px solid var(--sf)}
 .si-info{flex:1;min-width:0}
-.si-name{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.si-sub{font-size:.62rem;color:var(--tx2);margin-top:1px;display:flex;align-items:center;gap:5px}
-.si-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;flex-shrink:0}
+.si-name{font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-sub{font-size:.62rem;color:var(--tx2);margin-top:2px;display:flex;align-items:center;gap:6px}
+.si-score{font-size:.68rem;font-weight:700;color:var(--tx2);flex-shrink:0;text-align:right}
+.si-score span{display:block;font-size:.7rem;font-weight:800}
 
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .panel{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .panel.off{display:none}
 
-/* CMP */
-.cmp-hint{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--tx2);font-size:.88rem}
-.cmp-hint-icon{width:56px;height:56px;border-radius:50%;border:2px dashed var(--bd2);display:flex;align-items:center;justify-content:center;opacity:.3;font-size:20px}
+/* Empty state */
+.cmp-hint{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--tx2)}
+.hint-icon{width:70px;height:70px;border-radius:50%;border:2.5px dashed var(--bd2);display:flex;align-items:center;justify-content:center;font-size:26px;opacity:.35}
+.hint-title{font-size:1rem;font-weight:700;color:var(--tx3)}
+.hint-sub{font-size:.8rem;opacity:.6}
+
+/* Comparateur */
 .cscroll{flex:1;overflow:auto}
-.cwrap{padding:14px;display:flex;flex-direction:column;gap:10px}
-.cgrid{display:grid;gap:12px;align-items:start}
-.mcol{background:var(--sf);border:1px solid var(--bd2);border-radius:12px;overflow:hidden}
-.mcol-top{padding:15px;display:flex;align-items:flex-start;gap:12px;position:relative;border-bottom:1px solid var(--bd)}
-.mcol-accent{position:absolute;top:0;left:0;right:0;height:3px}
-.mport{width:64px;height:64px;border-radius:9px;object-fit:cover;border:1px solid var(--bd2);flex-shrink:0;background:var(--sf3)}
+.cwrap{padding:16px;display:flex;flex-direction:column;gap:12px}
+.cgrid{display:grid;gap:14px;align-items:start}
+.mcol{background:var(--sf);border:1.5px solid var(--bd2);border-radius:var(--rad);overflow:hidden;transition:border-color .2s}
+.mcol-top{padding:16px;display:flex;align-items:flex-start;gap:14px;position:relative;border-bottom:1px solid var(--bd)}
+.mcol-stripe{position:absolute;top:0;left:0;right:0;height:3px}
+.mport{width:66px;height:66px;border-radius:var(--rad-sm);object-fit:cover;border:1px solid var(--bd2);flex-shrink:0;background:var(--sf3)}
 .minfo{flex:1;min-width:0}
-.mname{font-size:1rem;font-weight:700}
-.tpill{display:inline-block;font-size:.62rem;font-weight:700;padding:2px 9px;border-radius:20px;border:1px solid;margin-top:4px}
+.mname{font-size:1rem;font-weight:800}
+.tpill{display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:700;padding:3px 10px;border-radius:20px;border:1.5px solid;margin-top:5px}
 .tp-m{color:var(--mel);border-color:rgba(224,85,85,.35);background:rgba(224,85,85,.08)}
 .tp-t{color:var(--tnk);border-color:rgba(77,143,214,.35);background:rgba(77,143,214,.08)}
 .tp-r{color:var(--rng);border-color:rgba(212,152,40,.35);background:rgba(212,152,40,.08)}
 .tp-s{color:var(--sup);border-color:rgba(82,184,106,.35);background:rgba(82,184,106,.08)}
-.mscore{font-size:1.7rem;font-weight:700;line-height:1;text-align:right}
-.mbar{height:4px;background:var(--sf3);border-radius:2px;margin-top:8px;overflow:hidden}
-.mbar-f{height:100%;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
-.win-chip{position:absolute;bottom:10px;right:12px;font-size:.6rem;font-weight:700;color:#52b86a;background:rgba(82,184,106,.1);border:1px solid rgba(82,184,106,.25);border-radius:20px;padding:2px 8px}
+.mscore-wrap{text-align:right;flex-shrink:0}
+.mscore{font-size:1.9rem;font-weight:900;line-height:1}
+.mscore-max{font-size:.63rem;color:var(--tx2)}
+.mbar{height:5px;background:var(--sf3);border-radius:3px;margin-top:10px;overflow:hidden}
+.mbar-f{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.win-chip{display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:700;color:#52b86a;background:rgba(82,184,106,.12);border:1.5px solid rgba(82,184,106,.3);border-radius:20px;padding:3px 9px;margin-top:6px}
 .mcol-body{padding:12px;display:flex;flex-direction:column;gap:8px}
-.ablk{border:1px solid var(--bd2);border-radius:9px;overflow:hidden}
-.ablk-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px}
-.ablk-h.lv5{background:rgba(212,164,74,.07);border-bottom:1px solid rgba(212,164,74,.15)}
-.ablk-h.lv7{background:rgba(204,51,85,.07);border-bottom:1px solid rgba(204,51,85,.18)}
-.ablk-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.ablk{border:1.5px solid var(--bd2);border-radius:var(--rad-sm);overflow:hidden}
+.ablk-h{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid var(--bd)}
+.ablk-h.lv5{background:rgba(212,164,74,.07)}
+.ablk-h.lv7{background:rgba(204,51,85,.07)}
+.ablk-lbl{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
 .ablk-h.lv5 .ablk-lbl{color:var(--gold)}
 .ablk-h.lv7 .ablk-lbl{color:#dd5577}
 .ablk-right{display:flex;align-items:center;gap:6px}
-.mchip{font-size:.57rem;font-weight:700;padding:2px 6px;border-radius:4px}
-.mc-pvp{color:#c04040;background:rgba(192,64,64,.1);border:1px solid rgba(192,64,64,.22)}
-.mc-pve{color:#2e9898;background:rgba(46,152,152,.1);border:1px solid rgba(46,152,152,.22)}
-.ablk-b{padding:12px}
-.adesc{font-size:.82rem;line-height:1.7;color:var(--tx3);white-space:pre-line;margin-bottom:10px}
-.adesc .vp{color:var(--tx);font-weight:600}
-.adesc .vm{color:#ff9966;font-weight:600}
+.mchip{font-size:.58rem;font-weight:800;padding:2px 7px;border-radius:5px;border:1px solid}
+.mc-pvp{color:#c04040;background:rgba(192,64,64,.1);border-color:rgba(192,64,64,.25)}
+.mc-pve{color:#2e9898;background:rgba(46,152,152,.1);border-color:rgba(46,152,152,.25)}
+.ablk-b{padding:12px;display:flex;flex-direction:column;gap:8px}
+.adesc{font-size:.82rem;line-height:1.75;color:var(--tx3);white-space:pre-line}
+.adesc .vp{color:#7dd87d;font-weight:700}
+.adesc .vm{color:#ff9966;font-weight:700}
 .blist{display:flex;flex-direction:column;gap:4px}
-.brow{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.055);background:rgba(255,255,255,.02)}
+.brow{display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:6px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);transition:background .12s}
+.brow:hover{background:rgba(255,255,255,.05)}
 .brow.iscond{border-style:dashed;opacity:.85}
-.bdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.blbl{flex:1;font-size:.79rem;color:var(--tx3);line-height:1.3}
-.btags{display:flex;gap:3px}
-.btag{font-size:.58rem;font-weight:800;padding:1px 6px;border-radius:3px;letter-spacing:.1px}
-.bt-team{background:rgba(255,200,50,.12);color:#ffcc44;border:1px solid rgba(255,200,50,.2)}
-.bt-cond{background:rgba(180,160,80,.1);color:#ccaa44;border:1px solid rgba(180,160,80,.18)}
-.verd{background:var(--sf);border:1px solid var(--bd2);border-radius:9px;padding:11px 15px;font-size:.85rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.5}
-.botbar{height:46px;background:var(--sf);border-top:1px solid var(--bd2);display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0}
+.bdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.blbl{flex:1;font-size:.8rem;color:var(--tx3);line-height:1.4}
+.btags{display:flex;gap:3px;flex-wrap:wrap}
+.btag{font-size:.57rem;font-weight:800;padding:1px 6px;border-radius:3px;letter-spacing:.1px}
+.bt-team{background:rgba(255,200,50,.14);color:#ffcc44;border:1px solid rgba(255,200,50,.25)}
+.bt-cond{background:rgba(180,160,80,.12);color:#ccaa44;border:1px solid rgba(180,160,80,.22)}
+
+/* Verdict */
+.verd{background:var(--sf);border:1.5px solid var(--bd2);border-radius:var(--rad);padding:12px 16px;font-size:.88rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;line-height:1.6}
+.shared-box{background:var(--sf);border:1.5px solid var(--bd2);border-radius:var(--rad);padding:12px 16px}
+.shared-title{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.1px;color:var(--tx2);margin-bottom:8px}
+.shared-chips{display:flex;flex-wrap:wrap;gap:5px}
+
+/* Botbar */
+.botbar{height:48px;background:var(--sf);border-top:1px solid var(--bd2);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
 .bot-hint{font-size:.78rem;color:var(--tx2);flex:1;text-align:center}
-.bot-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);flex-shrink:0}
+.bot-lbl{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);flex-shrink:0}
 .bcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.bcol-name{font-size:.7rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bcol-name{font-size:.72rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bcol-bar{height:4px;background:var(--bd);border-radius:2px;overflow:hidden}
 .bcol-fill{height:100%;border-radius:2px;transition:width .5s}
-.legbox{background:var(--sf);border:1px solid var(--bd2);border-radius:9px;padding:10px 15px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.leg{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--tx2)}
+
+/* Legend */
+.legbox{background:var(--sf);border:1.5px solid var(--bd2);border-radius:var(--rad);padding:10px 16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:7px;font-size:.76rem;color:var(--tx2)}
 .leg strong{color:var(--tx);font-weight:600}
 
 /* TEAM BUILDER */
-.tb-top{padding:12px 14px;background:var(--sf);border-bottom:1px solid var(--bd2);display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
-.tb-title{font-size:.92rem;font-weight:700;color:var(--tx)}
+.tb-top{padding:12px 16px;background:var(--sf);border-bottom:1px solid var(--bd2);display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.tb-title{font-size:.95rem;font-weight:800;color:var(--tx)}
 .size-btns{display:flex;gap:4px}
-.sz{padding:5px 14px;border-radius:6px;border:1px solid var(--bd2);background:none;color:var(--tx2);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .12s}
+.sz{padding:5px 14px;border-radius:20px;border:1.5px solid var(--bd2);background:none;color:var(--tx2);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .14s}
 .sz:hover{background:var(--sf2)}
-.sz.on{background:var(--gg);border-color:rgba(212,164,74,.35);color:var(--gl)}
-.tb-info{font-size:.78rem;color:var(--tx2);margin-left:auto}
-.tb-expbtn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1px solid rgba(212,164,74,.35);background:rgba(212,164,74,.07);color:var(--gl);font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .14s}
-.tb-expbtn:hover{background:rgba(212,164,74,.14)}
-.tb-expbtn:disabled{opacity:.35;cursor:not-allowed}
+.sz.on{background:var(--gg);border-color:rgba(212,164,74,.45);color:var(--gl)}
+.tb-info{font-size:.8rem;color:var(--tx2);margin-left:auto;font-weight:700}
+.tb-expbtn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1.5px solid rgba(212,164,74,.4);background:rgba(212,164,74,.08);color:var(--gl);font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.tb-expbtn:hover{background:rgba(212,164,74,.16)}
+.tb-expbtn:disabled{opacity:.3;cursor:not-allowed}
+.tb-clearbtn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1.5px solid rgba(224,85,85,.35);background:rgba(224,85,85,.07);color:var(--mel);font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.tb-clearbtn:hover{background:rgba(224,85,85,.14)}
+.tb-clearbtn:disabled{opacity:.3;cursor:not-allowed}
 .tbscroll{flex:1;overflow-y:auto}
-.tbwrap{padding:14px;display:flex;flex-direction:column;gap:14px}
+.tbwrap{padding:16px;display:flex;flex-direction:column;gap:16px}
 
-/* TEAM GRID (SW style) */
-.team-grid-wrap{background:var(--sf);border:1px solid var(--bd2);border-radius:12px;overflow:hidden;padding:14px}
-.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.slot{position:relative;aspect-ratio:1;border-radius:10px;border:2px dashed var(--bd2);background:var(--sf2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;overflow:hidden}
-.slot:hover{border-color:var(--bd2);background:var(--sf3)}
-.slot.filled{border:2px solid var(--bd2);background:var(--sf3);cursor:default}
-.slot.filled:hover{border-color:var(--bd2)}
-.slot-empty-icon{font-size:18px;color:var(--bd2);line-height:1}
-.slot-img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-.slot-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.8));font-size:.58rem;font-weight:700;color:#fff;text-align:center;padding:14px 2px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.slot-type{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:800}
-.slot-rm{position:absolute;top:3px;right:3px;width:17px;height:17px;border-radius:50%;background:rgba(220,50,50,.88);color:#fff;font-size:.7rem;font-weight:700;display:none;align-items:center;justify-content:center;cursor:pointer;line-height:1}
+/* Team grid */
+.team-grid-wrap{background:var(--sf);border:1.5px solid var(--bd2);border-radius:var(--rad);padding:16px}
+.team-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start}
+.slot{position:relative;width:82px;height:82px;border-radius:var(--rad);border:2px dashed var(--bd2);background:var(--sf2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.slot:not(.filled):hover{border-color:rgba(212,164,74,.4);background:rgba(212,164,74,.05)}
+.slot.filled{border:2px solid var(--bd2);cursor:default}
+.slot.filled:hover{border-color:rgba(77,143,214,.4)}
+.slot-empty-icon{font-size:22px;color:var(--bd2);line-height:1;opacity:.7}
+.slot-img{width:100%;height:100%;object-fit:cover;border-radius:calc(var(--rad) - 2px)}
+.slot-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:.55rem;font-weight:700;color:#fff;text-align:center;padding:12px 3px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:0 0 calc(var(--rad) - 2px) calc(var(--rad) - 2px)}
+.slot-type{position:absolute;top:4px;left:4px;width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:900;background:rgba(0,0,0,.6)}
+.slot-rm{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:rgba(220,50,50,.9);color:#fff;font-size:.8rem;font-weight:700;display:none;align-items:center;justify-content:center;cursor:pointer;line-height:1;z-index:2}
 .slot.filled:hover .slot-rm{display:flex}
-.slot-ph{width:42px;height:42px;border-radius:8px;background:var(--sf3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:.42rem;color:var(--tx2);text-align:center;padding:2px}
 
 /* Buff summary */
-.sec-title{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);margin-bottom:8px}
-.bagg{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:5px}
-.bagg-row{background:var(--sf);border:1px solid var(--bd2);border-radius:7px;padding:8px 11px;display:flex;align-items:center;gap:8px}
-.bagg-row.iscond{border-style:dashed;opacity:.82}
-.bagg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sec-title{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx2);margin-bottom:9px}
+.bagg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:5px}
+.bagg-row{background:var(--sf);border:1.5px solid var(--bd2);border-radius:var(--rad-sm);padding:8px 12px;display:flex;align-items:center;gap:9px;transition:background .12s}
+.bagg-row:hover{background:var(--sf2)}
+.bagg-row.iscond{border-style:dashed;opacity:.85}
+.bagg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .bagg-info{flex:1;min-width:0}
-.bagg-lbl{font-size:.78rem;color:var(--tx3)}
+.bagg-lbl{font-size:.8rem;color:var(--tx3)}
 .bagg-sub{font-size:.6rem;color:var(--tx2);margin-top:2px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.bagg-cnt{font-size:.95rem;font-weight:700;flex-shrink:0}
-.cat-sep{grid-column:1/-1;display:flex;align-items:center;gap:8px;margin-top:4px}
-.cat-sep-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.bagg-cnt{font-size:.95rem;font-weight:800;flex-shrink:0}
+.cat-sep{grid-column:1/-1;display:flex;align-items:center;gap:9px;margin-top:6px}
+.cat-sep-lbl{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
 .cat-sep-line{flex:1;height:1px;background:var(--bd2)}
-.cat-sep-cnt{font-size:.6rem;color:var(--tx2)}
+.cat-sep-cnt{font-size:.62rem;color:var(--tx2)}
+
+/* Score pill in sidebar */
+.si-power{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.si-pts{font-size:.78rem;font-weight:800;line-height:1}
+.si-pbar{width:36px;height:3px;background:var(--bd2);border-radius:2px;overflow:hidden}
+.si-pbar-f{height:100%;border-radius:2px}
+
+/* Score color helpers */
+.sc-hi{color:#52b86a}
+.sc-mid{color:var(--gold)}
+.sc-lo{color:#c44040}
 </style>
 </head>
 <body>
 <script>
 const IP='./images/';
-const CC=['#4d7fff','#22cc88','#ff5e2e'];
+const CC=['#4d8fd6','#d4a44a','#e05555'];
 const CN=['①','②','③'];
 const MD=['🥇','🥈','🥉'];
 
 const BUFF_CATS={
-  atk:{label:'⚔ ATQ/Dégâts',ids:['atk_10','atk_20','atk_25_delay','atk_100','dmg_15','dmg_20','dmg_150','dmg_aoe_scaling','dmg_buff_scaling','dmg_debuff_scaling','dmg_unique_target']},
-  crit:{label:'✦ Critique',ids:['crit_rate_10','crit_rate_10_cond','crit_rate_50','crit_dmg_10_cond','crit_dmg_20','crit_res_10_cond','crush_rate_10','crush_rate_10_cond','crush_rate_10_team','crush_dmg_20','double_hit_10','double_hit_15','triple_hit_10','no_crit_cd','double_hit_10_cond']},
-  spd:{label:'⚡ Vitesse',ids:['spd_10','spd_15','spd_15_cond','spd_30','spd_40_cond','spd_team_20','skill_accel_15','skill_accel_20_cond','move_spd_200']},
+  atk:{label:'⚔ ATQ/Dégâts',ids:['atk_10','atk_20','atk_25_delay','atk_100','atk_80','atk_up_stack','dmg_15','dmg_20','dmg_150','dmg_aoe_scaling','dmg_buff_scaling','dmg_debuff_scaling','dmg_unique_target','dmg_frozen_50','dmg_stunned_50','dmg_def_down_50','dmg_cc_50','dmg_poisoned_20','dmg_bleed_20','dmg_burned_20','dmg_sleeping_20','dmg_dot_50','dmg_petrified_20','target_weakness_provoke','target_weakness_immunity','target_weakness_shield','atk_down_ennemy_count']},
+  crit:{label:'✦ Critique',ids:['crit_rate_10','crit_rate_10_cond','crit_rate_50','crit_dmg_10_cond','crit_dmg_20','crit_res_10_cond','crush_rate_10','crush_rate_10_cond','crush_rate_10_team','crush_dmg_20','crush_dmg_20_ally','crush_rate_20_ally','double_hit_10','double_hit_15','double_hit_10_cond','triple_hit_10','no_crit_cd','teamwork_stack','one_team_one_spirit','perfect_team','double_triple_dmg_team','bloom_stack','full_bloom']},
+  spd:{label:'⚡ Vitesse',ids:['spd_10','spd_15','spd_15_cond','spd_30','spd_40_cond','spd_team_20','skill_accel_15','skill_accel_20_cond','move_spd_200','exclusive_cd_down','cd_reset_proc','cd_skill_cond','no_crit_cd']},
   range:{label:'🏹 Portée',ids:['range_3','range_5','aoe_range_30','aoe_range_30_cond']},
-  def:{label:'🛡 Défense',ids:['def_15','hp_max_15_cond','res_lp_30','dmg_resist_10','dmg_resist_20_cond','dmg_resist_80_cond','dmg_resist_15_cond','shield_hits_3_team','shield_hits_5','stealth_shield','endurance_cond','dodge_3s','dmg_resist_20_team']},
-  cc:{label:'🌀 CC/Survie',ids:['cc_eff_20','cc_immune_team_30','cc_immune_self_react','fran_blessing_team','cd_reset_proc','cd_skill_cond','stealth','strip_shield','lifesteal_15_cond']},
-  dot:{label:'☠ DoT/Ennemi',ids:['bleed','dot_poison','weakness_poison_enemy','weak_point_detect','weakness_element','weakness_elem_team','debuff_aoe_taken_10','debuff_crit_taken_10','dmg_frozen_50','dmg_stunned_50','dmg_def_down_50','dmg_cc_50','dmg_poisoned_20','dmg_bleed_20','dmg_burned_20','dmg_sleeping_20','dmg_dot_50','dmg_petrified_20','block_shield']},
-  team:{label:'👥 Team',ids:['spd_team_20','shield_hits_3_team','dmg_resist_20_team','cc_immune_team_30','fran_blessing_team','merry_box_team_cond','crush_rate_10_team','weakness_elem_team']},
+  def:{label:'🛡 Défense',ids:['def_15','hp_max_15_cond','res_lp_30','dmg_resist_10','dmg_resist_20_cond','dmg_resist_80_cond','dmg_resist_15_cond','dmg_resist_20_team','shield_hits_3_team','shield_hits_5','stealth_shield','endurance_cond','dodge_3s','protection_shield','limit_shield','dmg_down_provoked']},
+  cc:{label:'🌀 CC/Survie',ids:['cc_eff_20','cc_immune_team_30','cc_immune_self_react','fran_blessing_team','cd_reset_proc','cd_skill_cond','stealth','strip_shield','lifesteal_15_cond','provoke_status']},
+  dot:{label:'☠ DoT/Ennemi',ids:['bleed','dot_poison','weakness_poison_enemy','weak_point_detect','weakness_element','weakness_elem_team','debuff_aoe_taken_10','debuff_crit_taken_10','block_shield']},
+  team:{label:'👥 Team',ids:['spd_team_20','shield_hits_3_team','dmg_resist_20_team','cc_immune_team_30','fran_blessing_team','merry_box_team_cond','crush_rate_10_team','weakness_elem_team','double_triple_dmg_team','teamwork_stack','one_team_one_spirit','perfect_team','limit_shield','class_share_melee','target_weakness_provoke','target_weakness_shield','weak_point_detect']},
 };
 
 const BUFFS={
@@ -258,7 +297,7 @@ const BUFFS={
   "dodge_3s":{label:"Esquive Absolue 3s",color:"#60aaee",power:22},
   "cc_immune_team_30":{label:"Immunité CC ALLIÉS (30s)",color:"#44ddaa",power:52,team:true},
   "cc_immune_self_react":{label:"Immunité CC 2s (réactif) + Reset CD Excl.",color:"#44ddaa",power:36,cond:true},
-  "fran_blessing_team":{label:"Bénédiction de Fran ALLIÉS (Immunité débuffs + Dégâts +15%, 10s)",color:"#88aaff",power:48,team:true,cond:true},
+  "fran_blessing_team":{label:"Bénédiction de Fran ALLIÉS (Immunité débuffs + Dégâts +15%, 10s)",color:"#88aaff",power:48,cond:true,team:true},
   "cd_reset_proc":{label:"Reset CD Compétence (conditionnel)",color:"#00ffff",power:22,cond:true},
   "cd_skill_cond":{label:"Réduction CD Compétence Excl.",color:"#30c0d0",power:14,cond:true},
   "fox_fire_cond":{label:"Feu du renard (sur Coup Puissant)",color:"#ff8c42",power:12,cond:true},
@@ -268,11 +307,11 @@ const BUFFS={
   "rockstar_i":{label:"Rockstar I (passif permanente)",color:"#ff44cc",power:22},
   "rockstar_iii_cond":{label:"Rockstar III 2s (conditionnel)",color:"#ff00aa",power:14,cond:true},
   "happy_box_cond":{label:"Happy Box (sur Coup Puissant)",color:"#ffaa22",power:14,cond:true},
-  "merry_box_team_cond":{label:"Merry Box ALLIÉS (×5 stacks, 4s)",color:"#ffcc33",power:36,team:true,cond:true},
+  "merry_box_team_cond":{label:"Merry Box ALLIÉS (×5 stacks, 4s)",color:"#ffcc33",power:36,cond:true,team:true},
   "bleed":{label:"Saignement (ennemi)",color:"#b02020",power:12},
   "dot_poison":{label:"Empoisonnement (ennemi, continu)",color:"#669900",power:14},
   "weakness_poison_enemy":{label:"Faiblesse Empoisonnement (ennemi)",color:"#88bb22",power:18,cond:true},
-  "weak_point_detect":{label:"Détection P.Faible ALLIÉS (sur dot)",color:"#ffaa44",power:14,team:true,cond:true},
+  "weak_point_detect":{label:"Détection P.Faible ALLIÉS (sur dot)",color:"#ffaa44",power:14,cond:true,team:true},
   "weakness_element":{label:"Faiblesse Élémentaire (ennemi)",color:"#50aaee",power:18},
   "weakness_elem_team":{label:"Faiblesse Élémentaire ALLIÉS",color:"#70ccff",power:30,team:true},
   "debuff_aoe_taken_10":{label:"Dégâts Zone reçus +10% (ennemi)",color:"#dd6644",power:12,cond:true},
@@ -280,20 +319,40 @@ const BUFFS={
   "lifesteal_15_cond":{label:"Aspiration Dégâts +15% (2s)",color:"#cc4488",power:18,cond:true},
   "double_hit_10_cond":{label:"Coup Double +10% (2s, sur attaque)",color:"#cc70bb",power:14,cond:true},
   "block_shield":{label:"Détection Bouclier (cible)",color:"#5588cc",power:36},
+  "teamwork_stack":{label:"Augmente l'ATQ, les Dég. Crit, les Dég. Écrasement, le Taux Crit et le Taux Écrasement de 3% par cumul (jusqu'à 21%).",color:"#c8a830",power:20,team:true},
+  "one_team_one_spirit":{label:"Lorsque l'ATQ, les Dég. Crit, les Dég. Écrasement, le Taux Crit et le Taux Écrasement ont tous été augmentés de 20% ou plus par des effets de compétences, augmente les Dégâts infligés de 30%.",color:"#d06030",power:30,team:true},
+  "perfect_team":{label:"Lorsque l'ATQ, les Dég. Crit, les Dég. Écrasement, le Taux Crit et le Taux Écrasement ont tous été augmentés de 40% ou plus par des effets de compétences, augmente les Dégâts infligés de 30%.",color:"#e05555",power:40,team:true},
+  "atk_up_stack":{label:"ATQ +1% (10s, max 100 stacks)",color:"#ff44aa",power:5},
+  "exclusive_cd_down":{label:"Accél. Comp. Exclusive +5% (restant)",color:"#d06030",power:10},
+  "provoke_status":{label:"Provocation (force la cible à attaquer le lanceur)",color:"#aaaaaa",power:20},
+  "dmg_down_provoked":{label:"Dég. reçus -30% (cibles Provoquées)",color:"#aa66dd",power:30},
+  "target_weakness_provoke":{label:"Dégâts +15% (cibles Provoquées)",color:"#aa66dd",power:20,team:true},
+  "protection_shield":{label:"Bouclier = 50% des PV max",color:"#ffaa44",power:20},
+  "double_triple_dmg_team":{label:"Dég. Coups Doubles/Triples +15% ALLIÉS",color:"#4466cc",power:25,team:true},
+  "bloom_stack":{label:"Fleur (Cumul Bloom max 15)",color:"#d06030",power:30},
+  "full_bloom":{label:"Pleine Floraison (Crits déclenchent Coups Multiples)",color:"#e05555",power:40,cond:true},
+  "atk_80":{label:"ATQ +80%",color:"#ff44aa",power:60},
+  "atk_down_ennemy_count":{label:"ATK -5% / ennemy ( Max.60%)",color:"#ff44aa",power:10},
+  "target_weakness_immunity":{label:"Dégâts +30% (Cible avec stats Immunité) (Allié Aléatoire)(10s)",color:"#cc4488",power:30},
+  "crush_dmg_20_ally":{label:"Dég. Coup Puissants +20% (Allié Aléatoire)",color:"#44ddaa",power:25},
+  "crush_rate_20_ally":{label:"Coup Puissant +20% (Allié Aléatoire)",color:"#c8b840",power:15},
+  "limit_shield":{label:"Ne subit pas les dégâts dépassant 10% du max des HP",color:"#e05555",power:30,team:true},
+  "class_share_melee":{label:"Le monstre est aussi de type mêlée",color:"#50b890",power:40},
+  "target_weakness_shield":{label:"Dégâts +15% / nombre de shield (Max.45%)",color:"#30b0d0",power:30,team:true}
 };
 
 const AWK3={level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true};
-const MONSTERS={
-  "Craka":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- ATQ +10%.\n- Résist. LP -30%.\n- Chaque Saignement → allié : Détection point faible 10% / 10s.",buffs:["atk_10","res_lp_30","bleed","weak_point_detect"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Point faible – Saignement 15% sur ennemi.\n- Dégâts +20%.",buffs:["weakness_element","dmg_20"],pvp:true,pve:false}]},
+const MONSTERS = {
+  "Craka": { type: "melee", awakenings: [AWK3, { level: 5, desc: "Début de combat :\n- ATQ +10%.\n- Résist. LP -30%.\n- Chaque Saignement → allié : Détection point faible 10% / 10s.", buffs: ["atk_10", "res_lp_30", "bleed", "weak_point_detect"], pvp: true, pve: false }, { level: 7, desc: "Attaque réussie :\n- Point faible – Saignement 15% sur ennemi.\n- Dégâts +20%.", buffs: ["weakness_element", "dmg_20"], pvp: true, pve: false }] },
   "Mago":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Esquive absolue 3s.\n- ATQ +10%.\n- Furtivité.\n- Sous Furtivité : Coup puissant +10% / 3s.",buffs:["dodge_3s","atk_10","stealth","crush_rate_10_cond"],pvp:true,pve:false},{level:7,desc:"Sous Furtivité :\n- Dégâts +150% / 3s.\n- Attaque réussie : Dég. Coups puissants +20% / 10s.\n- Dégâts +20%.",buffs:["dmg_150","crush_dmg_20","dmg_20"],pvp:true,pve:false}]},
   "Jagger":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Bouclier invincible + Vit. déplacement +200% / 3s.\n- ATQ +10%, DEF +15%, Résist. LP -30%.",buffs:["stealth_shield","move_spd_200","atk_10","def_15","res_lp_30"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Dég. Crit +20% / 10s.\n- Dégâts / nb buffs actifs (max 30).\n- Dégâts +20%.",buffs:["crit_dmg_20","dmg_buff_scaling","dmg_20"],pvp:true,pve:false}]},
   "Trinity":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Bouclier ×5 + Dég. Crit +20%.\n- Coup puissant → Dégâts zone reçus +10% sur ennemi / 2s.",buffs:["shield_hits_5","crit_dmg_20","debuff_aoe_taken_10"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Dég. Crit reçus +10% sur ennemi / 10s.\n- Dégâts / nb debuffs cible (max 15).\n- Dégâts +20%.",buffs:["debuff_crit_taken_10","dmg_debuff_scaling","dmg_20"],pvp:true,pve:false}]},
   "Melissa":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Vit. ATQ +15%.\n- Bouclier ×5.",buffs:["spd_15","shield_hits_5"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Coup double +15% / 10s.\n- Dégâts +20%.",buffs:["double_hit_15","dmg_20"],pvp:true,pve:false}]},
   "Artamiel":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- ATQ +10% immédiat.\n- Après 10s : ATQ +25% supplémentaires / 10s.",buffs:["atk_10","atk_25_delay"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Résist. dégâts +80% / 2s.\n- Dégâts +20%.",buffs:["dmg_resist_80_cond","dmg_20"],pvp:true,pve:false}]},
-  "Tsuyuha":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup létal : Endurance 3s (CD : 30s).\nDébut de combat :\n- Coup puissant +10%.\n- Sur coup puissant : Réduit CD compétence excl. -10% (1×/2s).",buffs:["endurance_cond","crush_rate_10","cd_skill_cond"],pvp:true,pve:false},{level:7,desc:"Si cible subit -DEF : Reset CD compétence excl.\nAttaque réussie :\n- Coup puissant +10% / 5s.\n- Dégâts +20%.",buffs:["cd_reset_proc","crush_rate_10","dmg_20"],pvp:true,pve:false}]},
+  "Tsuyuha":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup létal : Endurance 3s (CD : 30s).\n- Coup puissant +10%.\n- Sur coup puissant : Réduit CD compétence excl. -10% (1×/2s).",buffs:["endurance_cond","crush_rate_10","cd_skill_cond"],pvp:true,pve:false},{level:7,desc:"Si cible subit -DEF : Reset CD compétence excl.\n- Coup puissant +10% / 5s.\n- Dégâts +20%.",buffs:["cd_reset_proc","crush_rate_10","dmg_20"],pvp:true,pve:false}]},
   "Barbara":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Esquive absolue + Giclée / 3s.\n- Taux Crit +10%.",buffs:["dodge_3s","crit_rate_10"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Supprime boucliers ennemis.\n- Vit. ATQ +40% / 1s.\n- Dégâts +20%.",buffs:["strip_shield","spd_40_cond","dmg_20"],pvp:true,pve:false}]},
   "Zeratu":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Coup puissant +10%.\n- Vit. ATQ +30% / 15s.",buffs:["crush_rate_10","spd_30"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Reset CD attaques critiques / 4s.\n- Dégâts +20%.",buffs:["no_crit_cd","dmg_20"],pvp:true,pve:false}]},
-  "Astar":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Résist. LP -30% et Vit. ATQ +10%.\n- Sur coup puissant : Charge 1 Happy Box / 20s (CD : 2s).",buffs:["res_lp_30","spd_10","happy_box_cond"],pvp:true,pve:true},{level:7,desc:"À chaque coup : Charge 1 Merry Box.\nÀ 5 stacks → ALLIÉS : ATQ+10%, CP+10%, Dég. CP+10% / 4s.\n- Dégâts +20%.",buffs:["merry_box_team_cond","happy_box_cond","dmg_20"],pvp:true,pve:true}]},
+  "Astar":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Résist. LP -30% et Vit. ATQ +10%.\n- Sur coup puissant : Charge 1 Happy Box / 20s.",buffs:["res_lp_30","spd_10","happy_box_cond"],pvp:true,pve:true},{level:7,desc:"À chaque coup : Charge 1 Merry Box.\nÀ 5 stacks → ALLIÉS : ATQ+10%, CP+10%, Dég. CP+10% / 4s.\n- Dégâts +20%.",buffs:["merry_box_team_cond","happy_box_cond","dmg_20"],pvp:true,pve:true}]},
   "Belle":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Rockstar I (passif permanente).\n- Bouclier invincible 3s.",buffs:["rockstar_i","stealth_shield"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Vit. ATQ ALLIÉS +20% / 2s.\n- Rockstar III / 2s.\n- Dégâts +20%.",buffs:["spd_team_20","rockstar_iii_cond","dmg_20"],pvp:true,pve:false}]},
   "Jeanne":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Bouclier invincible 5s.\n- Taux Crit +50% / 5s.",buffs:["stealth_shield","crit_rate_50"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Dég. Crit +20% / 2s.\n- Dégâts +20%.",buffs:["crit_dmg_20","dmg_20"],pvp:true,pve:false}]},
   "Vanessa":{type:"melee",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Accél. compétences +20% / 2s.",buffs:["skill_accel_20_cond"],pvp:true,pve:false},{level:7,desc:"Dégâts +50% sur cibles Étourdies.\n- Dégâts +20%.",buffs:["dmg_stunned_50","dmg_20"],pvp:false,pve:true}]},
@@ -309,11 +368,11 @@ const MONSTERS={
   "Sabrina":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Vit. ATQ +15%.",buffs:["range_3","spd_15"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Coup triple +10% / 10s.\n- Dégâts +20%.",buffs:["triple_hit_10","dmg_20"],pvp:true,pve:true}]},
   "Theomars":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3.\n- Par effet cumulable sur ennemi : Dég. Crit +10% / 20s.",buffs:["range_3","crit_dmg_10_cond"],pvp:true,pve:true},{level:7,desc:"Attaque réussie → ALLIÉS :\n- Faiblesse Congélation / 10s.\n- Coup puissant +10% / 10s.\n- Dégâts +20%.",buffs:["weakness_elem_team","crush_rate_10_team","dmg_20"],pvp:true,pve:false}]},
   "Laima":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Accél. compétences +15%.",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Taux Crit +10% et Dég. Crit +20% / 5s.\n- Dégâts +20%.",buffs:["crit_rate_10","crit_dmg_20","dmg_20"],pvp:true,pve:true}]},
-  "Anavel":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Taux Crit +10%.",buffs:["range_3","crit_rate_10"],pvp:true,pve:true},{level:7,desc:"Portée +3 (cumul = +6 total) et Taux Crit +10%.\nAttaque réussie → ALLIÉS : Faiblesse Congélation / 10s.\n- Dégâts +20%.",buffs:["range_3","crit_rate_10","weakness_elem_team","dmg_20"],pvp:true,pve:true}]},
+  "Anavel":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Taux Crit +10%.",buffs:["range_3","crit_rate_10"],pvp:true,pve:true},{level:7,desc:"Portée +3 (total +6) et Taux Crit +10%.\nAttaque réussie → ALLIÉS : Faiblesse Congélation / 10s.\n- Dégâts +20%.",buffs:["range_3","crit_rate_10","weakness_elem_team","dmg_20"],pvp:true,pve:true}]},
   "Soha":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Dég. Crit +20%.\n- Sur coup puissant : Charge 1 Feu du renard.",buffs:["range_3","crit_dmg_20","fox_fire_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Coup puissant +10% / 10s.\n- À 20 charges → compétence critique ×2.\n- Dégâts +20%.",buffs:["crush_rate_10","fox_fire_burst","dmg_20"],pvp:true,pve:false}]},
-  "Brandia":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Coup puissant +10%.",buffs:["range_3","crush_rate_10"],pvp:true,pve:true},{level:7,desc:"Dégâts supplémentaires aux cibles uniques.\nAttaque réussie :\n- Dég. Coups puissants +20% / 10s.\n- Dégâts +20%.",buffs:["dmg_unique_target","crush_dmg_20","dmg_20"],pvp:true,pve:true}]},
+  "Brandia":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Coup puissant +10%.",buffs:["range_3","crush_rate_10"],pvp:true,pve:true},{level:7,desc:"Dégâts supplémentaires aux cibles uniques.\n- Dég. Coups puissants +20% / 10s.\n- Dégâts +20%.",buffs:["dmg_unique_target","crush_dmg_20","dmg_20"],pvp:true,pve:true}]},
   "Dusky":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Coup double +10%.\n- Sur Brûlure → allié : Détection point faible / 10s.",buffs:["range_3","double_hit_10","weak_point_detect"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Faiblesse aux brûlures sur ennemi / 10s.\n- Dégâts +20%.",buffs:["weakness_element","dmg_20"],pvp:true,pve:false}]},
-  "Elenoa":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Taux Crit +10%.\n- Sur Empoisonnement → allié : Détection point faible / 10s.",buffs:["range_3","crit_rate_10","weak_point_detect"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Faiblesse empoisonnement sur ennemi / 10s.\n- Dégâts +20%.",buffs:["weakness_element","dmg_20"],pvp:true,pve:false}]},
+  "Elenoa":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Taux Crit +10%.",buffs:["range_3","crit_rate_10","weak_point_detect"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Faiblesse empoisonnement sur ennemi / 10s.\n- Dégâts +20%.",buffs:["weakness_element","dmg_20"],pvp:true,pve:false}]},
   "Seimei":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Accél. compétences +15%.",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},{level:7,desc:"Par attaque : Charge 1 Énergie Yang / 20s.\nÀ 10 stacks → ATQ +100% / 4s.\n- Dégâts +20%.",buffs:["atk_100","dmg_20"],pvp:true,pve:false}]},
   "Sekhmet":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Rayon Zone +30%.",buffs:["range_3","aoe_range_30"],pvp:false,pve:true},{level:7,desc:"Attaque réussie :\n- Accél. compétences +15% / 10s.\n- Dégâts ×ennemis (max ×10).\n- Dégâts +20%.",buffs:["skill_accel_15","dmg_aoe_scaling","dmg_20"],pvp:false,pve:true}]},
   "Zeta-06":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Accél. compétences +15%.",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Dég. Coups puissants +20%.\n- Dégâts +20%.",buffs:["crush_dmg_20","dmg_20"],pvp:true,pve:false}]},
@@ -332,12 +391,16 @@ const MONSTERS={
   "Celestia":{type:"support",awakenings:[AWK3,{level:5,desc:"Sur coup puissant :\n- Accél. compétences +20% / 2s.",buffs:["skill_accel_20_cond"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Rayon Zone +30% / 10s.\n- Dégâts +20%.",buffs:["aoe_range_30_cond","dmg_20"],pvp:false,pve:true}]},
   "Fran":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3.\n- Accél. Compétences +15%.",buffs:["range_3","skill_accel_15"],pvp:true,pve:true},{level:7,desc:"- Bénédiction de Fran ALLIÉS (Immunité débuffs + Dégâts +15%, 10s).\n- Dégâts +20%.",buffs:["fran_blessing_team","dmg_20"],pvp:true,pve:true}]},
   "Katarina":{type:"range",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Portée +3 et Taux Crit +10%.",buffs:["range_3","crit_rate_10"],pvp:true,pve:true},{level:7,desc:"Détection faiblesse :\n- Dégâts subis sous shield de 15% (cible) /10s.\n- Dégâts +20%.",buffs:["block_shield","dmg_20"],pvp:true,pve:true}]},
+  "YeonHong":{type:"range",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Sur coup critique :\n- Augmente l'ATQ, les Dég. Crit, les Dég. Écrasement, le Taux Crit et le Taux Écrasement de 3% par cumul (jusqu'à 21%). / 5s\nDébut de combat :\n- Portée +3\n- Taux Crit +10%",buffs:["teamwork_stack","range_3","crit_rate_10"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Lorsque l'ATQ, les Dég. Crit, les Dég. Écrasement, le Taux Crit et le Taux Écrasement ont tous été augmentés de 20% ou plus par des effets de compétences, augmente les Dégâts infligés de 30%.\n- Lorsque l'ATQ, les Dég. Crit, les Dég. Écrasement, le Taux Crit et le Taux Écrasement ont tous été augmentés de 40% ou plus par des effets de compétences, augmente les Dégâts infligés de 30%.\n- Dégâts +20%",buffs:["one_team_one_spirit","perfect_team","dmg_20"],pvp:true,pve:true}]},
+  "Frigate":{type:"melee",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Sur coup reçu :\n- ATQ +1%/stack (max 100, 10s)\n- Accél. Comp. Exclusive +5% (restant)\n- Endurance anti-mort (coup létal) / 3s",buffs:["atk_up_stack","exclusive_cd_down","endurance_cond"],pvp:true,pve:false},{level:7,desc:"Début de combat :\n- Bouclier = 50% des PV max\n- Dégâts +15% (cibles Provoquées)\n- Dégâts +20%",buffs:["protection_shield","target_weakness_provoke","dmg_20"],pvp:true,pve:false}]},
+  "Juno":{type:"range",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Début de combat :\n- Portée +3\n- Vit. ATQ +15%",buffs:["range_3","spd_15"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Dég. Coups Doubles/Triples +15% ALLIÉS\n- Fleur (Cumul Bloom max 15)\n- Pleine Floraison (Crits → Coups Multiples)\n- Dégâts +20%",buffs:["double_triple_dmg_team","bloom_stack","full_bloom","dmg_20"],pvp:true,pve:false}]},
+  "Iris":{type:"melee",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Début de combat :\n- ATQ +80%\n- ATQ ennemi -5%/ennemi (max -60%)",buffs:["atk_80","atk_down_ennemy_count"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Dég. Coup Puissant +20% (Allié Aléatoire) / 10s\n- Dégâts +30% (cible immunisée, Allié Aléatoire) / 10s\n- Coup Puissant +20% (Allié Aléatoire) / 1s\n- Dégâts +20%",buffs:["crush_dmg_20_ally","target_weakness_immunity","crush_rate_20_ally","dmg_20"],pvp:true,pve:false}]},
+  "Josephine":{type:"tank",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Début de combat :\n- Dégâts reçus ≤ 10% HP max (7s)\n- Type Mêlée partagé\n- Accél. Compétences +15%",buffs:["limit_shield","class_share_melee","skill_accel_15"],pvp:true,pve:false},{level:7,desc:"Attaque réussie :\n- Dégâts +15% / bouclier ennemi (max +45%)\n- Dégâts +20%",buffs:["target_weakness_shield","dmg_20"],pvp:true,pve:false}]},
 };
 </script>
 
 <header>
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M12 2L8 8H2l5 4-2 7 7-4 7 4-2-7 5-4h-6z"/></svg>
-  <span class="logo">SW : RUSH</span>
+  <span class="logo"><span class="logo-star">★</span> SW RUSH</span>
   <div class="hsep"></div>
   <div class="tabs">
     <button class="tab on" id="tab-cmp" onclick="switchTab('cmp')">⚔ Comparateur</button>
@@ -346,24 +409,22 @@ const MONSTERS={
 </header>
 
 <div class="layout">
-  <!-- SIDEBAR toujours visible -->
   <div class="sidebar">
     <div class="sb-head">
       <div class="sb-sinp">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--tx2)" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="srch" placeholder="Rechercher un monstre…" oninput="buildList()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="srch" placeholder="Rechercher…" oninput="buildList()">
       </div>
       <div class="type-row" id="typeRow">
         <button class="tf aa" data-t="">Tous</button>
-        <button class="tf" data-t="melee">Mêlée</button>
-        <button class="tf" data-t="tank">Tank</button>
-        <button class="tf" data-t="range">Range</button>
-        <button class="tf" data-t="support">Support</button>
+        <button class="tf" data-t="melee">⚔ Mêlée</button>
+        <button class="tf" data-t="tank">🛡 Tank</button>
+        <button class="tf" data-t="range">🏹 Range</button>
+        <button class="tf" data-t="support">💚 Support</button>
       </div>
     </div>
-    <!-- Filtre par catégorie de buff -->
     <div class="buff-filter-wrap">
-      <div class="bf-title">Filtrer par buff</div>
+      <div class="bf-title">Filtre par buff</div>
       <div class="bf-cats" id="buffCats">
         <button class="bfc" data-cat="atk">⚔ ATQ</button>
         <button class="bfc" data-cat="crit">✦ Crit</button>
@@ -379,33 +440,29 @@ const MONSTERS={
   </div>
 
   <div class="main">
-    <!-- COMPARATEUR -->
     <div class="panel on" id="panelCmp">
       <div class="cmp-hint" id="cmpEmpty">
-        <div class="cmp-hint-icon">⚔</div>
-        <div>Cliquez sur un monstre dans la liste pour comparer</div>
-        <div style="font-size:.75rem;color:var(--tx2)">Jusqu'à 3 monstres simultanément</div>
+        <div class="hint-icon">⚔</div>
+        <div class="hint-title">Sélectionnez un monstre</div>
+        <div class="hint-sub">Jusqu'à 3 monstres pour comparer</div>
       </div>
       <div class="cscroll" id="cscroll" style="display:none">
         <div class="cwrap" id="cwrap"></div>
       </div>
-      <div class="botbar" id="cmpBot"><span class="bot-hint">Sélectionnez des monstres dans la liste à gauche</span></div>
+      <div class="botbar" id="cmpBot"><span class="bot-hint">Cliquez sur un monstre dans la liste</span></div>
     </div>
 
-    <!-- TEAM BUILDER -->
     <div class="panel off" id="panelTeam">
       <div class="tb-top">
-        <span class="tb-title">Team Builder</span>
+        <span class="tb-title">👥 Team Builder</span>
         <div class="size-btns">
           <button class="sz" data-s="10" onclick="setSize(10)">10</button>
           <button class="sz on" data-s="15" onclick="setSize(15)">15</button>
           <button class="sz" data-s="25" onclick="setSize(25)">25</button>
         </div>
-        <span class="tb-info" id="tbInfo">0 / 15</span>
-        <button class="tb-expbtn" id="expBtn" onclick="exportTeam()" disabled>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Exporter
-        </button>
+        <button class="tb-clearbtn" id="clearBtn" onclick="clearTeam()" disabled>✕ Vider</button>
+        <button class="tb-expbtn" id="expBtn" onclick="exportTeam()" disabled>↓ Exporter</button>
+        <span class="tb-info" id="tbInfo" style="margin-left:auto">0 / 15</span>
       </div>
       <div class="tbscroll">
         <div class="tbwrap">
@@ -413,7 +470,7 @@ const MONSTERS={
             <div class="team-grid" id="teamGrid"></div>
           </div>
           <div id="tbBuffSec" style="display:none">
-            <div class="sec-title">Récapitulatif des buffs de l'équipe</div>
+            <div class="sec-title">Récapitulatif des buffs</div>
             <div class="bagg" id="tbBuffs"></div>
           </div>
           <div class="legbox" id="tbLeg" style="display:none">
@@ -429,20 +486,22 @@ const MONSTERS={
 
 <script>
 const CW=0.6;
-function rgb(h){return`${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`}
+function rgb(h){h=h.replace('#','');return`${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)}`}
 function bVal(id){const b=BUFFS[id];return b?Math.round(b.power*(b.cond?CW:1)):0}
 function awkRaw(a){return(a.buffs||[]).reduce((s,id)=>s+bVal(id),0)}
-const MAX_AWK=Math.max(...Object.values(MONSTERS).flatMap(m=>(m.awakenings||[]).filter(a=>a.level!==3).map(awkRaw)));
+const ALL_SCORES=Object.values(MONSTERS).flatMap(m=>(m.awakenings||[]).filter(a=>a.level!==3).map(awkRaw));
+const MAX_AWK=Math.max(...ALL_SCORES);
 function awkPts(a){return Math.round(awkRaw(a)/MAX_AWK*100)}
 function totPts(m){return(m.awakenings||[]).filter(a=>a.level!==3).reduce((s,a)=>s+awkPts(a),0)}
-const MAX_T=200;
-function sCol(r){return r>=.7?'#52b86a':r>=.4?'var(--gold)':'#c44040'}
-function sGrad(r){return r>=.7?'linear-gradient(90deg,#1e5528,#52b86a)':r>=.4?'linear-gradient(90deg,#6a4010,var(--gold))':'linear-gradient(90deg,#601818,#c44040)'}
-function hD(t){return t.replace(/(\+\d+(?:[,.]\d+)?%)/g,'<span class="vp">$1</span>').replace(/(-\d+(?:[,.]\d+)?%)/g,'<span class="vm">$1</span>')}
+const ALL_TOTS=Object.keys(MONSTERS).map(n=>totPts(MONSTERS[n]));
+const MAX_T=Math.max(...ALL_TOTS);
+function sCol(r){return r>=.68?'#52b86a':r>=.38?'var(--gold)':'#c44040'}
+function sGrad(r){return r>=.68?'#52b86a':r>=.38?'var(--gold)':'#c44040'}
+function hD(t){return t.replace(/(\+\d+(?:[,.]\d+)?%(?:\s*\(\s*[^)]*\))?)/g,'<span class="vp">$1</span>').replace(/(-\d+(?:[,.]\d+)?%(?:\s*\(\s*[^)]*\))?)/g,'<span class="vm">$1</span>')}
 const RL={melee:'Mêlée',tank:'Tank',range:'Range',support:'Support'};
 const RC={melee:'tp-m',tank:'tp-t',range:'tp-r',support:'tp-s'};
-const RD={melee:'var(--mel)',tank:'var(--tnk)',range:'var(--rng)',support:'var(--sup)'};
-const RDot={melee:'#e05555',tank:'#4d8fd6',range:'#d49828',support:'#52b86a'};
+const RDot={melee:CC[0],tank:'#4d8fd6',range:CC[1],support:'#52b86a'};
+const REmoji={melee:'⚔',tank:'🛡',range:'🏹',support:'💚'};
 
 let selCmp=[], selTeam=[], activeTab='cmp', activeType='', activeBuffCat='', teamSize=15;
 
@@ -450,7 +509,8 @@ function switchTab(t){
   activeTab=t;
   ['cmp','team'].forEach(id=>{
     document.getElementById('tab-'+id).classList.toggle('on',id===t);
-    document.getElementById('panel'+id.charAt(0).toUpperCase()+id.slice(1)).className='panel '+(id===t?'on':'off');
+    const pid='panel'+id.charAt(0).toUpperCase()+id.slice(1);
+    document.getElementById(pid).className='panel '+(id===t?'on':'off');
   });
   buildList();
 }
@@ -458,26 +518,25 @@ function switchTab(t){
 function setSize(s){
   teamSize=s;
   document.querySelectorAll('.sz').forEach(b=>b.classList.toggle('on',+b.dataset.s===s));
-  // Trim si trop de monstres
-  if(selTeam.length>s) selTeam=selTeam.slice(0,s);
-  renderTeam(); buildList();
+  if(selTeam.length>s)selTeam=selTeam.slice(0,s);
+  renderTeam();buildList();
 }
 
-// Type filter
 document.getElementById('typeRow').addEventListener('click',e=>{
   const btn=e.target.closest('.tf');if(!btn)return;
-  document.querySelectorAll('.tf').forEach(b=>{b.className='tf'+(b.dataset.t===''?' all':'');});
+  document.querySelectorAll('.tf').forEach(b=>b.className='tf');
   activeType=btn.dataset.t;
   btn.classList.add(activeType?'a'+activeType[0]:'aa');
   buildList();
 });
 
-// Buff category filter
 document.getElementById('buffCats').addEventListener('click',e=>{
   const btn=e.target.closest('.bfc');if(!btn)return;
   const cat=btn.dataset.cat;
-  if(activeBuffCat===cat){activeBuffCat='';btn.classList.remove('on','cat-'+cat);}
-  else{
+  if(activeBuffCat===cat){
+    activeBuffCat='';
+    document.querySelectorAll('.bfc').forEach(b=>{b.classList.remove('on');Object.keys(BUFF_CATS).forEach(k=>b.classList.remove('cat-'+k));});
+  }else{
     document.querySelectorAll('.bfc').forEach(b=>{b.classList.remove('on');Object.keys(BUFF_CATS).forEach(k=>b.classList.remove('cat-'+k));});
     activeBuffCat=cat;
     btn.classList.add('on','cat-'+cat);
@@ -488,9 +547,10 @@ document.getElementById('buffCats').addEventListener('click',e=>{
 function monsterHasBuffCat(nm){
   if(!activeBuffCat)return true;
   const catIds=new Set(BUFF_CATS[activeBuffCat].ids);
-  const m=MONSTERS[nm];
-  return (m.awakenings||[]).some(a=>a.level!==3&&(a.buffs||[]).some(id=>catIds.has(id)));
+  return (MONSTERS[nm].awakenings||[]).some(a=>a.level!==3&&(a.buffs||[]).some(id=>catIds.has(id)));
 }
+
+function scoreClass(r){return r>=.68?'sc-hi':r>=.38?'sc-mid':'sc-lo'}
 
 function buildList(){
   const q=document.getElementById('srch').value.toLowerCase();
@@ -501,32 +561,52 @@ function buildList(){
     if(!n.toLowerCase().includes(q))return false;
     if(!monsterHasBuffCat(n))return false;
     return true;
-  });
-  if(!names.length){list.innerHTML='<div style="color:var(--tx2);font-size:.76rem;padding:16px;text-align:center">Aucun résultat</div>';return;}
+  }).sort((a,b)=>totPts(MONSTERS[b])-totPts(MONSTERS[a]));
+
+  if(!names.length){list.innerHTML='<div style="color:var(--tx2);font-size:.76rem;padding:20px;text-align:center">Aucun résultat</div>';return;}
   const max=activeTab==='cmp'?3:teamSize;
   names.forEach(name=>{
     const m=MONSTERS[name];
+    const tot=totPts(m);
+    const r=tot/MAX_T;
+    const sc=sCol(r);
     const idxC=selCmp.indexOf(name),idxT=selTeam.indexOf(name);
     const el=document.createElement('div');
     el.className='sitem';
-    let badge='';
     if(activeTab==='cmp'&&idxC!==-1){
       const c=CC[idxC];
-      el.style.cssText=`border-color:rgba(${rgb(c)},.45);background:rgba(${rgb(c)},.07)`;
-      badge=`<div class="si-badge" style="background:rgba(${rgb(c)},.22);color:${c}">${CN[idxC]}</div>`;
+      el.style.cssText=`border-color:rgba(${rgb(c)},.4);background:rgba(${rgb(c)},.07)`;
+      el.classList.add('sel-cmp');
     }else if(activeTab==='team'&&idxT!==-1){
-      el.style.cssText='border-color:rgba(212,164,74,.4);background:rgba(212,164,74,.06)';
-      badge='<div class="si-badge" style="background:rgba(212,164,74,.2);color:var(--gl)">✓</div>';
+      el.classList.add('sel-team');
     }
-    // Indicateur buff catégorie matchée
-    let buffDots='';
+    let badge='';
+    if(activeTab==='cmp'&&idxC!==-1){
+      badge=`<div class="si-badge" style="background:rgba(${rgb(CC[idxC])},.25);color:${CC[idxC]};border-color:${CC[idxC]}">${CN[idxC]}</div>`;
+    }else if(activeTab==='team'&&idxT!==-1){
+      badge=`<div class="si-badge" style="background:rgba(212,164,74,.25);color:var(--gl);border-color:var(--gold)">✓</div>`;
+    }
+    let buffBadge='';
     if(activeBuffCat){
       const catIds=new Set(BUFF_CATS[activeBuffCat].ids);
-      const matched=new Set();
-      (m.awakenings||[]).filter(a=>a.level!==3).forEach(a=>(a.buffs||[]).forEach(id=>{if(catIds.has(id))matched.add(id);}));
-      if(matched.size) buffDots=`<span style="font-size:.58rem;color:var(--tx2);white-space:nowrap">${matched.size} buff${matched.size>1?'s':''}</span>`;
+      let cnt=0;
+      const seen=new Set();
+      (m.awakenings||[]).filter(a=>a.level!==3).forEach(a=>(a.buffs||[]).forEach(id=>{if(catIds.has(id)&&!seen.has(id)){seen.add(id);cnt++;}}));
+      if(cnt)buffBadge=`<span style="font-size:.6rem;color:var(--tx2);background:var(--sf3);padding:1px 6px;border-radius:4px;border:1px solid var(--bd2)">${cnt}×</span>`;
     }
-    el.innerHTML=`<img class="si-img" src="${IP}${name}.png" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="si-ph" style="display:none;width:40px;height:40px;border-radius:8px;background:var(--sf3);border:1px solid var(--bd);font-size:.42rem;color:var(--tx2);text-align:center;padding:2px;flex-shrink:0;align-items:center;justify-content:center;">${name.substring(0,4)}</div><div class="si-info"><div class="si-name">${name}</div><div class="si-sub"><span style="color:${RDot[m.type]||'var(--tx2)'}">⬤</span> ${RL[m.type]||m.type} ${buffDots}</div></div>${badge}`;
+    el.innerHTML=`
+      <div class="si-img-wrap">
+        <img class="si-img" src="${IP}${name}.png" loading="lazy" onerror="this.style.display='none'">
+        ${badge}
+      </div>
+      <div class="si-info">
+        <div class="si-name">${name}</div>
+        <div class="si-sub"><span style="color:${RDot[m.type]||'var(--tx2)'}">${REmoji[m.type]}</span> ${RL[m.type]||m.type} ${buffBadge}</div>
+      </div>
+      <div class="si-power">
+        <span class="si-pts" style="color:${sc}">${tot}</span>
+        <div class="si-pbar"><div class="si-pbar-f" style="width:${Math.round(r*100)}%;background:${sc}"></div></div>
+      </div>`;
     el.onclick=()=>pick(name);
     list.appendChild(el);
   });
@@ -547,7 +627,7 @@ function pick(name){
   buildList();
 }
 
-/* ---- COMPARATEUR ---- */
+/* COMPARATEUR */
 function buffRow(id){
   const b=BUFFS[id];if(!b)return'';
   return`<div class="brow${b.cond?' iscond':''}">
@@ -557,12 +637,12 @@ function buffRow(id){
   </div>`;
 }
 function awkBlock(a){
-  const pts=awkPts(a),c=sCol(pts/100);
+  const pts=awkPts(a);const c=sCol(pts/100);
   const modes=(a.pvp?'<span class="mchip mc-pvp">PvP</span>':'')+(a.pve?'<span class="mchip mc-pve">PvE</span>':'');
   return`<div class="ablk">
     <div class="ablk-h lv${a.level}">
       <span class="ablk-lbl">Éveil ${a.level}★</span>
-      <div class="ablk-right">${modes}<span class="ablk-pts" style="color:${c}">${pts} pts</span></div>
+      <div class="ablk-right">${modes}<span style="font-size:.68rem;font-weight:800;color:${c}">${pts} pts</span></div>
     </div>
     <div class="ablk-b">
       <div class="adesc">${hD(a.desc)}</div>
@@ -570,75 +650,92 @@ function awkBlock(a){
     </div>
   </div>`;
 }
+
 function renderCmp(){
   const n=selCmp.length;
   const empty=document.getElementById('cmpEmpty');
   const scroll=document.getElementById('cscroll');
   const wrap=document.getElementById('cwrap');
   const bot=document.getElementById('cmpBot');
-  if(!n){empty.style.display='';scroll.style.display='none';bot.innerHTML='<span class="bot-hint">Sélectionnez des monstres dans la liste à gauche</span>';return;}
+  if(!n){empty.style.display='';scroll.style.display='none';bot.innerHTML='<span class="bot-hint">Cliquez sur un monstre dans la liste</span>';return;}
   empty.style.display='none';scroll.style.display='';
   const scores=selCmp.map(nm=>totPts(MONSTERS[nm]));
   const maxScore=Math.max(...scores);
   const soloWin=scores.filter(s=>s===maxScore).length===1;
   const cols=n===1?'1fr':n===2?'repeat(2,1fr)':'repeat(3,1fr)';
-  let vHtml='⚖ ';
   const ranked=[...selCmp.map((nm,i)=>({nm,s:scores[i],c:CC[i]}))].sort((a,b)=>b.s-a.s);
-  if(n===1){vHtml+=`Score : <strong style="color:${sCol(scores[0]/MAX_T)}">${scores[0]} pts</strong> / ${MAX_T}`;}
-  else if(n===2){const d=Math.abs(scores[0]-scores[1]),wi=scores.indexOf(maxScore);if(scores[0]===scores[1])vHtml+='Scores identiques.';else if(d<15)vHtml+=`<strong style="color:${CC[wi]}">${selCmp[wi]}</strong> légèrement supérieur (+${d} pts)`;else vHtml+=`<strong style="color:${CC[wi]}">${selCmp[wi]}</strong> prend l'avantage (+${d} pts)`;}
-  else{vHtml+=ranked.map((r,i)=>`<span>${MD[i]} <strong style="color:${r.c}">${r.nm}</strong> <span style="opacity:.45;font-size:.8rem">${r.s} pts</span></span>`).join('<span style="color:var(--bd2);padding:0 4px">·</span>');}
+
+  let vHtml='⚖ ';
+  if(n===1){
+    const r=scores[0]/MAX_T;
+    vHtml+=`Score : <strong style="color:${sCol(r)}">${scores[0]} pts</strong> / ${MAX_T}`;
+  }else if(n===2){
+    const d=Math.abs(scores[0]-scores[1]),wi=scores.indexOf(maxScore);
+    if(scores[0]===scores[1])vHtml+='Scores identiques.';
+    else if(d<15)vHtml+=`<strong style="color:${CC[wi]}">${selCmp[wi]}</strong> légèrement supérieur (+${d} pts)`;
+    else vHtml+=`<strong style="color:${CC[wi]}">${selCmp[wi]}</strong> prend l'avantage (+${d} pts)`;
+  }else{
+    vHtml+=ranked.map((r,i)=>`<span>${['🥇','🥈','🥉'][i]} <strong style="color:${r.c}">${r.nm}</strong> <span style="opacity:.45;font-size:.8rem">${r.s} pts</span></span>`).join('<span style="color:var(--bd2);padding:0 5px">·</span>');
+  }
+
   let sharedHtml='';
   if(n>1){
     const bsets=selCmp.map(nm=>new Set((MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[])));
     const shared=[...bsets[0]].filter(b=>bsets.every(s=>s.has(b)));
-    if(shared.length)sharedHtml=`<div style="background:var(--sf);border:1px solid var(--bd2);border-radius:9px;padding:10px 14px"><div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);margin-bottom:7px">Buffs communs</div><div style="display:flex;flex-wrap:wrap;gap:5px">${shared.map(id=>{const b=BUFFS[id];return b?`<span style="font-size:.72rem;padding:3px 10px;border-radius:5px;border:1px solid rgba(${rgb(b.color)},.4);color:${b.color};opacity:.7">${b.label}</span>`:''}).join('')}</div></div>`;
+    if(shared.length){
+      const chips=shared.map(id=>{const b=BUFFS[id];return b?`<span style="font-size:.72rem;padding:3px 10px;border-radius:20px;border:1px solid rgba(${rgb(b.color)},.4);color:${b.color};background:rgba(${rgb(b.color)},.08)">${b.label}</span>`:''}).join('');
+      sharedHtml=`<div class="shared-box"><div class="shared-title">Buffs communs</div><div class="shared-chips">${chips}</div></div>`;
+    }
   }
+
   const colsHtml=selCmp.map((nm,ci)=>{
-    const m=MONSTERS[nm],tot=totPts(m),r=tot/MAX_T,c=sCol(r),g=sGrad(r),col=CC[ci];
+    const m=MONSTERS[nm],tot=totPts(m),r=tot/MAX_T,c=sCol(r),col=CC[ci];
     const winner=soloWin&&scores[ci]===maxScore;
-    return`<div class="mcol">
+    return`<div class="mcol" style="border-color:rgba(${rgb(col)},.25)">
       <div class="mcol-top">
-        <div class="mcol-accent" style="background:linear-gradient(90deg,${col},transparent)"></div>
-        ${winner?'<div class="win-chip">★ Meilleur</div>':''}
-        <img class="mport" src="${IP}${nm}.png" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-        <div class="mport-ph" style="display:none;width:64px;height:64px;border-radius:9px;background:var(--sf3);border:1px solid var(--bd);font-size:.44rem;color:var(--tx2);text-align:center;padding:4px;flex-shrink:0;align-items:center;justify-content:center">${nm.substring(0,6)}</div>
+        <div class="mcol-stripe" style="background:${col}"></div>
+        <img class="mport" src="${IP}${nm}.png" onerror="this.style.display='none'">
         <div class="minfo">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px">
-            <div class="mname">${nm}</div>
-            <div style="text-align:right;flex-shrink:0">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+            <div>
+              <div class="mname">${nm}</div>
+              <span class="tpill ${RC[m.type]||''}">${REmoji[m.type]} ${RL[m.type]||m.type}</span>
+              ${winner?'<div class="win-chip">★ Meilleur éveil</div>':''}
+            </div>
+            <div class="mscore-wrap">
               <div class="mscore" style="color:${c}">${tot}</div>
-              <div style="font-size:.65rem;color:var(--tx2)">/&nbsp;${MAX_T}</div>
+              <div class="mscore-max">/ ${MAX_T}</div>
             </div>
           </div>
-          <span class="tpill ${RC[m.type]||''}">${RL[m.type]||m.type}</span>
-          <div class="mbar" style="margin-top:9px"><div class="mbar-f" style="width:${Math.min(r*100,100)}%;background:${g}"></div></div>
+          <div class="mbar"><div class="mbar-f" style="width:${Math.round(Math.min(r,1)*100)}%;background:${c}"></div></div>
         </div>
       </div>
       <div class="mcol-body">${(m.awakenings||[]).filter(a=>a.level!==3).map(awkBlock).join('')}</div>
     </div>`;
   }).join('');
+
   wrap.innerHTML=`<div class="verd">${vHtml}</div>${sharedHtml}<div class="cgrid" style="grid-template-columns:${cols}">${colsHtml}</div><div class="legbox"><div class="leg"><span class="btag bt-cond">COND</span> <strong>Conditionnel</strong></div><div class="leg"><span class="btag bt-team">TEAM</span> <strong>Équipe</strong></div></div>`;
-  bot.innerHTML=n===1?'<span class="bot-hint">Ajoutez un 2ème monstre pour comparer</span>':`<span class="bot-lbl">Score</span>${ranked.map(r=>`<div class="bcol"><div class="bcol-name" style="color:${r.c}">${r.nm} <span style="opacity:.4;font-weight:400">${r.s}</span></div><div class="bcol-bar"><div class="bcol-fill" style="width:${Math.round(r.s/maxScore*100)}%;background:${r.c}"></div></div></div>`).join('')}`;
+
+  const filled=ranked.filter(r=>r.s>0);
+  bot.innerHTML=n===1?'<span class="bot-hint">Ajoutez un 2ème monstre pour comparer</span>':
+    `<span class="bot-lbl">Score</span>${filled.map(r=>`<div class="bcol"><div class="bcol-name" style="color:${r.c}">${r.nm} <span style="opacity:.4;font-weight:400">${r.s}</span></div><div class="bcol-bar"><div class="bcol-fill" style="width:${Math.round(r.s/maxScore*100)}%;background:${r.c}"></div></div></div>`).join('')}`;
 }
 
-/* ---- TEAM BUILDER ---- */
+/* TEAM BUILDER */
 function renderTeam(){
   const n=selTeam.length;
   document.getElementById('tbInfo').textContent=`${n} / ${teamSize}`;
   document.getElementById('expBtn').disabled=n===0;
+  document.getElementById('clearBtn').disabled=n===0;
   const grid=document.getElementById('teamGrid');
   let html='';
   for(let i=0;i<teamSize;i++){
     if(i<n){
-      const nm=selTeam[i];const m=MONSTERS[nm];
-      const tc=RDot[m.type]||'var(--tx2)';
+      const nm=selTeam[i];const m=MONSTERS[nm];const tc=RDot[m.type]||'var(--tx2)';
       html+=`<div class="slot filled">
         <div class="slot-rm" onclick="removeTb('${nm}')">×</div>
-        <img class="slot-img" src="${IP}${nm}.png" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-        <div class="slot-ph" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:.42rem;color:var(--tx2)">${nm.substring(0,4)}</div>
-        <div class="slot-type" style="background:rgba(0,0,0,.55);color:${tc}">
-          ${{melee:'M',tank:'T',range:'R',support:'S'}[m.type]||'?'}
-        </div>
+        <img class="slot-img" src="${IP}${nm}.png" onerror="this.style.display='none'">
+        <div class="slot-type" style="color:${tc}">${REmoji[m.type]}</div>
         <div class="slot-name">${nm}</div>
       </div>`;
     }else{
@@ -657,22 +754,28 @@ function renderTeam(){
   selTeam.forEach(nm=>{
     const m=MONSTERS[nm];const seen=new Set();
     (m.awakenings||[]).filter(a=>a.level!==3).forEach(a=>{
-      (a.buffs||[]).forEach(bid=>{if(!seen.has(bid)){seen.add(bid);if(!agg[bid]){agg[bid]={count:0,monsters:[]};}agg[bid].count++;agg[bid].monsters.push(nm);}});
+      (a.buffs||[]).forEach(bid=>{if(!seen.has(bid)){seen.add(bid);if(!agg[bid])agg[bid]={count:0,monsters:[]};agg[bid].count++;agg[bid].monsters.push(nm);}});
     });
   });
   const co=b=>b.team?0:b.cond?2:1;
-  const sorted=Object.entries(agg).sort(([ai,ad],[bi,bd])=>{const ba=BUFFS[ai],bb=BUFFS[bi];const ca=co(ba||{}),cb=co(bb||{});if(ca!==cb)return ca-cb;if(bd.count!==ad.count)return bd.count-ad.count;return(bb?.power||0)-(ba?.power||0);});
+  const sorted=Object.entries(agg).sort(([ai,ad],[bi,bd])=>{
+    const ba=BUFFS[ai],bb=BUFFS[bi];
+    const ca=co(ba||{}),cb=co(bb||{});
+    if(ca!==cb)return ca-cb;
+    if(bd.count!==ad.count)return bd.count-ad.count;
+    return(bb?.power||0)-(ba?.power||0);
+  });
   const cats=[
-    {key:0,label:'Buffs Équipe',color:'#ffcc44',entries:[]},
-    {key:1,label:'Buffs Personnels',color:'var(--tx3)',entries:[]},
-    {key:2,label:'Conditionnels',color:'#ccaa44',entries:[]},
+    {key:0,label:'👥 Buffs Équipe',color:'#ffcc44',entries:[]},
+    {key:1,label:'⚔ Buffs Personnels',color:'var(--tx3)',entries:[]},
+    {key:2,label:'⚡ Conditionnels',color:'#ccaa44',entries:[]},
   ];
   sorted.forEach(e=>{const b=BUFFS[e[0]];if(b)cats[co(b)].entries.push(e);});
   document.getElementById('tbBuffs').innerHTML=cats.filter(c=>c.entries.length).map(cat=>`
     <div class="cat-sep"><span class="cat-sep-lbl" style="color:${cat.color}">${cat.label}</span><div class="cat-sep-line"></div><span class="cat-sep-cnt">${cat.entries.length}</span></div>
     ${cat.entries.map(([id,{count,monsters}])=>{
       const b=BUFFS[id];if(!b)return'';
-      const src=monsters.slice(0,4).join(', ')+(monsters.length>4?` +${monsters.length-4}`:'');
+      const src=monsters.slice(0,3).join(', ')+(monsters.length>3?` +${monsters.length-3}`:'');
       return`<div class="bagg-row${b.cond?' iscond':''}">
         <div class="bagg-dot" style="background:${b.color}"></div>
         <div class="bagg-info">
@@ -685,13 +788,110 @@ function renderTeam(){
 
   const total=selTeam.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
   const avg=Math.round(total/n);
-  bot.innerHTML=`<span class="bot-lbl">Équipe</span><span style="font-size:.8rem;color:var(--tx2);flex:1">Total : <strong style="color:var(--gl)">${total}</strong> · Moyenne : <strong style="color:var(--tx3)">${avg} / ${MAX_T}</strong></span>`;
+  bot.innerHTML=`<span class="bot-lbl">Équipe</span><span style="font-size:.8rem;color:var(--tx2);flex:1">Total : <strong style="color:var(--gl)">${total}</strong> pts · Moy. : <strong style="color:var(--tx3)">${avg}</strong> / ${MAX_T}</span>`;
 }
 
 function removeTb(name){selTeam=selTeam.filter(n=>n!==name);renderTeam();buildList();}
-
+function clearTeam(){selTeam=[];renderTeam();buildList();}
 function exportTeam(){
-  alert('Export disponible — fonctionnalité identique à la version précédente.');
+  const total=selTeam.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
+  const avg=Math.round(total/selTeam.length);
+  const agg={};
+  selTeam.forEach(nm=>{
+    const m=MONSTERS[nm];const seen=new Set();
+    (m.awakenings||[]).filter(a=>a.level!==3).forEach(a=>{
+      (a.buffs||[]).forEach(bid=>{if(!seen.has(bid)){seen.add(bid);if(!agg[bid])agg[bid]={count:0,monsters:[]};agg[bid].count++;agg[bid].monsters.push(nm);}});
+    });
+  });
+  const co=b=>b.team?0:b.cond?2:1;
+  const sorted=Object.entries(agg).sort(([ai,ad],[bi,bd])=>{
+    const ba=BUFFS[ai],bb=BUFFS[bi];const ca=co(ba||{}),cb=co(bb||{});
+    if(ca!==cb)return ca-cb;if(bd.count!==ad.count)return bd.count-ad.count;return(bb?.power||0)-(ba?.power||0);
+  });
+  const catDefs=[
+    {label:'👥 Buffs Équipe',color:'#ffcc44',key:0},
+    {label:'⚔ Buffs Personnels',color:'#9ab0cc',key:1},
+    {label:'⚡ Conditionnels',color:'#ccaa44',key:2},
+  ];
+  const catEntries={0:[],1:[],2:[]};
+  sorted.forEach(e=>{const b=BUFFS[e[0]];if(b)catEntries[co(b)].push(e);});
+
+  const monsterRows=selTeam.map(nm=>{
+    const m=MONSTERS[nm];const pts=totPts(m);const r=pts/MAX_T;
+    const col=r>=.68?'#52b86a':r>=.38?'#d4a44a':'#c44040';
+    const awks=(m.awakenings||[]).filter(a=>a.level!==3).map(a=>{
+      const brows=(a.buffs||[]).map(id=>{const b=BUFFS[id];if(!b)return'';
+        return`<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);margin-bottom:3px">
+          <div style="width:7px;height:7px;border-radius:50%;background:${b.color};flex-shrink:0"></div>
+          <span style="flex:1;font-size:.78rem;color:#9ab0cc">${b.label}</span>
+          ${b.team?'<span style="font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:3px;background:rgba(255,200,50,.14);color:#ffcc44;border:1px solid rgba(255,200,50,.2)">TEAM</span>':''}
+          ${b.cond?'<span style="font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:3px;background:rgba(180,160,80,.12);color:#ccaa44;border:1px solid rgba(180,160,80,.2)">COND</span>':''}
+        </div>`;}).join('');
+      const ap=awkPts(a);const ac=ap>=68?'#52b86a':ap>=38?'#d4a44a':'#c44040';
+      const modes=(a.pvp?'<span style="font-size:.57rem;font-weight:800;padding:2px 6px;border-radius:4px;color:#c04040;background:rgba(192,64,64,.1);border:1px solid rgba(192,64,64,.22)">PvP</span>':'')+(a.pve?'<span style="font-size:.57rem;font-weight:800;padding:2px 6px;border-radius:4px;color:#2e9898;background:rgba(46,152,152,.1);border:1px solid rgba(46,152,152,.22)">PvE</span>':'');
+      return`<div style="border:1.5px solid #253a5e;border-radius:8px;overflow:hidden;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #1e3050;background:${a.level===5?'rgba(212,164,74,.07)':'rgba(204,51,85,.07)'}">
+          <span style="font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:${a.level===5?'#d4a44a':'#dd5577'}">Éveil ${a.level}★</span>
+          <div style="display:flex;align-items:center;gap:6px">${modes}<span style="font-size:.67rem;font-weight:800;color:${ac}">${ap} pts</span></div>
+        </div>
+        <div style="padding:10px 12px">
+          <div style="font-size:.8rem;line-height:1.7;color:#9ab0cc;white-space:pre-line;margin-bottom:8px">${a.desc}</div>
+          ${brows}
+        </div>
+      </div>`;}).join('');
+    return`<div style="background:#131e2e;border:1.5px solid rgba(${r>=.68?'82,184,106':r>=.38?'212,164,74':'196,64,64'},.3);border-radius:12px;overflow:hidden;margin-bottom:12px">
+      <div style="padding:14px 16px;border-bottom:1px solid #1e3050;display:flex;align-items:center;gap:12px">
+        <div style="flex:1">
+          <div style="font-size:1rem;font-weight:800;color:#d8e4f8">${nm}</div>
+          <span style="display:inline-block;font-size:.62rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:4px;border:1.5px solid;color:${{melee:'#e05555',tank:'#4d8fd6',range:'#d49828',support:'#52b86a'}[m.type]||'#9ab0cc'};border-color:rgba(${{melee:'224,85,85',tank:'77,143,214',range:'212,152,40',support:'82,184,106'}[m.type]||'154,176,204'},.35);background:rgba(${{melee:'224,85,85',tank:'77,143,214',range:'212,152,40',support:'82,184,106'}[m.type]||'154,176,204'},.08)">${REmoji[m.type]} ${RL[m.type]||m.type}</span>
+        </div>
+        <div style="text-align:right"><div style="font-size:1.8rem;font-weight:900;line-height:1;color:${col}">${pts}</div><div style="font-size:.62rem;color:#6a82aa">/ ${MAX_T}</div></div>
+      </div>
+      <div style="padding:12px">${awks}</div>
+    </div>`;
+  }).join('');
+
+  const buffRows=catDefs.filter(c=>catEntries[c.key].length).map(cat=>`
+    <div style="grid-column:1/-1;display:flex;align-items:center;gap:8px;margin-top:8px">
+      <span style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:${cat.color}">${cat.label}</span>
+      <div style="flex:1;height:1px;background:#253a5e"></div>
+      <span style="font-size:.6rem;color:#6a82aa">${catEntries[cat.key].length}</span>
+    </div>
+    ${catEntries[cat.key].map(([id,{count,monsters}])=>{const b=BUFFS[id];if(!b)return'';
+      const src=monsters.slice(0,3).join(', ')+(monsters.length>3?` +${monsters.length-3}`:'');
+      return`<div style="background:#131e2e;border:1.5px solid ${b.cond?'rgba(255,255,255,.06)':'#253a5e'};${b.cond?'border-style:dashed':'opacity:.9'};border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:9px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${b.color};flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.79rem;color:#9ab0cc">${b.label}</div>
+          <div style="font-size:.6rem;color:#6a82aa;margin-top:2px;display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+            ${b.team?'<span style="font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:3px;background:rgba(255,200,50,.14);color:#ffcc44;border:1px solid rgba(255,200,50,.2)">TEAM</span>':''}
+            ${b.cond?'<span style="font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:3px;background:rgba(180,160,80,.12);color:#ccaa44;border:1px solid rgba(180,160,80,.2)">COND</span>':''}
+            <span>${src}</span>
+          </div>
+        </div>
+        <div style="font-size:.95rem;font-weight:800;color:${b.color};flex-shrink:0">×${count}</div>
+      </div>`;}).join('')}`).join('');
+
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Export SW Rush — ${selTeam.length} monstres</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{background:#0d1520;color:#d8e4f8;font-family:'Segoe UI',Inter,system-ui,sans-serif;font-size:13px;padding:24px}h1{font-size:1.3rem;font-weight:900;color:#ecc46a;margin-bottom:4px;letter-spacing:1px}.sub{font-size:.82rem;color:#6a82aa;margin-bottom:24px}.cols{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}@media(max-width:800px){.cols{grid-template-columns:1fr}}.sticky{position:sticky;top:24px}.buff-grid{display:grid;grid-template-columns:1fr;gap:5px}h2{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#6a82aa;margin-bottom:10px}.panel{background:#131e2e;border:1.5px solid #253a5e;border-radius:12px;padding:16px;margin-bottom:16px}</style>
+</head><body>
+<h1>★ SW RUSH — Export d'équipe</h1>
+<div class="sub">${selTeam.length} monstres · Total : <strong style="color:#ecc46a">${total} pts</strong> · Moyenne : <strong style="color:#9ab0cc">${avg}</strong> / ${MAX_T}</div>
+<div class="cols">
+  <div>${monsterRows}</div>
+  <div class="sticky">
+    <div class="panel">
+      <h2>Récapitulatif des buffs</h2>
+      <div class="buff-grid">${buffRows}</div>
+    </div>
+    <div style="background:#131e2e;border:1.5px solid #253a5e;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:#6a82aa"><span style="font-size:.55rem;font-weight:800;padding:1px 6px;border-radius:3px;background:rgba(180,160,80,.12);color:#ccaa44;border:1px solid rgba(180,160,80,.2)">COND</span> <strong style="color:#d8e4f8;font-weight:600">Conditionnel</strong></div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:#6a82aa"><span style="font-size:.55rem;font-weight:800;padding:1px 6px;border-radius:3px;background:rgba(255,200,50,.14);color:#ffcc44;border:1px solid rgba(255,200,50,.2)">TEAM</span> <strong style="color:#d8e4f8;font-weight:600">Équipe</strong></div>
+    </div>
+  </div>
+</div>
+</body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
 }
 
 buildList();renderCmp();renderTeam();
