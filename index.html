@@ -566,7 +566,7 @@ function genTagline(nm){
   if (has('class_share_melee')) return 'Tank qui se prend pour un mêlée';
 
   // 11. Amplification offensive d'équipe
-  if (any(['crush_rate_10_team', 'weakness_elem_team'])) return 'Amplifie l\'équipe — coups puissants renforcés';
+  if (any(['crush_rate_10_team' , 'crush_rate_10', 'crush_rate_20', 'crush_rate_20_cond', 'crush_dmg_20_ally', 'crush_rate_20_ally', 'crush_dmg_20'])) return 'Amplifie l\'équipe — coups puissants renforcés';
   if (any(['shield_hits_3_team', 'dmg_resist_20_team'])) return 'Bouclier vivant — protège ses alliés';
 
   // 12. Interaction et destruction des Boucliers ennemis
@@ -579,10 +579,10 @@ function genTagline(nm){
   if (any(['dodge_3s', 'endurance_cond', 'dmg_resist_80_cond', 'dmg_resist_15_cond', 'dmg_resist_10', 'dmg_resist_20_cond', 'limit_shield', 'protection_shield', 'cc_immune_self_react'])) return 'Survivant hors pair';
 
   // 15. Spécialisation Critique & Coups Puissants (Self-buffs)
-  if (any(['crit_rate_50', 'crit_rate_10', 'crit_rate_10_cond', 'crit_dmg_20', 'crit_dmg_10_cond', 'crush_rate_10', 'crush_rate_10_cond', 'crush_dmg_20', 'crit_res_10_cond'])) return 'Spécialiste des coups critiques';
+  if (any(['crit_rate_50', 'crit_rate_10', 'crit_rate_10_cond', 'crit_dmg_20', 'crit_dmg_10_cond', 'crit_res_10_cond'])) return 'Spécialiste des coups critiques';
 
   // 16. Exploitation des Faiblesses et Détection
-  if (any(['weak_point_detect', 'weakness_element', 'debuff_aoe_taken_10', 'debuff_crit_taken_10', 'target_weakness_immunity', 'bleed'])) return 'Détecte et exploite impitoyablement les failles ennemies';
+  if (any(['weak_point_detect', 'weakness_elem_team','weakness_element', 'debuff_aoe_taken_10', 'debuff_crit_taken_10', 'target_weakness_immunity', 'bleed'])) return 'Détecte et exploite impitoyablement les failles ennemies';
 
   // 17. Mécaniques spécifiques complexes (Boxes, Rockstar, Feu de renard...)
   if (any(['happy_box_cond', 'merry_box_team_cond', 'rockstar_i', 'rockstar_iii_cond', 'fox_fire_cond', 'fox_fire_burst', 'dmg_unique_target', 'cc_eff_20', 'atk_down_ennemy_count', 'crush_dmg_20_ally', 'crush_rate_20_ally'])) return 'Utilise des mécaniques uniques pour surprendre l\'ennemi';
