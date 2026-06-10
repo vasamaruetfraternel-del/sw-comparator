@@ -544,8 +544,9 @@ function genTagline(nm){
   if (has('spd_team_20')) return 'Accélère l\'équipe en combat';
 
   // 4. Multiplicateurs de dégâts (Buffs / Debuffs)
-  if (any(['dmg_buff_scaling', 'dmg_debuff_scaling'])) return 'Plus l\'ennemi est affaibli, plus il est détruit';
-  if (any(['perfect_team', 'one_team_one_spirit', 'teamwork_stack'])) return 'Explose avec une équipe buffée';
+  if (any([, 'dmg_debuff_scaling'])) return 'Plus l\'ennemi est affaibli, plus il est détruit';
+  if (any(['dmg_buff_scaling'])) return 'Plus il est buffé, plus il inflige des dégâts massifs';
+  if (any(['perfect_team', 'one_team_one_spirit', 'teamwork_stack'])) return 'Brille avec des boost d\'équipe bien orchestrés';
 
   // 5. Zone & Longue portée
   if (any(['range_3', 'range_5']) && any(['dmg_aoe_scaling', 'aoe_range_30', 'aoe_range_30_cond'])) return 'Longue portée — ravage les groupes';
