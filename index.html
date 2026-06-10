@@ -521,27 +521,79 @@ const ALL_SC=Object.values(MONSTERS).flatMap(m=>(m.awakenings||[]).filter(a=>a.l
 const MAX_AW=Math.max(...ALL_SC);
 function awkPts(a){return Math.round(awkRaw(a)/MAX_AW*100)}
 function totPts(m){return(m.awakenings||[]).filter(a=>a.level!==3).reduce((s,a)=>s+awkPts(a),0)}
-const MAX_T=Math.max(...Object.keys(MONSTERS).map(n=>totPts(MONSTERS[n])));
+const MAX_T=200;
 function sCol(r){return r>=.68?'var(--hi)':r>=.38?'var(--mid)':'var(--lo)'}
 function genTagline(nm){
-  const m=MONSTERS[nm],buffs=(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]);
-  const has=id=>buffs.includes(id),any=ids=>ids.some(id=>has(id));
-  if(has('dmg_150'))return'Prédateur furtif — explose sous Furtivité';
-  if(has('atk_80')||has('atk_100'))return'ATQ colossale — frappe comme un marteau';
-  if(has('cc_immune_team_30'))return'Protège toute l\'équipe contre les CC';
-  if(has('fran_blessing_team'))return'Immunité + dégâts groupés pour les alliés';
-  if(has('spd_team_20'))return'Accélère toute l\'équipe en combat';
-  if(has('dmg_debuff_scaling'))return'Plus l\'ennemi est affaibli, plus il détruit';
-  if(has('perfect_team')||has('one_team_one_spirit'))return'Synergiste pur — explose avec une équipe buffée';
-  if(any(['range_3','range_5'])&&any(['dmg_aoe_scaling','aoe_range_30']))return'Longue portée — ravage les groupes';
-  if(has('full_bloom')||has('bloom_stack'))return'Accumule des Fleurs — cascades critiques';
-  if(any(['dmg_frozen_50','dmg_stunned_50','dmg_cc_50']))return'Punit sévèrement les ennemis sous contrôle';
-  if(any(['double_hit_15','triple_hit_10']))return'Multiplicateur de coups — volume élevé';
-  if(has('dmg_dot_50'))return'Exploite les DoT pour amplifier ses dégâts';
-  if(has('class_share_melee'))return'Polyvalent — portée et type mêlée';
-  if(has('crush_rate_10_team')||has('weakness_elem_team'))return'Amplifie l\'équipe — coups critiques renforcés';
-  if(any(['shield_hits_3_team','dmg_resist_20_team']))return'Bouclier vivant — protège ses alliés';
-  return'Combattant polyvalent';
+  const m = MONSTERS[nm];
+  if (!m) return 'Combattant polyvalent';
+
+  // Récupération de tous les buffs hors éveil niveau 3
+  const buffs = (m.awakenings || []).filter(a => a.level !== 3).flatMap(a => a.buffs || []);
+  const has = id => buffs.includes(id);
+  const any = ids => ids.some(id => has(id));
+
+  // 1. Furtivité & Burst Massif
+  if (has('dmg_150')) return 'Explose sous Furtivité';
+
+  // 2. Attaque brute colossale
+  if (any(['atk_80', 'atk_100'])) return 'Attaquant redoutable avec une attaque de base élevée';
+
+  // 3. Protection d'équipe & Utilitaires Majeurs
+  if (has('cc_immune_team_30')) return 'Protège toute l\'équipe contre les CC';
+  if (has('fran_blessing_team')) return 'Immunité + dégâts groupés pour les alliés';
+  if (has('spd_team_20')) return 'Accélère l\'équipe en combat';
+
+  // 4. Multiplicateurs de dégâts (Buffs / Debuffs)
+  if (any(['dmg_buff_scaling', 'dmg_debuff_scaling'])) return 'Plus l\'ennemi est affaibli, plus il est détruit';
+  if (any(['perfect_team', 'one_team_one_spirit', 'teamwork_stack'])) return 'Explose avec une équipe buffée';
+
+  // 5. Zone & Longue portée
+  if (any(['range_3', 'range_5']) && any(['dmg_aoe_scaling', 'aoe_range_30', 'aoe_range_30_cond'])) return 'Longue portée — ravage les groupes';
+
+  // 6. Mécanique de multi-coups accumulés (Bloom / Floraison)
+  if (any(['full_bloom', 'bloom_stack', 'double_triple_dmg_team'])) return 'Taux et dégâtsdes coups Double ou Triple Hit augmentée';
+
+  // 7. Punition des ennemis sous Altération de contrôle (CC)
+  if (any(['dmg_frozen_50', 'dmg_stunned_50', 'dmg_cc_50', 'dmg_def_down_50', 'dmg_petrified_20', 'dmg_sleeping_20', 'target_weakness_provoke'])) return 'Punit sévèrement les ennemis sous contrôle';
+
+  // 8. Exploitation des DoT (Poison, Saignement, Brûlure)
+  if (any(['dmg_dot_50', 'dmg_poisoned_20', 'dmg_bleed_20', 'dmg_burned_20', 'dot_poison', 'weakness_poison_enemy'])) return 'Exploite les DoT pour amplifier ses dégâts';
+
+  // 9. Enchaînements de coups physiques assurés
+  if (any(['double_hit_15', 'triple_hit_10', 'double_hit_10_cond', 'double_hit_10'])) return 'Taux des coups Double ou Triple Hit augmentée';
+
+  // 10. Archétype de classe unique
+  if (has('class_share_melee')) return 'Tank qui se prend pour un mêlée';
+
+  // 11. Amplification offensive d'équipe
+  if (any(['crush_rate_10_team', 'weakness_elem_team'])) return 'Amplifie l\'équipe — coups puissants renforcés';
+  if (any(['shield_hits_3_team', 'dmg_resist_20_team'])) return 'Bouclier vivant — protège ses alliés';
+
+  // 12. Interaction et destruction des Boucliers ennemis
+  if (any(['strip_shield', 'block_shield', 'target_weakness_shield'])) return 'Perce-bouclier';
+
+  // 13. Réduction des Temps de Recharge (Gestion de la jauge / cooldowns)
+  if (any(['cd_skill_cond', 'cd_reset_proc', 'no_crit_cd', 'exclusive_cd_down', 'skill_accel_20_cond', 'skill_accel_15'])) return 'Enchaîne ses compétences rapidement';
+
+  // 14. Survivabilité pure (Endurance, Esquive, Réduction de dégâts reçus)
+  if (any(['dodge_3s', 'endurance_cond', 'dmg_resist_80_cond', 'dmg_resist_15_cond', 'dmg_resist_10', 'dmg_resist_20_cond', 'limit_shield', 'protection_shield', 'cc_immune_self_react'])) return 'Survivant hors pair';
+
+  // 15. Spécialisation Critique & Coups Puissants (Self-buffs)
+  if (any(['crit_rate_50', 'crit_rate_10', 'crit_rate_10_cond', 'crit_dmg_20', 'crit_dmg_10_cond', 'crush_rate_10', 'crush_rate_10_cond', 'crush_dmg_20', 'crit_res_10_cond'])) return 'Spécialiste des coups critiques';
+
+  // 16. Exploitation des Faiblesses et Détection
+  if (any(['weak_point_detect', 'weakness_element', 'debuff_aoe_taken_10', 'debuff_crit_taken_10', 'target_weakness_immunity', 'bleed'])) return 'Détecte et exploite impitoyablement les failles ennemies';
+
+  // 17. Mécaniques spécifiques complexes (Boxes, Rockstar, Feu de renard...)
+  if (any(['happy_box_cond', 'merry_box_team_cond', 'rockstar_i', 'rockstar_iii_cond', 'fox_fire_cond', 'fox_fire_burst', 'dmg_unique_target', 'cc_eff_20', 'atk_down_ennemy_count', 'crush_dmg_20_ally', 'crush_rate_20_ally'])) return 'Utilise des mécaniques uniques pour surprendre l\'ennemi';
+
+  // 18. Auto-buffs de statistiques standards (ATQ, VIT, Sangsue)
+  if (any(['atk_10', 'atk_20', 'atk_25_delay', 'atk_up_stack', 'spd_15', 'spd_30', 'spd_10', 'spd_40_cond', 'spd_15_cond', 'hp_max_15_cond', 'lifesteal_15_cond', 'res_lp_30'])) return 'Combattant redoutable optimisant ses statistiques';
+
+  // 19. Bonus de dégâts générique de palier d'Éveil
+  if (has('dmg_20')) return 'Combattant polyvalent amélioré';
+
+  return 'Combattant polyvalent';
 }
 
 let selCmp=[null,null,null],selTb=[],activeTab='cmp',activeType='',activeCat='',teamSize=15;
