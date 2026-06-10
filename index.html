@@ -245,7 +245,7 @@ const BUFFS={
   // ── Dégâts ───────────────────────────────────────────────────────────────
   "dmg_15":{label:"Dégâts +15%",color:"#d06030",power:13},
   "dmg_20":{label:"Dégâts +20%",color:"#d06030",power:17},
-  "dmg_150":{label:"Dégâts +150% (sous Furtivité)",color:"#ff6600",power:42,cond:true},
+  "dmg_150":{label:"Dégâts +150% (sous Furtivité)",color:"#ff6600",power:60,cond:true},
   "dmg_aoe_scaling":{label:"Dégâts ×ennemis (max ×10)",color:"#ddaa66",power:32},
   "dmg_buff_scaling":{label:"Dégâts / Nb Buffs (max 30)",color:"#c8a830",power:24},
   "dmg_debuff_scaling":{label:"Dégâts / Nb Debuffs (max 15)",color:"#d07030",power:44},
@@ -373,7 +373,7 @@ const BUFFS={
 const AWK3={level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true};
 const MONSTERS = {
   "Craka": { type: "melee", awakenings: [AWK3, { level: 5, desc: "Début de combat :\n- ATQ +10%.\n- Résist. LP -30%.\n- Chaque Saignement → allié : Détection point faible 10% / 10s.", buffs: ["atk_10", "res_lp_30", "bleed", "weak_point_detect"], pvp: true, pve: false }, { level: 7, desc: "Attaque réussie :\n- Point faible – Saignement 15% sur ennemi.\n- Dégâts +20%.", buffs: ["weakness_element", "dmg_20"], pvp: true, pve: false }] },
-  "Mago":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Esquive absolue 3s.\n- ATQ +10%.\n- Furtivité.\n- Sous Furtivité : Coup puissant +10% / 3s.",buffs:["dodge_3s","atk_10","stealth","crush_rate_10_cond"],pvp:true,pve:true},{level:7,desc:"Sous Furtivité :\n- Dégâts +150% / 3s.\n- Attaque réussie : Dég. Coups puissants +20% / 10s.\n- Dégâts +20%.",buffs:["dmg_150","crush_dmg_20","dmg_20"],pvp:true,pve:true}]},
+  "Mago":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Esquive absolue 3s.\n- ATQ +10%.\n- Sous Furtivité : Coup puissant +10% / 3s.",buffs:["dodge_3s","atk_10","crush_rate_10_cond"],pvp:true,pve:true},{level:7,desc:"Sous Furtivité :\n- Dégâts +150% / 3s.\n- Attaque réussie : Dég. Coups puissants +20% / 10s.\n- Dégâts +20%.",buffs:["dmg_150","crush_dmg_20","dmg_20"],pvp:true,pve:true}]},
   "Jagger":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Bouclier invincible + Vit. déplacement +200% / 3s.\n- ATQ +10%, DEF +15%, Résist. LP -30%.",buffs:["stealth_shield","move_spd_200","atk_10","def_15","res_lp_30"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Dég. Crit +20% / 10s.\n- Dégâts / nb buffs actifs (max 30).\n- Dégâts +20%.",buffs:["crit_dmg_20","dmg_buff_scaling","dmg_20"],pvp:true,pve:true}]},
   "Trinity":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Bouclier ×5 + Dég. Crit +20%.\n- Coup puissant → Dégâts zone reçus +10% sur ennemi / 2s.",buffs:["shield_hits_5","crit_dmg_20","debuff_aoe_taken_10"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Dég. Crit reçus +10% sur ennemi / 10s.\n- Dégâts / nb debuffs cible (max 15).\n- Dégâts +20%.",buffs:["debuff_crit_taken_10","dmg_debuff_scaling","dmg_20"],pvp:true,pve:true}]},
   "Melissa":{type:"melee",awakenings:[AWK3,{level:5,desc:"Début de combat :\n- Vit. ATQ +15%.\n- Bouclier ×5.",buffs:["spd_15","shield_hits_5"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Coup double +15% / 10s.\n- Dégâts +20%.",buffs:["double_hit_15","dmg_20"],pvp:true,pve:true}]},
