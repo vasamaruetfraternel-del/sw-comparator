@@ -681,8 +681,8 @@ function buffChips(buffs){
     const b=BUFFS[id];if(!b)return'';
     return`<div class="bchip" style="border-left:3px solid ${b.color}">
       <span style="flex:1;overflow:hidden;text-overflow:ellipsis;font-size:.7rem;color:var(--tx3)">${b.label}</span>
-      ${b.team?'<span class="bchip-tag bt-team">T</span>':''}
-      ${b.cond?'<span class="bchip-tag bt-cond">C</span>':''}
+      ${b.team?'<span class="bchip-tag bt-team">Team</span>':''}
+      ${b.cond?'<span class="bchip-tag bt-cond">Condition</span>':''}
     </div>`;
   }).join('');
 }
