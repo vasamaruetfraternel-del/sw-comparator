@@ -380,13 +380,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .syn-section-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .syn-section-title::after{content:'';flex:1;height:1px;background:var(--b1)}
 .syn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:5px}
-.syn-row{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:6px 10px;display:flex;align-items:center;gap:8px;transition:background .1s}
+.syn-row{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:6px 10px;display:flex;align-items:flex-start;gap:8px;transition:background .1s}
 .syn-row:hover{background:var(--s3)}
 .syn-row.cond{border-style:dashed;opacity:.8}
 .syn-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.syn-lbl{flex:1;font-size:.76rem;color:var(--tx3);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.syn-lbl{flex:1;font-size:.76rem;color:var(--tx3);min-width:0;white-space:normal;overflow:visible;text-overflow:unset;word-break:break-word}
 .syn-src{font-size:.6rem;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px}
 .syn-cnt{font-size:.9rem;font-weight:800;flex-shrink:0}
+.syn-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
 
 /* ══ TIER LIST ══ */
 #tlPanel{flex:1;display:flex;flex-direction:column;overflow:hidden}
@@ -493,11 +494,22 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
     <!-- TL -->
     <div class="panel off" id="panelTl">
       <div id="tlPanel">
-        <div class="tl-topbar">
-          <span class="tl-title">Tier List</span>
-          <button class="tl-reset" onclick="resetTier()">Réinitialiser</button>
-          <span class="tl-hint">Glissez les portraits dans les rangs</span>
-        </div>
+		<div class="tl-topbar">
+			<span class="tl-title">Tier List</span>
+			<button class="tl-reset" onclick="resetTier()">Réinitialiser</button>
+		<div id="tlCatRow" style="display:flex;gap:4px;flex-wrap:wrap">
+			<button class="fp fa" data-tc="" onclick="setTlCat('')">Tous</button>
+			<button class="fp" data-tc="atk" onclick="setTlCat('atk')">ATQ</button>
+			<button class="fp" data-tc="crit" onclick="setTlCat('crit')">Crit</button>
+			<button class="fp" data-tc="spd" onclick="setTlCat('spd')">Vitesse</button>
+			<button class="fp" data-tc="range" onclick="setTlCat('range')">Portée</button>
+			<button class="fp" data-tc="def" onclick="setTlCat('def')">Déf</button>
+			<button class="fp" data-tc="cc" onclick="setTlCat('cc')">CC</button>
+			<button class="fp" data-tc="dot" onclick="setTlCat('dot')">DoT</button>
+			<button class="fp" data-tc="team" onclick="setTlCat('team')">Team</button>
+		</div>
+  <span class="tl-hint">Glissez les portraits dans les rangs</span>
+</div>
         <div id="tlContent" id="tlRows"></div>
         <div id="tlPool">
           <div class="tl-pool-title">Non classés</div>
@@ -599,6 +611,7 @@ function genTagline(nm){
 
 let selCmp=[null,null,null],selTb=[],activeTab='cmp',activeType='',activeCat='',teamSize=15;
 let tlData={S:[],A:[],B:[],C:[],D:[]},tlDragName=null,tlDragFrom=null,cmpDragName=null;
+let tlCat='';
 
 /* ── TAB ── */
 function switchTab(t){
@@ -636,24 +649,45 @@ function hasBuffCat(nm){
 function buildGrid(){
   const q=document.getElementById('srch').value.toLowerCase();
   const g=document.getElementById('grid');
+  const placed={};
+  TIERS.forEach(t=>tlData[t.id].forEach(nm=>{placed[nm]=t.id;}));
+
   const names=Object.keys(MONSTERS).filter(n=>{
     if(activeType&&MONSTERS[n].type!==activeType)return false;
     if(!n.toLowerCase().includes(q))return false;
-    return hasBuffCat(n);
+    if(activeTab==='tl'&&tlCat&&!hasBuffCat(n))return false;
+    if(activeTab!=='tl'&&activeCat&&!hasBuffCat(n))return false;
+    return true;
   }).sort((a,b)=>totPts(MONSTERS[b])-totPts(MONSTERS[a]));
+
   g.innerHTML='';
   names.forEach(nm=>{
     const m=MONSTERS[nm],tot=totPts(m),r=tot/MAX_T,sc=sCol(r);
     const iC=selCmp.indexOf(nm),iT=selTb.includes(nm);
+    const tier=placed[nm];
     const d=document.createElement('div');
     d.className='pc'+(iC!==-1?' sel':'');
     d.draggable=true;
+
+    let badge='';
+    if(activeTab==='tl'&&tier){
+      const bg=TIERS.find(t=>t.id===tier)?.bg||'#666';
+      badge=`<div class="pc-badge" style="background:${bg};color:#fff;font-size:.58rem">${tier}</div>`;
+    }else if(iC!==-1){
+      badge=`<div class="pc-badge" style="background:rgba(${rgb(SCOLS[iC])},.3);color:${SCOLS[iC]}">${iC+1}</div>`;
+    }else if(iT){
+      badge=`<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`;
+    }
+
     d.innerHTML=`<img src="${IP}${nm}.png" loading="lazy" onerror="this.src=''">
       <div class="pc-type" style="color:${TCOL[m.type]}">${{melee:'⚔',tank:'🛡',range:'🏹',support:'💚'}[m.type]}</div>
-      ${iC!==-1?`<div class="pc-badge" style="background:rgba(${rgb(SCOLS[iC])},.3);color:${SCOLS[iC]}">${iC+1}</div>`:''}
-      ${iT&&iC===-1?`<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`:''}
+      ${badge}
       <div class="pc-bot"><div class="pc-name">${nm}</div><div class="pc-score" style="color:${sc}">${tot}</div></div>`;
-    d.addEventListener('dragstart',e=>{cmpDragName=nm;tlDragName=nm;tlDragFrom='pool';e.dataTransfer.effectAllowed='copy';});
+
+    d.addEventListener('dragstart',e=>{
+      cmpDragName=nm;tlDragName=nm;tlDragFrom='pool';
+      e.dataTransfer.effectAllowed='copy';
+    });
     d.addEventListener('dragend',()=>{cmpDragName=null;});
     d.addEventListener('click',()=>{
       if(activeTab==='cmp'){
@@ -667,8 +701,7 @@ function buildGrid(){
         else if(selTb.length<teamSize)selTb.push(nm);
         renderTeam();
       }else if(activeTab==='tl'){
-        const inTier=TIERS.some(t=>tlData[t.id].includes(nm));
-        if(!inTier){tlData['B'].push(nm);renderTierList();}
+        if(!tier){tlData['B'].push(nm);renderTierList();}
       }
       buildGrid();
     });
@@ -770,7 +803,6 @@ function renderTeam(){
   const n=selTb.length;
   document.getElementById('tbCtr').textContent=`${n} / ${teamSize}`;
   document.getElementById('tbClrBtn').disabled=n===0;
-  // slots
   const slots=document.getElementById('tbSlots');
   let h='';
   for(let i=0;i<teamSize;i++){
@@ -787,25 +819,27 @@ function renderTeam(){
   }
   slots.innerHTML=h;
 
-  // synergies
   const syn=document.getElementById('tbSyn');
-  const synEmpty=document.getElementById('synEmpty');
-  if(!n){syn.innerHTML='';syn.appendChild(synEmpty);return;}
-  synEmpty.style.display='none';
+  if(!n){
+    syn.innerHTML='<div class="syn-empty" id="synEmpty">Ajoutez des monstres pour voir les synergies</div>';
+    return;
+  }
 
-  // aggregate buffs
   const agg={};
   selTb.forEach(nm=>{
     const seen=new Set();
     (MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).forEach(a=>{
       (a.buffs||[]).forEach(id=>{
-        if(!seen.has(id)){seen.add(id);
+        if(!seen.has(id)){
+          seen.add(id);
           if(!agg[id])agg[id]={count:0,ms:[]};
-          agg[id].count++;agg[id].ms.push(nm);
+          agg[id].count++;
+          agg[id].ms.push(nm);
         }
       });
     });
   });
+
   const co=b=>b.team?0:b.cond?2:1;
   const sorted=Object.entries(agg).sort(([ai,ad],[bi,bd])=>{
     const ba=BUFFS[ai],bb=BUFFS[bi],ca=co(ba||{}),cb=co(bb||{});
@@ -838,6 +872,7 @@ function renderTeam(){
       </div>
     </div>`).join('');
 }
+
 function rmTb(nm){selTb=selTb.filter(n=>n!==nm);renderTeam();buildGrid();}
 
 /* ══ TIER LIST ══ */
@@ -853,17 +888,10 @@ function renderTierList(){
         ${tlData[t.id].map(nm=>tlPcHTML(nm,t.id)).join('')}
       </div>
     </div>`).join('');
+  document.getElementById('tlPool').style.display='none';
 
-  // pool
-  const placed=new Set(TIERS.flatMap(t=>tlData[t.id]));
-  const pool=Object.keys(MONSTERS).filter(nm=>!placed.has(nm)).sort((a,b)=>totPts(MONSTERS[b])-totPts(MONSTERS[a]));
-  document.getElementById('tlPoolGrid').innerHTML=pool.map(nm=>`
-    <div class="tl-pool-pc" draggable="true"
-      ondragstart="tlPoolDragStart(event,'${nm}')"
-      ondragend="tlDragEnd()">
-      <img src="${IP}${nm}.png" onerror="this.src=''">
-      <div class="tl-pool-pc-name">${nm}</div>
-    </div>`).join('');
+  // indique dans la sidebar quels monstres sont déjà placés (badge tier)
+  buildGrid();
 }
 
 function tlPcHTML(nm,tierId){
