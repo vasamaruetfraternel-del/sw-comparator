@@ -363,7 +363,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 /* team zone — 2 zones */
 #tbContent{flex:1;display:flex;flex-direction:column;overflow:hidden}
 #tbSlots{flex-shrink:0;padding:10px 14px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;flex-wrap:wrap;gap:6px}
-.tslot{width:64px;height:64px;border-radius:5px;border:1px dashed var(--b2);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:all .12s;cursor:pointer}
+.tslot{width:128px;height:128px;border-radius:5px;border:1px dashed var(--b2);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:all .12s;cursor:pointer}
 .tslot:not(.filled):hover{border-color:var(--green)}
 .tslot.filled{border-style:solid;border-color:var(--b2)}
 .tslot.filled:hover{border-color:var(--mel)}
@@ -398,10 +398,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 
 /* tier row */
 .trow{display:flex;align-items:stretch;border-radius:6px;overflow:hidden;border:1px solid var(--b1);min-height:100px}
-.trow-lbl{width:64px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:900;color:#fff}
+.trow-lbl{width:128px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:900;color:#fff}
 .trow-drop{flex:1;display:flex;flex-wrap:wrap;gap:7px;padding:8px 10px;align-items:center;background:var(--s2);min-height:100px}
 .trow-drop.drag-over{background:rgba(168,212,40,.08);outline:2px dashed rgba(168,212,40,.3)}
-.tl-pc{position:relative;width:76px;height:76px;border-radius:6px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;transition:transform .1s}
+.tl-pc{position:relative;width:96px;height:96px;border-radius:6px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;transition:transform .1s}
 .tl-pc:active{cursor:grabbing;transform:scale(.95)}
 .tl-pc img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 .tl-pc-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.88));font-size:.56rem;font-weight:700;color:#fff;text-align:center;padding:12px 2px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -412,7 +412,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 #tlPool{flex-shrink:0;background:var(--s1);border-top:1px solid var(--b1);padding:10px 14px;max-height:160px;overflow-y:auto}
 .tl-pool-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);margin-bottom:8px}
 #tlPoolGrid{display:flex;flex-wrap:wrap;gap:6px}
-.tl-pool-pc{width:64px;height:64px;border-radius:5px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;position:relative;background:var(--s2)}
+.tl-pool-pc{width:128px;height:128px;border-radius:5px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;position:relative;background:var(--s2)}
 .tl-pool-pc:active{cursor:grabbing;opacity:.7}
 .tl-pool-pc img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 .tl-pool-pc-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);font-size:.5rem;font-weight:700;color:#fff;text-align:center;padding:2px}
@@ -551,7 +551,7 @@ function genTagline(nm){
   if (any(['range_3', 'range_5']) && any(['dmg_aoe_scaling', 'aoe_range_30', 'aoe_range_30_cond'])) return 'Longue portée — ravage les groupes';
 
   // 6. Mécanique de multi-coups accumulés (Bloom / Floraison)
-  if (any(['full_bloom', 'bloom_stack', 'double_triple_dmg_team'])) return 'Taux et dégâtsdes coups Double ou Triple Hit augmentée';
+  if (any(['full_bloom', 'bloom_stack', 'double_triple_dmg_team'])) return 'Taux et dégâts des coups Double et/ou Triple Hit augmentée';
 
   // 7. Punition des ennemis sous Altération de contrôle (CC)
   if (any(['dmg_frozen_50', 'dmg_stunned_50', 'dmg_cc_50', 'dmg_def_down_50', 'dmg_petrified_20', 'dmg_sleeping_20', 'target_weakness_provoke'])) return 'Punit sévèrement les ennemis sous contrôle';
@@ -560,7 +560,7 @@ function genTagline(nm){
   if (any(['dmg_dot_50', 'dmg_poisoned_20', 'dmg_bleed_20', 'dmg_burned_20', 'dot_poison', 'weakness_poison_enemy'])) return 'Exploite les DoT pour amplifier ses dégâts';
 
   // 9. Enchaînements de coups physiques assurés
-  if (any(['double_hit_15', 'triple_hit_10', 'double_hit_10_cond', 'double_hit_10'])) return 'Taux des coups Double ou Triple Hit augmentée';
+  if (any(['double_hit_15', 'triple_hit_10', 'double_hit_10_cond', 'double_hit_10'])) return 'Taux des coups Double et/ou Triple Hit augmentée';
 
   // 10. Archétype de classe unique
   if (has('class_share_melee')) return 'Tank qui se prend pour un mêlée';
