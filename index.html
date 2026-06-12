@@ -227,17 +227,18 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
 
 /* ── NAV ── */
-#nav{height:46px;background:var(--s1);border-bottom:2px solid #18181e;display:flex;align-items:center;padding:0 16px;gap:0;flex-shrink:0}
-.logo{font-size:1rem;font-weight:800;color:var(--green2);letter-spacing:1px;margin-right:20px}
-.ntab{padding:0 18px;height:46px;border:none;background:none;color:var(--tx2);font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-2px;letter-spacing:.2px}
+#nav{height:46px;background:var(--s1);border-bottom:2px solid #18181e;display:flex;align-items:center;padding:0 12px;gap:0;flex-shrink:0;overflow-x:auto}
+#nav::-webkit-scrollbar{display:none}
+.logo{font-size:.9rem;font-weight:800;color:var(--green2);letter-spacing:1px;margin-right:14px;white-space:nowrap}
+.ntab{padding:0 14px;height:46px;border:none;background:none;color:var(--tx2);font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;flex-shrink:0}
 .ntab:hover{color:var(--tx3)}
 .ntab.on{color:var(--green2);border-bottom-color:var(--green2)}
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0}
 .nav-search{position:relative}
-.nav-search input{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:6px 10px 6px 30px;color:var(--tx);font-size:.82rem;outline:none;width:200px;font-family:inherit}
+.nav-search input{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:5px 8px 5px 28px;color:var(--tx);font-size:.78rem;outline:none;width:160px;font-family:inherit}
 .nav-search input:focus{border-color:var(--green)}
 .nav-search input::placeholder{color:var(--tx2)}
-.nav-search svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);opacity:.4;flex-shrink:0}
+.nav-search svg{position:absolute;left:7px;top:50%;transform:translateY(-50%);opacity:.4}
 
 /* ── ROOT ── */
 #root{display:flex;height:calc(100% - 46px);overflow:hidden}
@@ -245,10 +246,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .panel.off{display:none}
 
 /* ── SIDEBAR ── */
-#sb{width:300px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden}
-.sb-filters{padding:8px 10px;border-bottom:1px solid var(--b1);display:flex;flex-direction:column;gap:6px}
-.frow{display:flex;gap:4px;flex-wrap:wrap}
-.fp{font-size:.7rem;font-weight:600;padding:4px 10px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .1s}
+#sb{width:260px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;transition:width .2s}
+#sb.me-mode{width:0;border:none}
+.sb-filters{padding:8px 8px;border-bottom:1px solid var(--b1);display:flex;flex-direction:column;gap:5px}
+.frow{display:flex;gap:3px;flex-wrap:wrap}
+.fp{font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .1s}
 .fp:hover{background:var(--s2);color:var(--tx3)}
 .fp.fa{border-color:rgba(168,212,40,.4);color:var(--green2);background:rgba(168,212,40,.08)}
 .fp.fm{border-color:rgba(224,80,80,.35);color:var(--mel);background:rgba(224,80,80,.07)}
@@ -256,173 +258,216 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .fp.fr{border-color:rgba(200,144,32,.35);color:var(--rng);background:rgba(200,144,32,.07)}
 .fp.fs{border-color:rgba(56,176,96,.35);color:var(--sup);background:rgba(56,176,96,.07)}
 .fp.fbc{border-color:var(--b2);color:var(--tx3);background:var(--s3)}
-
-/* ── GRID ── */
-#grid{flex:1;overflow-y:auto;padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start}
-.pc {
-    position: relative;
-    border-radius: 6px;
-    overflow: hidden;
-    cursor: pointer;
-    background: var(--s2);
-    border: 2px solid var(--b1);
-    transition: all .14s;
-    
-    min-height: 110px; /* Ajoute la hauteur minimale de ton choix */
-}
+#grid{flex:1;overflow-y:auto;padding:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;align-content:start}
+.pc{position:relative;border-radius:5px;overflow:hidden;cursor:pointer;background:var(--s2);border:2px solid var(--b1);transition:all .14s;min-height:90px}
 .pc:hover{border-color:var(--b2);transform:translateY(-1px)}
 .pc.sel{border-color:var(--green)}
-.pc img {
-    width: 100%;
-    height: 100%;      /* Remplace aspect-ratio par height: 100% */
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-}
-.pc-bot{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.88));padding:18px 5px 5px}
-.pc-name{font-size:.72rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
-.pc-score{font-size:.64rem;font-weight:800;text-align:center}
-.pc-type{position:absolute;top:4px;left:4px;font-size:.55rem;font-weight:900;background:rgba(0,0,0,.7);padding:1px 4px;border-radius:3px}
-.pc-badge{position:absolute;top:4px;right:4px;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;border:1.5px solid rgba(0,0,0,.5)}
+.pc img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.pc-bot{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.88));padding:16px 4px 4px}
+.pc-name{font-size:.62rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.pc-score{font-size:.58rem;font-weight:800;text-align:center}
+.pc-type{position:absolute;top:3px;left:3px;font-size:.5rem;font-weight:900;background:rgba(0,0,0,.7);padding:1px 3px;border-radius:2px}
+.pc-badge{position:absolute;top:3px;right:3px;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:900;border:1.5px solid rgba(0,0,0,.5);padding:0 3px}
 
-/* ── MAIN PANELS ── */
+/* ── MAIN ── */
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
 /* ══ COMPARATEUR ══ */
 #cmpPanel{flex:1;display:flex;flex-direction:column;overflow:hidden}
-#cmpList{flex:1;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:6px}
-.cmp-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:.88rem;font-style:italic}
-
-/* ligne monstre comparateur */
-.mrow{display:grid;grid-template-columns:90px 1fr 1px 1fr 1px 1fr;min-height:90px;background:var(--s2);border-radius:6px;overflow:hidden;border:1px solid var(--b1);transition:border-color .15s}
-.mrow:hover{border-color:var(--b2)}
-.mrow-port{position:relative;background:var(--s3);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.mrow-port img{width:90px;height:90px;object-fit:cover;object-position:top center;display:block}
-.mrow-port-rm{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.6rem;font-weight:700;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2;line-height:1}
-.mrow:hover .mrow-port-rm{display:flex}
-.mrow-info{padding:10px 14px;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0}
-.mrow-name{font-size:.96rem;font-weight:700;color:var(--tx)}
-.mrow-type{display:inline-flex;align-items:center;gap:4px;font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.3px;padding:2px 7px;border-radius:3px;border:1px solid}
-.mrow-tagline{font-size:.76rem;color:var(--tx3);margin-top:2px}
-.mrow-score{font-size:1.6rem;font-weight:900;letter-spacing:.5px}
-.mrow-bar{height:3px;background:var(--b1);border-radius:2px;margin-top:4px;overflow:hidden}
-.mrow-barf{height:100%;border-radius:2px}
-.mrow-div{width:1px;background:var(--b1);flex-shrink:0}
-.mrow-awk{padding:8px 12px;display:flex;flex-direction:column;justify-content:flex-start;gap:3px;min-width:0;overflow:hidden}
-.awk-title{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
-.awk-title.lv5{color:var(--gold)}
-.awk-title.lv7{color:#cc2848}
-.awk-pts-badge{font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:3px}
-.bchip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: .7rem;
-    padding: 2px 7px;
-    border-radius: 3px;
-    background: var(--s3);
-    margin-bottom: 2px;
-    max-width: 100%;
-
-    /* Modifications ici : */
-    white-space: normal;       /* Autorise le retour à la ligne */
-    overflow: visible;         /* Rend le texte visible */
-    text-overflow: unset;      /* Supprime les trois petits points */
-}
-.bchip-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.bchip-tag{font-size:.52rem;font-weight:800;text-transform:uppercase;padding:1px 3px;border-radius:2px;flex-shrink:0}
-.bt-team{background:rgba(200,152,32,.15);color:#c8a020;border:1px solid rgba(200,152,32,.25)}
-.bt-cond{background:rgba(120,100,20,.15);color:#907820;border:1px solid rgba(120,100,20,.2)}
-.mc-p{font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:2px;color:#a02020;background:rgba(160,32,32,.12);border:1px solid rgba(160,32,32,.22)}
-.mc-e{font-size:.54rem;font-weight:700;padding:1px 4px;border-radius:2px;color:#207888;background:rgba(32,120,136,.12);border:1px solid rgba(32,120,136,.22)}
-
-/* shared bar */
-#cmpShared{padding:6px 12px;background:var(--s1);border-bottom:1px solid var(--b1);display:none;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+#cmpShared{padding:5px 10px;background:var(--s1);border-bottom:1px solid var(--b1);display:none;align-items:center;gap:5px;flex-wrap:wrap;flex-shrink:0}
 #cmpShared.show{display:flex}
-.sh-lbl{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2)}
-.shchip{font-size:.68rem;padding:2px 8px;border-radius:3px}
-
-/* cmp botbar */
-#cmpBot{height:38px;background:var(--s1);border-top:1px solid var(--b1);display:flex;align-items:center;padding:0 14px;gap:12px;flex-shrink:0}
+.sh-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);flex-shrink:0}
+.shchip{font-size:.64rem;padding:2px 7px;border-radius:3px}
+#cmpList{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.cmp-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--tx2);font-size:.88rem;font-style:italic}
+#cmpBot{height:36px;background:var(--s1);border-top:1px solid var(--b1);display:flex;align-items:center;padding:0 12px;gap:10px;flex-shrink:0}
 .bseg{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.bseg-n{font-size:.72rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bseg-n{font-size:.68rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bseg-b{height:3px;background:var(--b1);border-radius:2px;overflow:hidden}
 .bseg-f{height:100%;border-radius:2px}
 
+/* carte comparateur */
+.mrow{background:var(--s2);border-radius:8px;overflow:hidden;border:1px solid var(--b1);transition:border-color .15s}
+.mrow:hover{border-color:var(--b2)}
+.mrow-head{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--b1);position:relative}
+.mrow-port{width:70px;height:70px;border-radius:6px;overflow:hidden;flex-shrink:0;background:var(--s3)}
+.mrow-port img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.mrow-port-rm{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.6rem;font-weight:700;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+.mrow:hover .mrow-port-rm{display:flex}
+.mrow-info{flex:1;min-width:0}
+.mrow-name{font-size:1.05rem;font-weight:700;color:var(--tx)}
+.mrow-type{display:inline-flex;align-items:center;gap:4px;font-size:.62rem;font-weight:600;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid;margin-top:3px}
+.mrow-tagline{font-size:.74rem;color:var(--tx3);margin-top:4px}
+.mrow-score-wrap{text-align:right;flex-shrink:0}
+.mrow-score{font-size:2rem;font-weight:900;letter-spacing:.5px;line-height:1}
+.mrow-bar{height:4px;background:var(--b1);border-radius:2px;margin-top:6px;overflow:hidden;width:80px}
+.mrow-barf{height:100%;border-radius:2px}
+.mrow-body{display:grid;grid-template-columns:1fr 1px 1fr;min-height:80px}
+.mrow-div{width:1px;background:var(--b1)}
+.mrow-awk{padding:10px 14px;display:flex;flex-direction:column;gap:5px}
+.awk-title{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.awk-title.lv5{color:var(--gold)}
+.awk-title.lv7{color:#cc2848}
+.awk-pts-badge{font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:6px}
+.bchip{display:flex;align-items:flex-start;gap:6px;font-size:.72rem;padding:4px 8px;border-radius:4px;background:var(--s3);border-left:3px solid transparent}
+.bchip-text{flex:1;color:var(--tx3);line-height:1.4}
+.bchip-tags{display:flex;gap:3px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.bchip-tag{font-size:.5rem;font-weight:800;text-transform:uppercase;padding:1px 4px;border-radius:2px}
+.bt-team{background:rgba(200,152,32,.15);color:#c8a020;border:1px solid rgba(200,152,32,.25)}
+.bt-cond{background:rgba(120,100,20,.15);color:#907820;border:1px solid rgba(120,100,20,.2)}
+/* badge éveil sur chip */
+.bchip-awk{font-size:.5rem;font-weight:900;padding:1px 4px;border-radius:2px;border:1px solid}
+.bchip-awk.a3{color:#aaa;border-color:#666;background:rgba(100,100,100,.15)}
+.bchip-awk.a5{color:var(--gold);border-color:var(--gold);background:rgba(212,168,48,.1)}
+.bchip-awk.a7{color:#cc2848;border-color:#cc2848;background:rgba(204,40,72,.1)}
+
 /* ══ TEAM BUILDER ══ */
 #tbPanel{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.tb-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0}
-.tb-title{font-size:.88rem;font-weight:700;color:var(--tx)}
-.sz{padding:4px 12px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .1s}
+.tb-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;overflow-x:auto}
+.tb-topbar::-webkit-scrollbar{display:none}
+.tb-title{font-size:.85rem;font-weight:700;color:var(--tx);white-space:nowrap}
+.sz{padding:4px 10px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .1s;white-space:nowrap}
 .sz:hover{background:var(--s2)}
 .sz.on{background:var(--s3);border-color:var(--b2);color:var(--green2)}
-.tb-clr{padding:4px 12px;border-radius:3px;border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);color:var(--mel);font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit}
+.tb-clr{padding:4px 10px;border-radius:3px;border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);color:var(--mel);font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 .tb-clr:disabled{opacity:.3;cursor:not-allowed}
-.tb-ctr{font-size:.8rem;font-weight:700;color:var(--tx2);margin-left:auto}
-
-/* team zone — 2 zones */
+.tb-ctr{font-size:.78rem;font-weight:700;color:var(--tx2);margin-left:auto;white-space:nowrap}
 #tbContent{flex:1;display:flex;flex-direction:column;overflow:hidden}
-#tbSlots{flex-shrink:0;padding:10px 14px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;flex-wrap:wrap;gap:6px}
-.tslot{width:128px;height:128px;border-radius:5px;border:1px dashed var(--b2);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:all .12s;cursor:pointer}
+#tbSlots{flex-shrink:0;padding:8px 12px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;flex-wrap:wrap;gap:5px}
+.tslot{width:100px;height:100px;border-radius:5px;border:1px dashed var(--b2);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:all .12s;cursor:pointer}
 .tslot:not(.filled):hover{border-color:var(--green)}
 .tslot.filled{border-style:solid;border-color:var(--b2)}
 .tslot.filled:hover{border-color:var(--mel)}
 .tslot img{width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:4px}
-.tslot-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.9));font-size:.5rem;font-weight:700;color:#fff;text-align:center;padding:10px 2px 3px;border-radius:0 0 4px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tslot-rm{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.55rem;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2;line-height:1;font-weight:700}
+.tslot-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.9));font-size:.48rem;font-weight:700;color:#fff;text-align:center;padding:8px 2px 2px;border-radius:0 0 4px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tslot-rm{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.52rem;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2;line-height:1;font-weight:700}
 .tslot.filled:hover .tslot-rm{display:flex}
-.tslot-plus{font-size:18px;color:var(--b2);line-height:1}
-
-/* synergies zone */
-#tbSyn{flex:1;overflow-y:auto;padding:12px 14px}
+.tslot-plus{font-size:16px;color:var(--b2)}
+#tbSyn{flex:1;overflow-y:auto;padding:10px 12px}
 .syn-empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--tx2);font-style:italic;font-size:.85rem}
-.syn-section{margin-bottom:16px}
-.syn-section-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.syn-section{margin-bottom:14px}
+.syn-section-title{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .syn-section-title::after{content:'';flex:1;height:1px;background:var(--b1)}
-.syn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:5px}
-.syn-row{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:6px 10px;display:flex;align-items:flex-start;gap:8px;transition:background .1s}
+.syn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px}
+.syn-row{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:5px 9px;display:flex;align-items:flex-start;gap:7px;transition:background .1s}
 .syn-row:hover{background:var(--s3)}
 .syn-row.cond{border-style:dashed;opacity:.8}
-.syn-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.syn-lbl{flex:1;font-size:.76rem;color:var(--tx3);min-width:0;white-space:normal;overflow:visible;text-overflow:unset;word-break:break-word}
-.syn-src{font-size:.6rem;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px}
-.syn-cnt{font-size:.9rem;font-weight:800;flex-shrink:0}
-.syn-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.syn-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.syn-lbl{flex:1;font-size:.72rem;color:var(--tx3);white-space:normal;word-break:break-word}
+.syn-src{font-size:.58rem;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px}
+.syn-cnt{font-size:.88rem;font-weight:800;flex-shrink:0}
 
 /* ══ TIER LIST ══ */
 #tlPanel{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.tl-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0}
-.tl-title{font-size:.88rem;font-weight:700;color:var(--tx)}
-.tl-reset{padding:4px 12px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit}
-.tl-hint{font-size:.72rem;color:var(--tx2);font-style:italic;margin-left:auto}
-#tlContent{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
-
-/* tier row */
-.trow{display:flex;align-items:stretch;border-radius:6px;overflow:hidden;border:1px solid var(--b1);min-height:100px}
-.trow-lbl{width:128px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:900;color:#fff}
-.trow-drop{flex:1;display:flex;flex-wrap:wrap;gap:7px;padding:8px 10px;align-items:center;background:var(--s2);min-height:100px}
+.tl-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;overflow-x:auto}
+.tl-topbar::-webkit-scrollbar{display:none}
+.tl-title{font-size:.85rem;font-weight:700;color:var(--tx);white-space:nowrap}
+.tl-reset{padding:4px 10px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.tl-hint{font-size:.68rem;color:var(--tx2);font-style:italic;margin-left:auto;white-space:nowrap}
+#tlContent{flex:1;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:6px}
+.trow{display:flex;align-items:stretch;border-radius:6px;overflow:hidden;border:1px solid var(--b1);min-height:80px}
+.trow-lbl{width:80px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:900;color:#fff}
+.trow-drop{flex:1;display:flex;flex-wrap:wrap;gap:5px;padding:6px 8px;align-items:center;background:var(--s2);min-height:80px}
 .trow-drop.drag-over{background:rgba(168,212,40,.08);outline:2px dashed rgba(168,212,40,.3)}
-.tl-pc{position:relative;width:96px;height:96px;border-radius:6px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;transition:transform .1s}
+.tl-pc{position:relative;width:76px;height:76px;border-radius:5px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;transition:transform .1s}
 .tl-pc:active{cursor:grabbing;transform:scale(.95)}
 .tl-pc img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-.tl-pc-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.88));font-size:.56rem;font-weight:700;color:#fff;text-align:center;padding:12px 2px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tl-pc-rm{position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.55rem;font-weight:700;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2;line-height:1}
+.tl-pc-name{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.88));font-size:.5rem;font-weight:700;color:#fff;text-align:center;padding:10px 2px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-pc-rm{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.52rem;font-weight:700;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2}
 .tl-pc:hover .tl-pc-rm{display:flex}
-
-/* unranked pool */
-#tlPool{flex-shrink:0;background:var(--s1);border-top:1px solid var(--b1);padding:10px 14px;max-height:160px;overflow-y:auto}
-.tl-pool-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);margin-bottom:8px}
-#tlPoolGrid{display:flex;flex-wrap:wrap;gap:6px}
-.tl-pool-pc{width:128px;height:128px;border-radius:5px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;position:relative;background:var(--s2)}
+#tlPool{flex-shrink:0;background:var(--s1);border-top:1px solid var(--b1);padding:8px 12px;max-height:140px;overflow-y:auto}
+.tl-pool-title{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);margin-bottom:6px}
+#tlPoolGrid{display:flex;flex-wrap:wrap;gap:5px}
+.tl-pool-pc{width:76px;height:76px;border-radius:4px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;position:relative;background:var(--s2)}
 .tl-pool-pc:active{cursor:grabbing;opacity:.7}
 .tl-pool-pc img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-.tl-pool-pc-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);font-size:.5rem;font-weight:700;color:#fff;text-align:center;padding:2px}
-
-/* type badges */
+.tl-pool-pc-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);font-size:.48rem;font-weight:700;color:#fff;text-align:center;padding:2px}
 .tc-m{color:var(--mel);border-color:rgba(224,80,80,.35);background:rgba(224,80,80,.07)}
 .tc-t{color:var(--tnk);border-color:rgba(72,136,216,.35);background:rgba(72,136,216,.07)}
 .tc-r{color:var(--rng);border-color:rgba(200,144,32,.35);background:rgba(200,144,32,.07)}
 .tc-s{color:var(--sup);border-color:rgba(56,176,96,.35);background:rgba(56,176,96,.07)}
+
+/* ══ MES ÉVEILS ══ */
+#mePanel{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.me-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.me-title{font-size:.85rem;font-weight:700;color:var(--tx)}
+.me-score-inline{font-size:.8rem;font-weight:700;margin-left:4px}
+.me-actions{margin-left:auto;display:flex;gap:6px}
+.me-btn{padding:4px 10px;border-radius:3px;font-size:.68rem;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid var(--b1);background:none;color:var(--tx2);white-space:nowrap}
+.me-btn:hover{background:var(--s2)}
+.me-btn.danger{border-color:rgba(200,48,48,.35);background:rgba(200,48,48,.08);color:var(--mel)}
+
+/* filtre type dans mes éveils */
+.me-filters{padding:6px 12px;border-bottom:1px solid var(--b1);display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;background:var(--s1)}
+
+/* recap */
+.me-recap{flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);overflow:hidden;transition:max-height .25s ease}
+.me-recap.collapsed{max-height:0}
+.me-recap.expanded{max-height:500px}
+.me-recap-body{padding:10px 14px 12px;display:flex;flex-direction:column;gap:8px}
+.me-recap-counts{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.me-stat{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700}
+.me-stat-num{font-size:1rem;font-weight:900}
+.me-buff-section{display:flex;flex-direction:column;gap:3px}
+.me-buff-section-title{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);display:flex;align-items:center;gap:8px}
+.me-buff-section-title::after{content:'';flex:1;height:1px;background:var(--b1)}
+.me-buff-chips{display:flex;flex-wrap:wrap;gap:3px}
+.me-buff-chip{display:inline-flex;align-items:center;gap:4px;font-size:.66rem;padding:2px 8px;border-radius:3px;background:var(--s3);border-left:3px solid transparent}
+.me-buff-chip-cnt{font-size:.58rem;font-weight:800;padding:1px 3px;border-radius:2px;background:rgba(255,255,255,.08);color:var(--tx3)}
+
+/* recap toggle btn */
+.me-recap-toggle{cursor:pointer;font-size:.62rem;padding:2px 6px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-family:inherit;white-space:nowrap}
+.me-recap-toggle:hover{background:var(--s2)}
+
+.me-body{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.me-grid-wrap{flex:1;overflow-y:auto;padding:12px 14px}
+.me-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:10px}
+
+.me-card{background:var(--s2);border:1px solid var(--b1);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .12s;position:relative}
+.me-card:hover{border-color:var(--b2)}
+.me-card.awk3{border-top:4px solid #666}
+.me-card.awk5{border-top:4px solid var(--gold)}
+.me-card.awk7{border-top:4px solid #cc2848}
+.me-card-top{display:flex;position:relative}
+.me-card-img{width:100px;height:100px;object-fit:cover;object-position:top center;flex-shrink:0}
+.me-card-mid{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;padding-right:80px}
+.me-card-name{font-size:.95rem;font-weight:700;color:var(--tx)}
+.me-card-tagline{font-size:.7rem;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me-card-type{display:inline-flex;align-items:center;gap:3px;font-size:.62rem;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;margin-top:3px;width:fit-content}
+.me-card-score{position:absolute;top:10px;right:10px;text-align:right;line-height:1}
+.me-card-score .sc-earned{font-size:1.4rem;font-weight:900}
+.me-card-score .sc-sep{font-size:.7rem;color:var(--tx2);font-weight:400;display:block}
+.me-card-bot{padding:7px 10px;border-top:1px solid var(--b1);display:flex;gap:5px}
+.me-awk-btn{flex:1;padding:7px 0;font-size:.7rem;font-weight:700;border-radius:5px;border:1px solid var(--b1);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .1s;text-align:center}
+.me-awk-btn:hover{background:var(--s3)}
+.me-awk-btn.awk3-on{border-color:#666;background:rgba(102,102,102,.18);color:#ccc}
+.me-awk-btn.awk5-on{border-color:var(--gold);background:rgba(212,168,48,.14);color:var(--gold)}
+.me-awk-btn.awk7-on{border-color:#cc2848;background:rgba(204,40,72,.14);color:#cc2848}
+.me-card-buffs{padding:4px 10px 9px;display:flex;flex-direction:column;gap:4px}
+.me-mini-chip{font-size:.7rem;padding:3px 9px;border-radius:3px;background:var(--s3);color:var(--tx3);border-left:3px solid transparent}
+
+/* ── RESPONSIVE MOBILE ── */
+@media(max-width:640px){
+  html,body{overflow:auto;height:auto}
+  #root{flex-direction:column;height:auto;overflow:visible}
+  #sb{width:100%;border-right:none;border-bottom:1px solid var(--b1)}
+  #sb.me-mode{width:100%;display:none}
+  #grid{grid-template-columns:repeat(4,1fr)}
+  #main{min-height:0}
+  .panel{height:auto;overflow:visible}
+  #cmpList{overflow:visible;max-height:none}
+  .mrow-body{grid-template-columns:1fr}
+  .mrow-div{display:none}
+  #tbSlots{gap:4px}
+  .tslot{width:72px;height:72px}
+  .trow-lbl{width:50px;font-size:1.2rem}
+  #tlContent{overflow:visible}
+  .me-grid{grid-template-columns:1fr}
+  .me-card-mid{padding-right:70px}
+  .me-card-score .sc-earned{font-size:1.1rem}
+  .nav-search input{width:110px}
+  .tl-hint{display:none}
+}
 </style>
 </head>
 <body>
@@ -431,15 +476,15 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
   <button class="ntab on" id="tab-cmp" onclick="switchTab('cmp')">Comparateur</button>
   <button class="ntab" id="tab-tb" onclick="switchTab('tb')">Team Builder</button>
   <button class="ntab" id="tab-tl" onclick="switchTab('tl')">Tier List</button>
+  <button class="ntab" id="tab-me" onclick="switchTab('me')">Mes Éveils</button>
   <div class="nav-right">
     <div class="nav-search">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="srch" type="text" placeholder="Rechercher…" oninput="buildGrid()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="srch" type="text" placeholder="Rechercher…" oninput="onSearch()">
     </div>
   </div>
 </div>
 <div id="root">
-  <!-- SIDEBAR -->
   <div id="sb">
     <div class="sb-filters">
       <div class="frow" id="typeRow">
@@ -462,14 +507,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
     </div>
     <div id="grid"></div>
   </div>
-  <!-- MAIN -->
   <div id="main">
     <!-- CMP -->
     <div class="panel on" id="panelCmp">
       <div id="cmpPanel">
         <div id="cmpShared"><span class="sh-lbl">Buffs communs :</span><div id="sharedChips"></div></div>
-        <div id="cmpList"><div class="cmp-empty" id="cmpEmpty">Cliquez sur des portraits pour comparer jusqu'à 3 monstres</div></div>
-        <div id="cmpBot"><span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);flex-shrink:0" id="botLbl"></span></div>
+        <div id="cmpList"><div class="cmp-empty">Cliquez sur des portraits pour comparer jusqu'à 3 monstres</div></div>
+        <div id="cmpBot"></div>
       </div>
     </div>
     <!-- TB -->
@@ -487,33 +531,73 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
         </div>
         <div id="tbContent">
           <div id="tbSlots"></div>
-          <div id="tbSyn"><div class="syn-empty" id="synEmpty">Ajoutez des monstres pour voir les synergies</div></div>
+          <div id="tbSyn"><div class="syn-empty">Ajoutez des monstres pour voir les synergies</div></div>
         </div>
       </div>
     </div>
     <!-- TL -->
     <div class="panel off" id="panelTl">
       <div id="tlPanel">
-		<div class="tl-topbar">
-			<span class="tl-title">Tier List</span>
-			<button class="tl-reset" onclick="resetTier()">Réinitialiser</button>
-		<div id="tlCatRow" style="display:flex;gap:4px;flex-wrap:wrap">
-			<button class="fp fa" data-tc="" onclick="setTlCat('')">Tous</button>
-			<button class="fp" data-tc="atk" onclick="setTlCat('atk')">ATQ</button>
-			<button class="fp" data-tc="crit" onclick="setTlCat('crit')">Crit</button>
-			<button class="fp" data-tc="spd" onclick="setTlCat('spd')">Vitesse</button>
-			<button class="fp" data-tc="range" onclick="setTlCat('range')">Portée</button>
-			<button class="fp" data-tc="def" onclick="setTlCat('def')">Déf</button>
-			<button class="fp" data-tc="cc" onclick="setTlCat('cc')">CC</button>
-			<button class="fp" data-tc="dot" onclick="setTlCat('dot')">DoT</button>
-			<button class="fp" data-tc="team" onclick="setTlCat('team')">Team</button>
-		</div>
-  <span class="tl-hint">Glissez les portraits dans les rangs</span>
-</div>
-        <div id="tlContent" id="tlRows"></div>
+        <div class="tl-topbar">
+          <span class="tl-title">Tier List</span>
+          <button class="tl-reset" onclick="resetTier()">Réinitialiser</button>
+          <div id="tlCatRow" style="display:flex;gap:3px;flex-wrap:wrap">
+            <button class="fp fa" data-tc="" onclick="setTlCat('')">Tous</button>
+            <button class="fp" data-tc="atk" onclick="setTlCat('atk')">ATQ</button>
+            <button class="fp" data-tc="crit" onclick="setTlCat('crit')">Crit</button>
+            <button class="fp" data-tc="spd" onclick="setTlCat('spd')">Vitesse</button>
+            <button class="fp" data-tc="range" onclick="setTlCat('range')">Portée</button>
+            <button class="fp" data-tc="def" onclick="setTlCat('def')">Déf</button>
+            <button class="fp" data-tc="cc" onclick="setTlCat('cc')">CC</button>
+            <button class="fp" data-tc="dot" onclick="setTlCat('dot')">DoT</button>
+            <button class="fp" data-tc="team" onclick="setTlCat('team')">Team</button>
+          </div>
+          <span class="tl-hint">Glissez les portraits dans les rangs</span>
+        </div>
+        <div id="tlContent"></div>
         <div id="tlPool">
           <div class="tl-pool-title">Non classés</div>
           <div id="tlPoolGrid"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ME -->
+    <div class="panel off" id="panelMe">
+      <div id="mePanel">
+        <div class="me-topbar">
+          <span class="me-title">Mes Éveils</span>
+          <span id="meScoreInline" class="me-score-inline"></span>
+          <button class="me-recap-toggle" id="meRecapToggle" onclick="toggleMeRecap()">▼ Détails</button>
+          <div class="me-actions">
+            <button class="me-btn" onclick="importAwk()">⬆ Importer</button>
+            <button class="me-btn" onclick="exportAwk()">⬇ Exporter</button>
+            <button class="me-btn danger" onclick="resetAwk()">Réinitialiser</button>
+          </div>
+        </div>
+        <div class="me-recap collapsed" id="meRecap">
+          <div class="me-recap-body">
+            <div class="me-recap-counts">
+              <div class="me-stat"><span style="color:#888">Éveil 3 :</span><span class="me-stat-num" style="color:#ccc" id="meStat3">0</span></div>
+              <div class="me-stat"><span style="color:var(--gold)">Éveil 5★ :</span><span class="me-stat-num" style="color:var(--gold)" id="meStat5">0</span></div>
+              <div class="me-stat"><span style="color:#cc2848">Éveil 7★ :</span><span class="me-stat-num" style="color:#cc2848" id="meStat7">0</span></div>
+            </div>
+            <div class="me-buff-section">
+              <div class="me-buff-section-title">Buffs conditionnels actifs</div>
+              <div class="me-buff-chips" id="meRecapBuffs"></div>
+            </div>
+          </div>
+        </div>
+        <div class="me-filters" id="meTypeRow">
+          <button class="fp fa" data-mt="">Tous</button>
+          <button class="fp" data-mt="melee">Mêlée</button>
+          <button class="fp" data-mt="tank">Tank</button>
+          <button class="fp" data-mt="range">Range</button>
+          <button class="fp" data-mt="support">Support</button>
+        </div>
+        <div class="me-body">
+          <div class="me-grid-wrap">
+            <div class="me-grid" id="meGridInner"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -526,105 +610,90 @@ const TLBL={melee:'Mêlée',tank:'Tank',range:'Range',support:'Support'};
 const TCLS={melee:'tc-m',tank:'tc-t',range:'tc-r',support:'tc-s'};
 const SCOLS=['#4888d8','#c89020','#d84040'];
 const TIERS=[{id:'S',label:'S',bg:'#b83030'},{id:'A',label:'A',bg:'#c07020'},{id:'B',label:'B',bg:'#a09020'},{id:'C',label:'C',bg:'#408830'},{id:'D',label:'D',bg:'#505080'}];
+const AWK3_PTS=25;
+const MAX_T=200;
+
 function rgb(h){h=h.replace('#','');return`${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)}`}
 function bVal(id){const b=BUFFS[id];return b?Math.round(b.power*(b.cond?CW:1)):0}
 function awkRaw(a){return(a.buffs||[]).reduce((s,id)=>s+bVal(id),0)}
 const ALL_SC=Object.values(MONSTERS).flatMap(m=>(m.awakenings||[]).filter(a=>a.level!==3).map(awkRaw));
-const MAX_AW=Math.max(...ALL_SC);
-function awkPts(a){return Math.round(awkRaw(a)/MAX_AW*100)}
-function totPts(m){return(m.awakenings||[]).filter(a=>a.level!==3).reduce((s,a)=>s+awkPts(a),0)}
-const MAX_T=200;
+const MAX_AW=Math.max(...ALL_SC,1);
+function awkPts(a){return a.level===3?AWK3_PTS:Math.round(awkRaw(a)/MAX_AW*100)}
+function totPts(m){return(m.awakenings||[]).reduce((s,a)=>s+awkPts(a),0)}
+
 function sCol(r){return r>=.68?'var(--hi)':r>=.38?'var(--mid)':'var(--lo)'}
+
 function genTagline(nm){
-  const m = MONSTERS[nm];
-  if (!m) return 'Combattant polyvalent';
-
-  // Récupération de tous les buffs hors éveil niveau 3
-  const buffs = (m.awakenings || []).filter(a => a.level !== 3).flatMap(a => a.buffs || []);
-  const has = id => buffs.includes(id);
-  const any = ids => ids.some(id => has(id));
-
-  // 1. Furtivité & Burst Massif
-  if (has('dmg_150')) return 'Explose sous Furtivité';
-
-  // 2. Attaque brute colossale
-  if (any(['atk_80', 'atk_100'])) return 'Attaquant redoutable avec une attaque de base élevée';
-
-  // 3. Protection d'équipe & Utilitaires Majeurs
-  if (has('cc_immune_team_30')) return 'Protège toute l\'équipe contre les CC';
-  if (has('fran_blessing_team')) return 'Immunité + dégâts groupés pour les alliés';
-  if (has('spd_team_20')) return 'Accélère l\'équipe en combat';
-
-  // 4. Multiplicateurs de dégâts (Buffs / Debuffs)
-  if (any([, 'dmg_debuff_scaling'])) return 'Plus l\'ennemi est affaibli, plus il est détruit';
-  if (any(['dmg_buff_scaling'])) return 'Plus il est buffé, plus il inflige des dégâts massifs';
-  if (any(['perfect_team', 'one_team_one_spirit', 'teamwork_stack'])) return 'Brille avec des boost d\'équipe bien orchestrés';
-
-  // 5. Zone & Longue portée
-  if (any(['range_3', 'range_5']) && any(['dmg_aoe_scaling', 'aoe_range_30', 'aoe_range_30_cond'])) return 'Longue portée — ravage les groupes';
-
-  // 6. Mécanique de multi-coups accumulés (Bloom / Floraison)
-  if (any(['full_bloom', 'bloom_stack', 'double_triple_dmg_team'])) return 'Taux et dégâts des coups Double et/ou Triple Hit augmentée';
-
-  // 7. Punition des ennemis sous Altération de contrôle (CC)
-  if (any(['dmg_frozen_50', 'dmg_stunned_50', 'dmg_cc_50', 'dmg_def_down_50', 'dmg_petrified_20', 'dmg_sleeping_20', 'target_weakness_provoke'])) return 'Punit sévèrement les ennemis sous contrôle';
-
-  // 8. Exploitation des DoT (Poison, Saignement, Brûlure)
-  if (any(['dmg_dot_50', 'dmg_poisoned_20', 'dmg_bleed_20', 'dmg_burned_20', 'dot_poison', 'weakness_poison_enemy'])) return 'Exploite les DoT pour amplifier ses dégâts';
-
-  // 9. Enchaînements de coups physiques assurés
-  if (any(['double_hit_15', 'triple_hit_10', 'double_hit_10_cond', 'double_hit_10'])) return 'Taux des coups Double et/ou Triple Hit augmentée';
-
-  // 10. Archétype de classe unique
-  if (has('class_share_melee')) return 'Tank qui se prend pour un mêlée';
-
-  // 11. Amplification offensive d'équipe
-  if (any(['crush_rate_10_team' , 'crush_rate_10', 'crush_rate_20', 'crush_rate_20_cond', 'crush_dmg_20_ally', 'crush_rate_20_ally', 'crush_dmg_20'])) return 'Amplifie l\'équipe — coups puissants renforcés';
-  if (any(['shield_hits_3_team', 'dmg_resist_20_team'])) return 'Bouclier vivant — protège ses alliés';
-
-  // 12. Interaction et destruction des Boucliers ennemis
-  if (any(['strip_shield', 'block_shield', 'target_weakness_shield'])) return 'Perce-bouclier';
-
-  // 13. Réduction des Temps de Recharge (Gestion de la jauge / cooldowns)
-  if (any(['cd_skill_cond', 'cd_reset_proc', 'no_crit_cd', 'exclusive_cd_down', 'skill_accel_20_cond', 'skill_accel_15'])) return 'Enchaîne ses compétences rapidement';
-
-  // 14. Survivabilité pure (Endurance, Esquive, Réduction de dégâts reçus)
-  if (any(['dodge_3s', 'endurance_cond', 'dmg_resist_80_cond', 'dmg_resist_15_cond', 'dmg_resist_10', 'dmg_resist_20_cond', 'limit_shield', 'protection_shield', 'cc_immune_self_react'])) return 'Survivant hors pair';
-
-  // 15. Spécialisation Critique & Coups Puissants (Self-buffs)
-  if (any(['crit_rate_50', 'crit_rate_10', 'crit_rate_10_cond', 'crit_dmg_20', 'crit_dmg_10_cond', 'crit_res_10_cond'])) return 'Spécialiste des coups critiques';
-
-  // 16. Exploitation des Faiblesses et Détection
-  if (any(['weak_point_detect', 'weakness_elem_team','weakness_element', 'debuff_aoe_taken_10', 'debuff_crit_taken_10', 'target_weakness_immunity', 'bleed'])) return 'Détecte et exploite impitoyablement les failles ennemies';
-
-  // 17. Mécaniques spécifiques complexes (Boxes, Rockstar, Feu de renard...)
-  if (any(['happy_box_cond', 'merry_box_team_cond', 'rockstar_i', 'rockstar_iii_cond', 'fox_fire_cond', 'fox_fire_burst', 'dmg_unique_target', 'cc_eff_20', 'atk_down_ennemy_count', 'crush_dmg_20_ally', 'crush_rate_20_ally'])) return 'Utilise des mécaniques uniques pour surprendre l\'ennemi';
-
-  // 18. Auto-buffs de statistiques standards (ATQ, VIT, Sangsue)
-  if (any(['atk_10', 'atk_20', 'atk_25_delay', 'atk_up_stack', 'spd_15', 'spd_30', 'spd_10', 'spd_40_cond', 'spd_15_cond', 'hp_max_15_cond', 'lifesteal_15_cond', 'res_lp_30'])) return 'Combattant redoutable optimisant ses statistiques';
-
-  // 19. Bonus de dégâts générique de palier d'Éveil
-  if (has('dmg_20')) return 'Combattant polyvalent amélioré';
-
-  return 'Combattant polyvalent';
+  const m=MONSTERS[nm];if(!m)return'Combattant polyvalent';
+  const buffs=(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]);
+  const has=id=>buffs.includes(id);
+  const any=ids=>ids.some(id=>has(id));
+  if(has('dmg_150'))return'Explose sous Furtivité';
+  if(any(['atk_80','atk_100']))return'Attaquant redoutable avec une attaque de base élevée';
+  if(has('cc_immune_team_30'))return"Protège toute l'équipe contre les CC";
+  if(has('fran_blessing_team'))return'Immunité + dégâts groupés pour les alliés';
+  if(has('spd_team_20'))return"Accélère l'équipe en combat";
+  if(any([,'dmg_debuff_scaling']))return"Plus l'ennemi est affaibli, plus il est détruit";
+  if(any(['dmg_buff_scaling']))return'Plus il est buffé, plus il inflige des dégâts massifs';
+  if(any(['perfect_team','one_team_one_spirit','teamwork_stack']))return"Brille avec des boost d'équipe bien orchestrés";
+  if(any(['range_3','range_5'])&&any(['dmg_aoe_scaling','aoe_range_30','aoe_range_30_cond']))return'Longue portée — ravage les groupes';
+  if(any(['full_bloom','bloom_stack','double_triple_dmg_team']))return'Taux et dégâts des coups Double/Triple Hit augmentés';
+  if(any(['dmg_frozen_50','dmg_stunned_50','dmg_cc_50','dmg_def_down_50','dmg_petrified_20','dmg_sleeping_20','target_weakness_provoke']))return'Punit sévèrement les ennemis sous contrôle';
+  if(any(['dmg_dot_50','dmg_poisoned_20','dmg_bleed_20','dmg_burned_20','dot_poison','weakness_poison_enemy']))return'Exploite les DoT pour amplifier ses dégâts';
+  if(any(['double_hit_15','triple_hit_10','double_hit_10_cond','double_hit_10']))return'Spécialiste des coups multiples';
+  if(has('class_share_melee'))return'Tank qui se prend pour un mêlée';
+  if(any(['crush_rate_10_team','crush_rate_10','crush_dmg_20_ally','crush_rate_20_ally','crush_dmg_20']))return'Amplifie les coups puissants de l\'équipe';
+  if(any(['shield_hits_3_team','dmg_resist_20_team']))return'Bouclier vivant — protège ses alliés';
+  if(any(['strip_shield','block_shield','target_weakness_shield']))return'Perce-bouclier';
+  if(any(['cd_skill_cond','cd_reset_proc','no_crit_cd','exclusive_cd_down','skill_accel_20_cond','skill_accel_15']))return'Enchaîne ses compétences rapidement';
+  if(any(['dodge_3s','endurance_cond','dmg_resist_80_cond','dmg_resist_15_cond','dmg_resist_10','dmg_resist_20_cond','limit_shield','protection_shield','cc_immune_self_react']))return'Survivant hors pair';
+  if(any(['crit_rate_50','crit_rate_10','crit_rate_10_cond','crit_dmg_20','crit_dmg_10_cond']))return'Spécialiste des coups critiques';
+  if(any(['weak_point_detect','weakness_elem_team','weakness_element','debuff_aoe_taken_10','debuff_crit_taken_10','target_weakness_immunity','bleed']))return'Détecte et exploite les failles ennemies';
+  if(any(['atk_10','atk_20','atk_25_delay','atk_up_stack','spd_15','spd_30','spd_10','hp_max_15_cond','lifesteal_15_cond','res_lp_30']))return'Combattant optimisant ses statistiques';
+  return'Combattant polyvalent';
 }
 
 let selCmp=[null,null,null],selTb=[],activeTab='cmp',activeType='',activeCat='',teamSize=15;
-let tlData={S:[],A:[],B:[],C:[],D:[]},tlDragName=null,tlDragFrom=null,cmpDragName=null;
-let tlCat='';
+let tlData={S:[],A:[],B:[],C:[],D:[]},tlDragName=null,tlDragFrom=null;
+let tlCat='',meType='';
+let myAwakenings=JSON.parse(localStorage.getItem('sw_my_awk')||'{}');
+let meRecapOpen=false;
+
+function saveAwk(){localStorage.setItem('sw_my_awk',JSON.stringify(myAwakenings));}
+function getAwkSet(nm){const v=myAwakenings[nm];return new Set(Array.isArray(v)?v:(v?[v]:[]));}
+function getAwkLevel(nm){const s=getAwkSet(nm);return s.has(7)?7:s.has(5)?5:s.has(3)?3:0;}
+
+function toggleAwk(nm,level){
+  const s=getAwkSet(nm);
+  if(s.has(level))s.delete(level);else s.add(level);
+  if(s.size===0)delete myAwakenings[nm];
+  else myAwakenings[nm]=[...s];
+  saveAwk();
+  const grid=document.getElementById('meGridInner');
+  if(grid&&grid.children.length){updateMeCard(nm);}
+  renderMeRecap();
+}
 
 /* ── TAB ── */
 function switchTab(t){
   activeTab=t;
-  ['cmp','tb','tl'].forEach(id=>{
+  ['cmp','tb','tl','me'].forEach(id=>{
     document.getElementById('tab-'+id).classList.toggle('on',id===t);
     document.getElementById('panel'+id.charAt(0).toUpperCase()+id.slice(1)).className='panel '+(id===t?'on':'off');
   });
-  buildGrid();
+  const sb=document.getElementById('sb');
+  if(t==='me'){sb.classList.add('me-mode');}
+  else{sb.classList.remove('me-mode');buildGrid();}
   if(t==='tl')renderTierList();
+  if(t==='me')renderMesEveils();
 }
 
-/* ── FILTERS ── */
+function onSearch(){
+  if(activeTab==='me')renderMesEveils();
+  else buildGrid();
+}
+
+/* ── FILTERS SIDEBAR ── */
 document.getElementById('typeRow').addEventListener('click',e=>{
   const b=e.target.closest('.fp');if(!b||!('t' in b.dataset))return;
   document.querySelectorAll('#typeRow .fp').forEach(x=>x.className='fp');
@@ -639,6 +708,14 @@ document.getElementById('catRow').addEventListener('click',e=>{
   else{document.querySelectorAll('#catRow .fp').forEach(x=>x.className='fp');activeCat=c;b.classList.add('fbc');}
   buildGrid();
 });
+document.getElementById('meTypeRow').addEventListener('click',e=>{
+  const b=e.target.closest('.fp');if(!b||!('mt' in b.dataset))return;
+  document.querySelectorAll('#meTypeRow .fp').forEach(x=>x.className='fp');
+  meType=b.dataset.mt;
+  b.classList.add(meType===''?'fa':meType==='melee'?'fm':meType==='tank'?'ft':meType==='range'?'fr':'fs');
+  renderMesEveils();
+});
+
 function hasBuffCat(nm){
   if(!activeCat)return true;
   const ids=new Set((BUFF_CATS[activeCat]||{ids:[]}).ids);
@@ -651,7 +728,6 @@ function buildGrid(){
   const g=document.getElementById('grid');
   const placed={};
   TIERS.forEach(t=>tlData[t.id].forEach(nm=>{placed[nm]=t.id;}));
-
   const names=Object.keys(MONSTERS).filter(n=>{
     if(activeType&&MONSTERS[n].type!==activeType)return false;
     if(!n.toLowerCase().includes(q))return false;
@@ -659,7 +735,6 @@ function buildGrid(){
     if(activeTab!=='tl'&&activeCat&&!hasBuffCat(n))return false;
     return true;
   }).sort((a,b)=>totPts(MONSTERS[b])-totPts(MONSTERS[a]));
-
   g.innerHTML='';
   names.forEach(nm=>{
     const m=MONSTERS[nm],tot=totPts(m),r=tot/MAX_T,sc=sCol(r);
@@ -668,27 +743,21 @@ function buildGrid(){
     const d=document.createElement('div');
     d.className='pc'+(iC!==-1?' sel':'');
     d.draggable=true;
-
+    const myLv=getAwkLevel(nm);
     let badge='';
     if(activeTab==='tl'&&tier){
       const bg=TIERS.find(t=>t.id===tier)?.bg||'#666';
-      badge=`<div class="pc-badge" style="background:${bg};color:#fff;font-size:.58rem">${tier}</div>`;
+      badge=`<div class="pc-badge" style="background:${bg};color:#fff;font-size:.52rem">${tier}</div>`;
     }else if(iC!==-1){
       badge=`<div class="pc-badge" style="background:rgba(${rgb(SCOLS[iC])},.3);color:${SCOLS[iC]}">${iC+1}</div>`;
     }else if(iT){
       badge=`<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`;
     }
-
     d.innerHTML=`<img src="${IP}${nm}.png" loading="lazy" onerror="this.src=''">
       <div class="pc-type" style="color:${TCOL[m.type]}">${{melee:'⚔',tank:'🛡',range:'🏹',support:'💚'}[m.type]}</div>
       ${badge}
       <div class="pc-bot"><div class="pc-name">${nm}</div><div class="pc-score" style="color:${sc}">${tot}</div></div>`;
-
-    d.addEventListener('dragstart',e=>{
-      cmpDragName=nm;tlDragName=nm;tlDragFrom='pool';
-      e.dataTransfer.effectAllowed='copy';
-    });
-    d.addEventListener('dragend',()=>{cmpDragName=null;});
+    d.addEventListener('dragstart',e=>{tlDragName=nm;tlDragFrom='pool';e.dataTransfer.effectAllowed='copy';});
     d.addEventListener('click',()=>{
       if(activeTab==='cmp'){
         const i=selCmp.indexOf(nm);
@@ -710,13 +779,25 @@ function buildGrid(){
 }
 
 /* ══ COMPARATEUR ══ */
-function buffChips(buffs){
+function buffChips(buffs,nm){
+  const awkSet=getAwkSet(nm);
+  const m=MONSTERS[nm];
+  const awk5buffs=new Set((m?.awakenings||[]).find(a=>a.level===5)?.buffs||[]);
+  const awk7buffs=new Set((m?.awakenings||[]).find(a=>a.level===7)?.buffs||[]);
+  const awk3buffs=new Set((m?.awakenings||[]).find(a=>a.level===3)?.buffs||[]);
   return buffs.map(id=>{
     const b=BUFFS[id];if(!b)return'';
-    return`<div class="bchip" style="border-left:3px solid ${b.color}">
-      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;font-size:.7rem;color:var(--tx3)">${b.label}</span>
-      ${b.team?'<span class="bchip-tag bt-team">Team</span>':''}
-      ${b.cond?'<span class="bchip-tag bt-cond">Condition</span>':''}
+    let awkBadge='';
+    if(awkSet.has(3)&&awk3buffs.has(id))awkBadge='<span class="bchip-awk a3">Éveil 3</span>';
+    else if(awkSet.has(5)&&awk5buffs.has(id))awkBadge='<span class="bchip-awk a5">Éveil 5★</span>';
+    else if(awkSet.has(7)&&awk7buffs.has(id))awkBadge='<span class="bchip-awk a7">Éveil 7★</span>';
+    return`<div class="bchip" style="border-color:${b.color}">
+      <span class="bchip-text">${b.label}</span>
+      <span class="bchip-tags">
+        ${awkBadge}
+        ${b.team?'<span class="bchip-tag bt-team">Équipe</span>':''}
+        ${b.cond?'<span class="bchip-tag bt-cond">Condition</span>':''}
+      </span>
     </div>`;
   }).join('');
 }
@@ -726,27 +807,33 @@ function renderCmpRow(nm,idx){
   const awks=(m.awakenings||[]).filter(a=>a.level!==3);
   const a5=awks.find(a=>a.level===5),a7=awks.find(a=>a.level===7);
   const pts5=a5?awkPts(a5):0,pts7=a7?awkPts(a7):0;
-  return`<div class="mrow" style="border-left:3px solid ${col}">
-    <div class="mrow-port">
-      <img src="${IP}${nm}.png" onerror="this.style.display='none'">
+  return`<div class="mrow" style="border-left:4px solid ${col}">
+    <div class="mrow-head">
+      <div class="mrow-port">
+        <img src="${IP}${nm}.png" onerror="this.style.display='none'">
+      </div>
       <div class="mrow-port-rm" onclick="removeCmp(${idx})">×</div>
+      <div class="mrow-info">
+        <div class="mrow-name">${nm}</div>
+        <div class="mrow-type ${TCLS[m.type]||''}">${TLBL[m.type]}</div>
+        <div class="mrow-tagline">${genTagline(nm)}</div>
+      </div>
+      <div class="mrow-score-wrap">
+        <div class="mrow-score" style="color:${c}">${tot}</div>
+        <div style="font-size:.65rem;color:var(--tx2);text-align:right">/ ${MAX_T}</div>
+        <div class="mrow-bar" style="margin-left:auto"><div class="mrow-barf" style="width:${Math.round(Math.min(r,1)*100)}%;background:${c}"></div></div>
+      </div>
     </div>
-    <div class="mrow-info">
-      <div class="mrow-name">${nm}</div>
-      <div class="mrow-type ${TCLS[m.type]||''}">${TLBL[m.type]}</div>
-      <div class="mrow-tagline">${genTagline(nm)}</div>
-      <div class="mrow-score" style="color:${c}">${tot} <span style="font-size:.7rem;font-weight:400;color:var(--tx2)">/ ${MAX_T}</span></div>
-      <div class="mrow-bar"><div class="mrow-barf" style="width:${Math.round(Math.min(r,1)*100)}%;background:${c}"></div></div>
-    </div>
-    <div class="mrow-div"></div>
-    <div class="mrow-awk">
-      ${a5?`<div class="awk-title lv5">Éveil 5★ <span style="display:flex;gap:3px;align-items:center">${a5.pvp?'<span class="mc-p">PvP</span>':''}${a5.pve?'<span class="mc-e">PvE</span>':''}<span class="awk-pts-badge" style="color:${sCol(pts5/100)};background:var(--s3)">${pts5} pts</span></span></div>${buffChips(a5.buffs||[])}`:
-      '<div style="color:var(--tx2);font-size:.72rem;font-style:italic">—</div>'}
-    </div>
-    <div class="mrow-div"></div>
-    <div class="mrow-awk">
-      ${a7?`<div class="awk-title lv7">Éveil 7★ <span style="display:flex;gap:3px;align-items:center">${a7.pvp?'<span class="mc-p">PvP</span>':''}${a7.pve?'<span class="mc-e">PvE</span>':''}<span class="awk-pts-badge" style="color:${sCol(pts7/100)};background:var(--s3)">${pts7} pts</span></span></div>${buffChips(a7.buffs||[])}`:
-      '<div style="color:var(--tx2);font-size:.72rem;font-style:italic">—</div>'}
+    <div class="mrow-body">
+      <div class="mrow-awk">
+        ${a5?`<div class="awk-title lv5">Éveil 5★ <span class="awk-pts-badge" style="color:${sCol(pts5/100)};background:var(--s3)">${pts5} pts</span></div>${buffChips(a5.buffs||[],nm)}`:
+        '<div style="color:var(--tx2);font-size:.72rem;font-style:italic;padding:8px 0">Aucun éveil 5★</div>'}
+      </div>
+      <div class="mrow-div"></div>
+      <div class="mrow-awk">
+        ${a7?`<div class="awk-title lv7">Éveil 7★ <span class="awk-pts-badge" style="color:${sCol(pts7/100)};background:var(--s3)">${pts7} pts</span></div>${buffChips(a7.buffs||[],nm)}`:
+        '<div style="color:var(--tx2);font-size:.72rem;font-style:italic;padding:8px 0">Aucun éveil 7★</div>'}
+      </div>
     </div>
   </div>`;
 }
@@ -758,34 +845,22 @@ function renderCmp(){
   const list=document.getElementById('cmpList');
   const bot=document.getElementById('cmpBot');
   const sb=document.getElementById('cmpShared');
-
   if(!filled.length){
     list.innerHTML='<div class="cmp-empty">Cliquez sur des portraits pour comparer jusqu\'à 3 monstres</div>';
-    if(bot)bot.innerHTML='';
-    if(sb)sb.className='';
-    return;
+    if(bot)bot.innerHTML='';if(sb)sb.className='';return;
   }
-
   list.innerHTML=selCmp.map((nm,i)=>nm?renderCmpRow(nm,i):'').filter(Boolean).join('');
-
-  if(sb){
-    if(filled.length>=2){
-      const bsets=filled.map(nm=>new Set((MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[])));
-      const shared=[...bsets[0]].filter(b=>bsets.every(s=>s.has(b)));
-      if(shared.length){
-        sb.className='show';
-        document.getElementById('sharedChips').innerHTML=shared.map(id=>{
-          const b=BUFFS[id];if(!b)return'';
-          return`<span class="shchip" style="background:rgba(${rgb(b.color)},.12);color:${b.color};border:1px solid rgba(${rgb(b.color)},.25)">${b.label}</span>`;
-        }).join('');
-      }else sb.className='';
+  if(sb&&filled.length>=2){
+    const bsets=filled.map(nm=>new Set((MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[])));
+    const shared=[...bsets[0]].filter(b=>bsets.every(s=>s.has(b)));
+    if(shared.length){
+      sb.className='show';
+      document.getElementById('sharedChips').innerHTML=shared.map(id=>{const b=BUFFS[id];if(!b)return'';return`<span class="shchip" style="background:rgba(${rgb(b.color)},.12);color:${b.color};border:1px solid rgba(${rgb(b.color)},.25)">${b.label}</span>`;}).join('');
     }else sb.className='';
-  }
-
-  if(!bot)return;
-  if(filled.length<2){bot.innerHTML='';return;}
+  }else if(sb)sb.className='';
+  if(!bot||filled.length<2){if(bot)bot.innerHTML='';return;}
   const r2=[...selCmp.map((nm,i)=>({nm,s:scores[i],c:SCOLS[i]}))].filter(x=>x.nm).sort((a,b)=>b.s-a.s);
-  bot.innerHTML=`<span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);flex-shrink:0">Score</span>`+
+  bot.innerHTML=`<span style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:var(--tx2);flex-shrink:0">Score</span>`+
     r2.map(r=>`<div class="bseg"><div class="bseg-n" style="color:${r.c}">${r.nm} <span style="opacity:.35;font-weight:400">${r.s}</span></div><div class="bseg-b"><div class="bseg-f" style="width:${Math.round(r.s/maxS*100)}%;background:${r.c}"></div></div></div>`).join('');
 }
 function removeCmp(i){selCmp[i]=null;renderCmp();buildGrid();}
@@ -798,7 +873,6 @@ function setSize(s){
   renderTeam();buildGrid();
 }
 function clearTeam(){selTb=[];renderTeam();buildGrid();}
-
 function renderTeam(){
   const n=selTb.length;
   document.getElementById('tbCtr').textContent=`${n} / ${teamSize}`;
@@ -806,110 +880,69 @@ function renderTeam(){
   const slots=document.getElementById('tbSlots');
   let h='';
   for(let i=0;i<teamSize;i++){
-    if(i<n){
-      const nm=selTb[i];
-      h+=`<div class="tslot filled">
-        <img src="${IP}${nm}.png" onerror="this.style.display='none'">
-        <div class="tslot-name">${nm}</div>
-        <div class="tslot-rm" onclick="rmTb('${nm}')">×</div>
-      </div>`;
-    }else{
-      h+=`<div class="tslot"><span class="tslot-plus">+</span></div>`;
-    }
+    if(i<n){const nm=selTb[i];h+=`<div class="tslot filled"><img src="${IP}${nm}.png" onerror="this.style.display='none'"><div class="tslot-name">${nm}</div><div class="tslot-rm" onclick="rmTb('${nm}')">×</div></div>`;}
+    else h+=`<div class="tslot"><span class="tslot-plus">+</span></div>`;
   }
   slots.innerHTML=h;
-
   const syn=document.getElementById('tbSyn');
-  if(!n){
-    syn.innerHTML='<div class="syn-empty" id="synEmpty">Ajoutez des monstres pour voir les synergies</div>';
-    return;
-  }
-
+  if(!n){syn.innerHTML='<div class="syn-empty">Ajoutez des monstres pour voir les synergies</div>';return;}
   const agg={};
   selTb.forEach(nm=>{
     const seen=new Set();
     (MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).forEach(a=>{
-      (a.buffs||[]).forEach(id=>{
-        if(!seen.has(id)){
-          seen.add(id);
-          if(!agg[id])agg[id]={count:0,ms:[]};
-          agg[id].count++;
-          agg[id].ms.push(nm);
-        }
-      });
+      (a.buffs||[]).forEach(id=>{if(!seen.has(id)){seen.add(id);if(!agg[id])agg[id]={count:0,ms:[]};agg[id].count++;agg[id].ms.push(nm);}});
     });
   });
-
   const co=b=>b.team?0:b.cond?2:1;
   const sorted=Object.entries(agg).sort(([ai,ad],[bi,bd])=>{
     const ba=BUFFS[ai],bb=BUFFS[bi],ca=co(ba||{}),cb=co(bb||{});
-    if(ca!==cb)return ca-cb;
-    if(bd.count!==ad.count)return bd.count-ad.count;
-    return(bb?.power||0)-(ba?.power||0);
+    if(ca!==cb)return ca-cb;if(bd.count!==ad.count)return bd.count-ad.count;return(bb?.power||0)-(ba?.power||0);
   });
-  const cats=[
-    {k:0,label:'Buffs d\'équipe',color:'var(--gold)'},
-    {k:1,label:'Buffs personnels',color:'var(--tx3)'},
-    {k:2,label:'Conditionnels',color:'#a09020'}
-  ];
+  const cats=[{k:0,label:"Buffs d'équipe",color:'var(--gold)'},{k:1,label:'Buffs personnels',color:'var(--tx3)'},{k:2,label:'Conditionnels',color:'#a09020'}];
   const ce={0:[],1:[],2:[]};
   sorted.forEach(e=>{const b=BUFFS[e[0]];if(b)ce[co(b)].push(e);});
-
   syn.innerHTML=cats.filter(c=>ce[c.k].length).map(cat=>`
     <div class="syn-section">
-      <div class="syn-section-title" style="color:${cat.color}">${cat.label} <span style="font-size:.62rem;color:var(--tx2);font-weight:400">(${ce[cat.k].length})</span></div>
-      <div class="syn-grid">
-        ${ce[cat.k].map(([id,{count,ms}])=>{
-          const b=BUFFS[id];if(!b)return'';
-          const src=ms.slice(0,2).join(', ')+(ms.length>2?` +${ms.length-2}`:'');
-          return`<div class="syn-row${b.cond?' cond':''}">
-            <div class="syn-dot" style="background:${b.color}"></div>
-            <span class="syn-lbl">${b.label}</span>
-            <span class="syn-src">${src}</span>
-            <span class="syn-cnt" style="color:${b.color}">×${count}</span>
-          </div>`;
-        }).join('')}
-      </div>
+      <div class="syn-section-title" style="color:${cat.color}">${cat.label} <span style="font-size:.6rem;color:var(--tx2);font-weight:400">(${ce[cat.k].length})</span></div>
+      <div class="syn-grid">${ce[cat.k].map(([id,{count,ms}])=>{
+        const b=BUFFS[id];if(!b)return'';
+        const src=ms.slice(0,2).join(', ')+(ms.length>2?` +${ms.length-2}`:'');
+        return`<div class="syn-row${b.cond?' cond':''}"><div class="syn-dot" style="background:${b.color}"></div><span class="syn-lbl">${b.label}</span><span class="syn-src">${src}</span><span class="syn-cnt" style="color:${b.color}">×${count}</span></div>`;
+      }).join('')}</div>
     </div>`).join('');
 }
-
 function rmTb(nm){selTb=selTb.filter(n=>n!==nm);renderTeam();buildGrid();}
 
 /* ══ TIER LIST ══ */
+function setTlCat(c){
+  tlCat=c;
+  document.querySelectorAll('#tlCatRow .fp').forEach(b=>{b.className='fp';if(b.dataset.tc===c)b.classList.add('fa');});
+  buildGrid();
+}
 function renderTierList(){
   const content=document.getElementById('tlContent');
   content.innerHTML=TIERS.map(t=>`
     <div class="trow">
       <div class="trow-lbl" style="background:${t.bg}">${t.label}</div>
-      <div class="trow-drop" id="tier-${t.id}"
-        ondragover="tlDragOver(event,'${t.id}')"
-        ondragleave="this.classList.remove('drag-over')"
-        ondrop="tlDrop(event,'${t.id}')">
+      <div class="trow-drop" id="tier-${t.id}" ondragover="tlDragOver(event,'${t.id}')" ondragleave="this.classList.remove('drag-over')" ondrop="tlDrop(event,'${t.id}')">
         ${tlData[t.id].map(nm=>tlPcHTML(nm,t.id)).join('')}
       </div>
     </div>`).join('');
   document.getElementById('tlPool').style.display='none';
-
-  // indique dans la sidebar quels monstres sont déjà placés (badge tier)
   buildGrid();
 }
-
-function tlPcHTML(nm,tierId){
-  return`<div class="tl-pc" draggable="true"
-    ondragstart="tlTierDragStart(event,'${nm}','${tierId}')"
-    ondragend="tlDragEnd()">
+function tlPcHTML(nm,tid){
+  return`<div class="tl-pc" draggable="true" ondragstart="tlTierDragStart(event,'${nm}','${tid}')" ondragend="tlDragEnd()">
     <img src="${IP}${nm}.png" onerror="this.src=''">
     <div class="tl-pc-name">${nm}</div>
-    <div class="tl-pc-rm" onclick="tlRemove('${nm}','${tierId}')">×</div>
+    <div class="tl-pc-rm" onclick="tlRemove('${nm}','${tid}')">×</div>
   </div>`;
 }
-function tlPoolDragStart(e,nm){tlDragName=nm;tlDragFrom='pool';e.dataTransfer.effectAllowed='move';}
 function tlTierDragStart(e,nm,from){tlDragName=nm;tlDragFrom=from;e.dataTransfer.effectAllowed='move';}
 function tlDragEnd(){tlDragName=null;tlDragFrom=null;}
 function tlDragOver(e,tid){e.preventDefault();document.getElementById('tier-'+tid).classList.add('drag-over');}
 function tlDrop(e,tid){
-  e.preventDefault();
-  document.getElementById('tier-'+tid).classList.remove('drag-over');
+  e.preventDefault();document.getElementById('tier-'+tid).classList.remove('drag-over');
   if(!tlDragName)return;
   if(tlDragFrom&&tlDragFrom!=='pool')tlData[tlDragFrom]=tlData[tlDragFrom].filter(n=>n!==tlDragName);
   if(!tlData[tid].includes(tlDragName))tlData[tid].push(tlDragName);
@@ -918,7 +951,219 @@ function tlDrop(e,tid){
 function tlRemove(nm,tid){tlData[tid]=tlData[tid].filter(n=>n!==nm);renderTierList();buildGrid();}
 function resetTier(){TIERS.forEach(t=>tlData[t.id]=[]);renderTierList();buildGrid();}
 
-/* ── INIT ── */
+/* ══ MES ÉVEILS ══ */
+const ME_ORDER=Object.keys(MONSTERS).sort((a,b)=>totPts(MONSTERS[b])-totPts(MONSTERS[a]));
+
+function myPts(nm){
+  const m=MONSTERS[nm];if(!m)return 0;
+  const s=getAwkSet(nm);
+  return(m.awakenings||[]).filter(a=>s.has(a.level)).reduce((sum,a)=>sum+awkPts(a),0);
+}
+
+function renderMesEveils(){
+  const q=document.getElementById('srch').value.toLowerCase();
+  const grid=document.getElementById('meGridInner');
+  if(!grid)return;
+
+  const filtered=ME_ORDER.filter(nm=>{
+    if(meType&&MONSTERS[nm].type!==meType)return false;
+    if(q&&!nm.toLowerCase().includes(q))return false;
+    return true;
+  });
+
+  // recalc score inline selon filtre
+  const filteredMax=filtered.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
+  const filteredEarned=filtered.reduce((s,nm)=>s+myPts(nm),0);
+  const pctF=filteredMax>0?Math.round(filteredEarned/filteredMax*100):0;
+  const colF=sCol(pctF/100);
+  const scoreEl=document.getElementById('meScoreInline');
+  if(scoreEl)scoreEl.innerHTML=`<span style="color:${colF}">${filteredEarned}</span><span style="color:var(--tx2);font-size:.7rem"> / ${filteredMax} pts (${pctF}%)</span>`;
+
+  // build ou recycle cartes
+  const existing=new Set([...grid.querySelectorAll('[data-me-nm]')].map(el=>el.dataset.meNm));
+  const needed=new Set(filtered);
+
+  // remove cartes hors filtre
+  [...grid.querySelectorAll('[data-me-nm]')].forEach(el=>{
+    if(!needed.has(el.dataset.meNm))el.remove();
+  });
+
+  // ajouter manquantes
+  filtered.forEach(nm=>{
+    if(!existing.has(nm)){
+      const el=buildMeCard(nm);
+      grid.appendChild(el);
+    }
+  });
+
+  // réordonner
+  filtered.forEach(nm=>{
+    const el=grid.querySelector(`[data-me-nm="${nm}"]`);
+    if(el)grid.appendChild(el);
+  });
+
+  // update toutes les cartes visibles
+  filtered.forEach(nm=>updateMeCard(nm));
+  renderMeRecap();
+}
+
+function buildMeCard(nm){
+  const m=MONSTERS[nm];
+  const awks=m.awakenings||[];
+  const lv3=awks.find(a=>a.level===3);
+  const a5=awks.find(a=>a.level===5);
+  const a7=awks.find(a=>a.level===7);
+  const mxPts=totPts(m);
+  const div=document.createElement('div');
+  div.className='me-card';
+  div.dataset.meNm=nm;
+  div.innerHTML=`
+    <div class="me-card-top">
+      <img class="me-card-img" src="${IP}${nm}.png" onerror="this.style.display='none'">
+      <div class="me-card-mid">
+        <div class="me-card-name">${nm}</div>
+        <div class="me-card-tagline">${genTagline(nm)}</div>
+        <div class="me-card-type ${TCLS[m.type]||''}">${TLBL[m.type]}</div>
+      </div>
+      <div class="me-card-score">
+        <span class="sc-earned" style="color:var(--tx2)">0</span>
+        <span class="sc-sep">/ ${mxPts} pts</span>
+      </div>
+    </div>
+    <div class="me-card-bot">
+      <button class="me-awk-btn" data-lv="3" onclick="toggleAwk('${nm}',3)">Éveil 3</button>
+      <button class="me-awk-btn" data-lv="5" onclick="toggleAwk('${nm}',5)">Éveil 5★</button>
+      <button class="me-awk-btn" data-lv="7" onclick="toggleAwk('${nm}',7)">Éveil 7★</button>
+    </div>
+    <div class="me-card-buffs"></div>`;
+  return div;
+}
+
+function updateMeCard(nm){
+  const m=MONSTERS[nm];if(!m)return;
+  const s=getAwkSet(nm);
+  const has3=s.has(3),has5=s.has(5),has7=s.has(7);
+  const mxPts=totPts(m);
+  const earned=myPts(nm);
+  const scoreCol=earned>0?sCol(earned/mxPts):'var(--tx2)';
+  const cardCls=has7?'awk7':has5?'awk5':has3?'awk3':'';
+  const card=document.querySelector(`#meGridInner [data-me-nm="${nm}"]`);
+  if(!card)return;
+  card.className='me-card'+(cardCls?' '+cardCls:'');
+  const sc=card.querySelector('.sc-earned');
+  if(sc){sc.textContent=earned;sc.style.color=scoreCol;}
+  card.querySelectorAll('.me-awk-btn').forEach(btn=>{
+    const lv=+btn.dataset.lv;
+    btn.className='me-awk-btn'+(s.has(lv)?' awk'+lv+'-on':'');
+  });
+  const awks=m.awakenings||[];
+  const lv3=awks.find(a=>a.level===3);
+  const a5=awks.find(a=>a.level===5);
+  const a7=awks.find(a=>a.level===7);
+  const activeBuffs=[];
+  if(has3&&lv3)activeBuffs.push(...(lv3.buffs||[]));
+  if(has5&&a5)activeBuffs.push(...(a5.buffs||[]));
+  if(has7&&a7)activeBuffs.push(...(a7.buffs||[]));
+  const buffsEl=card.querySelector('.me-card-buffs');
+  if(buffsEl){
+    buffsEl.innerHTML=activeBuffs.map(id=>{
+      const b=BUFFS[id];if(!b)return'';
+      return`<div class="me-mini-chip" style="border-color:${b.color}">${b.label}</div>`;
+    }).join('');
+  }
+}
+
+function renderMeRecap(){
+  const cnt3=Object.keys(myAwakenings).filter(nm=>getAwkSet(nm).has(3)).length;
+  const cnt5=Object.keys(myAwakenings).filter(nm=>getAwkSet(nm).has(5)).length;
+  const cnt7=Object.keys(myAwakenings).filter(nm=>getAwkSet(nm).has(7)).length;
+  const s3=document.getElementById('meStat3');
+  const s5=document.getElementById('meStat5');
+  const s7=document.getElementById('meStat7');
+  if(s3)s3.textContent=cnt3;
+  if(s5)s5.textContent=cnt5;
+  if(s7)s7.textContent=cnt7;
+
+  // score global (tous monstres)
+  const totalEarned=Object.keys(myAwakenings).reduce((s,nm)=>s+myPts(nm),0);
+  const totalMax=Object.values(MONSTERS).reduce((s,m)=>s+totPts(m),0);
+  const pct=totalMax>0?Math.round(totalEarned/totalMax*100):0;
+  const col=sCol(pct/100);
+
+  // aussi mettre à jour le score inline filtré
+  const q=document.getElementById('srch').value.toLowerCase();
+  const filtered=ME_ORDER.filter(nm=>{
+    if(meType&&MONSTERS[nm].type!==meType)return false;
+    if(q&&!nm.toLowerCase().includes(q))return false;
+    return true;
+  });
+  const filteredMax=filtered.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
+  const filteredEarned=filtered.reduce((s,nm)=>s+myPts(nm),0);
+  const pctF=filteredMax>0?Math.round(filteredEarned/filteredMax*100):0;
+  const colF=sCol(pctF/100);
+  const scoreEl=document.getElementById('meScoreInline');
+  if(scoreEl)scoreEl.innerHTML=`<span style="color:${colF}">${filteredEarned}</span><span style="color:var(--tx2);font-size:.7rem"> / ${filteredMax} pts (${pctF}%)</span>`;
+
+  // buffs conditionnels uniquement
+  const buffAgg={};
+  Object.entries(myAwakenings).forEach(([nm,lvArr])=>{
+    const m=MONSTERS[nm];if(!m)return;
+    const sv=new Set(Array.isArray(lvArr)?lvArr:[lvArr]);
+    (m.awakenings||[]).forEach(a=>{
+      if(!sv.has(a.level))return;
+      (a.buffs||[]).forEach(id=>{
+        const b=BUFFS[id];
+        if(!b||!b.cond)return;
+        if(!buffAgg[id])buffAgg[id]=0;
+        buffAgg[id]++;
+      });
+    });
+  });
+  const sorted=Object.entries(buffAgg).sort(([,a],[,b])=>b-a);
+  const body=document.getElementById('meRecapBuffs');
+  if(body)body.innerHTML=sorted.map(([id,cnt])=>{
+    const b=BUFFS[id];if(!b)return'';
+    return`<div class="me-buff-chip" style="border-color:${b.color}">${b.label}<span class="me-buff-chip-cnt">×${cnt}</span></div>`;
+  }).join('');
+}
+
+function toggleMeRecap(){
+  meRecapOpen=!meRecapOpen;
+  const r=document.getElementById('meRecap');
+  const btn=document.getElementById('meRecapToggle');
+  r.className='me-recap '+(meRecapOpen?'expanded':'collapsed');
+  if(btn)btn.textContent=meRecapOpen?'▲ Réduire':'▼ Détails';
+}
+
+function exportAwk(){
+  const blob=new Blob([JSON.stringify(myAwakenings,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sw_eveils.json';a.click();
+}
+function importAwk(){
+  const input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=e=>{
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        Object.assign(myAwakenings,data);
+        saveAwk();
+        document.getElementById('meGridInner').innerHTML='';
+        renderMesEveils();
+      }catch{}
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+function resetAwk(){
+  if(!confirm('Réinitialiser tous vos éveils ?'))return;
+  myAwakenings={};saveAwk();
+  document.getElementById('meGridInner').innerHTML='';
+  renderMesEveils();
+}
+
 buildGrid();renderCmp();renderTeam();
 </script>
 </body>
