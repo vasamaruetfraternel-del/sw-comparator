@@ -226,7 +226,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
 
-/* ── NAV ── */
 #nav{height:46px;background:var(--s1);border-bottom:2px solid #18181e;display:flex;align-items:center;padding:0 12px;gap:0;flex-shrink:0;overflow-x:auto}
 #nav::-webkit-scrollbar{display:none}
 .logo{font-size:.9rem;font-weight:800;color:var(--green2);letter-spacing:1px;margin-right:14px;white-space:nowrap}
@@ -240,15 +239,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .nav-search input::placeholder{color:var(--tx2)}
 .nav-search svg{position:absolute;left:7px;top:50%;transform:translateY(-50%);opacity:.4}
 
-/* ── ROOT ── */
 #root{display:flex;height:calc(100% - 46px);overflow:hidden}
 .panel{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .panel.off{display:none}
 
-/* ── SIDEBAR ── */
 #sb{width:260px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;transition:width .2s}
 #sb.me-mode{width:0;border:none}
-.sb-filters{padding:8px 8px;border-bottom:1px solid var(--b1);display:flex;flex-direction:column;gap:5px}
+.sb-filters{padding:8px;border-bottom:1px solid var(--b1);display:flex;flex-direction:column;gap:5px}
 .frow{display:flex;gap:3px;flex-wrap:wrap}
 .fp{font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .1s}
 .fp:hover{background:var(--s2);color:var(--tx3)}
@@ -269,7 +266,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .pc-type{position:absolute;top:3px;left:3px;font-size:.5rem;font-weight:900;background:rgba(0,0,0,.7);padding:1px 3px;border-radius:2px}
 .pc-badge{position:absolute;top:3px;right:3px;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:900;border:1.5px solid rgba(0,0,0,.5);padding:0 3px}
 
-/* ── MAIN ── */
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
 /* ══ COMPARATEUR ══ */
@@ -285,8 +281,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .bseg-n{font-size:.68rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bseg-b{height:3px;background:var(--b1);border-radius:2px;overflow:hidden}
 .bseg-f{height:100%;border-radius:2px}
-
-/* carte comparateur */
 .mrow{background:var(--s2);border-radius:8px;overflow:hidden;border:1px solid var(--b1);transition:border-color .15s}
 .mrow:hover{border-color:var(--b2)}
 .mrow-head{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--b1);position:relative}
@@ -315,7 +309,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .bchip-tag{font-size:.5rem;font-weight:800;text-transform:uppercase;padding:1px 4px;border-radius:2px}
 .bt-team{background:rgba(200,152,32,.15);color:#c8a020;border:1px solid rgba(200,152,32,.25)}
 .bt-cond{background:rgba(120,100,20,.15);color:#907820;border:1px solid rgba(120,100,20,.2)}
-/* badge éveil sur chip */
 .bchip-awk{font-size:.5rem;font-weight:900;padding:1px 4px;border-radius:2px;border:1px solid}
 .bchip-awk.a3{color:#aaa;border-color:#666;background:rgba(100,100,100,.15)}
 .bchip-awk.a5{color:var(--gold);border-color:var(--gold);background:rgba(212,168,48,.1)}
@@ -326,12 +319,24 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .tb-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;overflow-x:auto}
 .tb-topbar::-webkit-scrollbar{display:none}
 .tb-title{font-size:.85rem;font-weight:700;color:var(--tx);white-space:nowrap}
-.sz{padding:4px 10px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .1s;white-space:nowrap}
+.sz{padding:4px 10px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 .sz:hover{background:var(--s2)}
 .sz.on{background:var(--s3);border-color:var(--b2);color:var(--green2)}
 .tb-clr{padding:4px 10px;border-radius:3px;border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);color:var(--mel);font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 .tb-clr:disabled{opacity:.3;cursor:not-allowed}
-.tb-ctr{font-size:.78rem;font-weight:700;color:var(--tx2);margin-left:auto;white-space:nowrap}
+.tb-ctr{font-size:.78rem;font-weight:700;color:var(--tx2);white-space:nowrap}
+
+/* sauvegardes */
+.tb-saves-bar{padding:6px 12px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.tb-save-slot{display:flex;align-items:center;gap:0;border:1px solid var(--b1);border-radius:4px;overflow:hidden;flex-shrink:0}
+.tb-save-name{font-size:.65rem;padding:4px 8px;background:none;border:none;color:var(--tx2);font-family:inherit;min-width:60px;max-width:90px;outline:none;cursor:pointer}
+.tb-save-name:focus{color:var(--tx);background:var(--s3)}
+.tb-save-load{padding:4px 6px;background:none;border:none;border-left:1px solid var(--b1);color:var(--tx2);cursor:pointer;font-size:.62rem;font-family:inherit}
+.tb-save-load:hover{background:var(--s2);color:var(--green2)}
+.tb-save-save{padding:4px 6px;background:none;border:none;border-left:1px solid var(--b1);color:var(--tx2);cursor:pointer;font-size:.62rem;font-family:inherit}
+.tb-save-save:hover{background:var(--s2);color:var(--gold)}
+.tb-save-slot.active{border-color:var(--green)}
+
 #tbContent{flex:1;display:flex;flex-direction:column;overflow:hidden}
 #tbSlots{flex-shrink:0;padding:8px 12px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;flex-wrap:wrap;gap:5px}
 .tslot{width:100px;height:100px;border-radius:5px;border:1px dashed var(--b2);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:all .12s;cursor:pointer}
@@ -343,6 +348,23 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .tslot-rm{position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.52rem;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:2;line-height:1;font-weight:700}
 .tslot.filled:hover .tslot-rm{display:flex}
 .tslot-plus{font-size:16px;color:var(--b2)}
+
+/* scores offensif/déf/team */
+#tbScores{flex-shrink:0;padding:8px 12px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;gap:10px;align-items:center}
+.tb-score-gauge{flex:1;display:flex;flex-direction:column;gap:3px}
+.tb-score-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);display:flex;justify-content:space-between}
+.tb-score-label span{font-weight:900;font-size:.72rem}
+.tb-score-bar{height:6px;background:var(--b1);border-radius:3px;overflow:hidden}
+.tb-score-fill{height:100%;border-radius:3px;transition:width .3s}
+
+/* recommandation */
+#tbReco{flex-shrink:0;padding:6px 12px;background:var(--s2);border-bottom:1px solid var(--b1);display:none;align-items:center;gap:6px;flex-wrap:wrap}
+#tbReco.show{display:flex}
+.reco-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);flex-shrink:0}
+.reco-chip{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;padding:2px 8px;border-radius:3px;background:var(--s3);border:1px solid var(--b1);cursor:pointer;color:var(--tx3);transition:all .1s}
+.reco-chip:hover{border-color:var(--green2);color:var(--green2)}
+.reco-chip img{width:18px;height:18px;border-radius:2px;object-fit:cover;object-position:top center}
+
 #tbSyn{flex:1;overflow-y:auto;padding:10px 12px}
 .syn-empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--tx2);font-style:italic;font-size:.85rem}
 .syn-section{margin-bottom:14px}
@@ -379,7 +401,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .tl-pool-title{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);margin-bottom:6px}
 #tlPoolGrid{display:flex;flex-wrap:wrap;gap:5px}
 .tl-pool-pc{width:76px;height:76px;border-radius:4px;overflow:hidden;border:1px solid var(--b1);cursor:grab;flex-shrink:0;position:relative;background:var(--s2)}
-.tl-pool-pc:active{cursor:grabbing;opacity:.7}
 .tl-pool-pc img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 .tl-pool-pc-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);font-size:.48rem;font-weight:700;color:#fff;text-align:center;padding:2px}
 .tc-m{color:var(--mel);border-color:rgba(224,80,80,.35);background:rgba(224,80,80,.07)}
@@ -389,41 +410,32 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 
 /* ══ MES ÉVEILS ══ */
 #mePanel{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.me-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.me-topbar{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0}
 .me-title{font-size:.85rem;font-weight:700;color:var(--tx)}
-.me-score-inline{font-size:.8rem;font-weight:700;margin-left:4px}
+.me-score-inline{font-size:.78rem;font-weight:700}
 .me-actions{margin-left:auto;display:flex;gap:6px}
 .me-btn{padding:4px 10px;border-radius:3px;font-size:.68rem;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid var(--b1);background:none;color:var(--tx2);white-space:nowrap}
 .me-btn:hover{background:var(--s2)}
 .me-btn.danger{border-color:rgba(200,48,48,.35);background:rgba(200,48,48,.08);color:var(--mel)}
-
-/* filtre type dans mes éveils */
-.me-filters{padding:6px 12px;border-bottom:1px solid var(--b1);display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;background:var(--s1)}
-
-/* recap */
+.me-recap-toggle{cursor:pointer;font-size:.62rem;padding:2px 6px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-family:inherit;white-space:nowrap}
+.me-recap-toggle:hover{background:var(--s2)}
 .me-recap{flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);overflow:hidden;transition:max-height .25s ease}
 .me-recap.collapsed{max-height:0}
 .me-recap.expanded{max-height:500px}
 .me-recap-body{padding:10px 14px 12px;display:flex;flex-direction:column;gap:8px}
-.me-recap-counts{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.me-recap-counts{display:flex;gap:14px;flex-wrap:wrap}
 .me-stat{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700}
 .me-stat-num{font-size:1rem;font-weight:900}
-.me-buff-section{display:flex;flex-direction:column;gap:3px}
 .me-buff-section-title{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);display:flex;align-items:center;gap:8px}
 .me-buff-section-title::after{content:'';flex:1;height:1px;background:var(--b1)}
-.me-buff-chips{display:flex;flex-wrap:wrap;gap:3px}
+.me-buff-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
 .me-buff-chip{display:inline-flex;align-items:center;gap:4px;font-size:.66rem;padding:2px 8px;border-radius:3px;background:var(--s3);border-left:3px solid transparent}
 .me-buff-chip-cnt{font-size:.58rem;font-weight:800;padding:1px 3px;border-radius:2px;background:rgba(255,255,255,.08);color:var(--tx3)}
-
-/* recap toggle btn */
-.me-recap-toggle{cursor:pointer;font-size:.62rem;padding:2px 6px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--tx2);font-family:inherit;white-space:nowrap}
-.me-recap-toggle:hover{background:var(--s2)}
-
+.me-filters{padding:6px 12px;border-bottom:1px solid var(--b1);display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;background:var(--s1)}
 .me-body{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .me-grid-wrap{flex:1;overflow-y:auto;padding:12px 14px}
 .me-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:10px}
-
-.me-card{background:var(--s2);border:1px solid var(--b1);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .12s;position:relative}
+.me-card{background:var(--s2);border:1px solid var(--b1);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;position:relative}
 .me-card:hover{border-color:var(--b2)}
 .me-card.awk3{border-top:4px solid #666}
 .me-card.awk5{border-top:4px solid var(--gold)}
@@ -446,27 +458,24 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .me-card-buffs{padding:4px 10px 9px;display:flex;flex-direction:column;gap:4px}
 .me-mini-chip{font-size:.7rem;padding:3px 9px;border-radius:3px;background:var(--s3);color:var(--tx3);border-left:3px solid transparent}
 
-/* ── RESPONSIVE MOBILE ── */
 @media(max-width:640px){
   html,body{overflow:auto;height:auto}
   #root{flex-direction:column;height:auto;overflow:visible}
   #sb{width:100%;border-right:none;border-bottom:1px solid var(--b1)}
   #sb.me-mode{width:100%;display:none}
   #grid{grid-template-columns:repeat(4,1fr)}
-  #main{min-height:0}
   .panel{height:auto;overflow:visible}
   #cmpList{overflow:visible;max-height:none}
   .mrow-body{grid-template-columns:1fr}
   .mrow-div{display:none}
-  #tbSlots{gap:4px}
   .tslot{width:72px;height:72px}
   .trow-lbl{width:50px;font-size:1.2rem}
-  #tlContent{overflow:visible}
   .me-grid{grid-template-columns:1fr}
   .me-card-mid{padding-right:70px}
-  .me-card-score .sc-earned{font-size:1.1rem}
-  .nav-search input{width:110px}
+  .tb-saves-bar{gap:4px}
+  #tbScores{flex-direction:column;gap:6px}
   .tl-hint{display:none}
+  .nav-search input{width:110px}
 }
 </style>
 </head>
@@ -529,8 +538,24 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
           <button class="tb-clr" id="tbClrBtn" onclick="clearTeam()" disabled>Vider</button>
           <span class="tb-ctr" id="tbCtr">0 / 15</span>
         </div>
+        <div class="tb-saves-bar" id="tbSavesBar"></div>
+        <div id="tbReco"><span class="reco-lbl">Suggestions :</span><div id="recoChips"></div></div>
         <div id="tbContent">
           <div id="tbSlots"></div>
+          <div id="tbScores">
+            <div class="tb-score-gauge">
+              <div class="tb-score-label">Offensif <span id="scoreOff">0</span></div>
+              <div class="tb-score-bar"><div class="tb-score-fill" id="fillOff" style="width:0%;background:var(--mel)"></div></div>
+            </div>
+            <div class="tb-score-gauge">
+              <div class="tb-score-label">Défensif <span id="scoreDef">0</span></div>
+              <div class="tb-score-bar"><div class="tb-score-fill" id="fillDef" style="width:0%;background:var(--tnk)"></div></div>
+            </div>
+            <div class="tb-score-gauge">
+              <div class="tb-score-label">Team <span id="scoreTeam">0</span></div>
+              <div class="tb-score-bar"><div class="tb-score-fill" id="fillTeam" style="width:0%;background:var(--gold)"></div></div>
+            </div>
+          </div>
           <div id="tbSyn"><div class="syn-empty">Ajoutez des monstres pour voir les synergies</div></div>
         </div>
       </div>
@@ -581,7 +606,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
               <div class="me-stat"><span style="color:var(--gold)">Éveil 5★ :</span><span class="me-stat-num" style="color:var(--gold)" id="meStat5">0</span></div>
               <div class="me-stat"><span style="color:#cc2848">Éveil 7★ :</span><span class="me-stat-num" style="color:#cc2848" id="meStat7">0</span></div>
             </div>
-            <div class="me-buff-section">
+            <div>
               <div class="me-buff-section-title">Buffs conditionnels actifs</div>
               <div class="me-buff-chips" id="meRecapBuffs"></div>
             </div>
@@ -613,6 +638,11 @@ const TIERS=[{id:'S',label:'S',bg:'#b83030'},{id:'A',label:'A',bg:'#c07020'},{id
 const AWK3_PTS=25;
 const MAX_T=200;
 
+/* catégories offensif/défensif/team pour scoring */
+const OFF_IDS=new Set(['atk_10','atk_20','atk_25_delay','atk_80','atk_100','atk_up_stack','dmg_15','dmg_20','dmg_150','dmg_aoe_scaling','dmg_buff_scaling','dmg_debuff_scaling','dmg_unique_target','dmg_frozen_50','dmg_stunned_50','dmg_def_down_50','dmg_cc_50','dmg_poisoned_20','dmg_bleed_20','dmg_burned_20','dmg_sleeping_20','dmg_dot_50','dmg_petrified_20','crit_rate_10','crit_rate_10_cond','crit_rate_50','crit_dmg_10_cond','crit_dmg_20','no_crit_cd','crush_rate_10','crush_rate_10_cond','crush_dmg_20','crush_dmg_20_ally','crush_rate_20_ally','double_hit_10','double_hit_15','double_hit_10_cond','triple_hit_10','spd_10','spd_15','spd_15_cond','spd_30','spd_40_cond','move_spd_200','skill_accel_15','skill_accel_20_cond','cd_reset_proc','cd_skill_cond','exclusive_cd_down','range_3','range_5','aoe_range_30','aoe_range_30_cond','cc_eff_20','stealth','strip_shield','bleed','dot_poison','weakness_poison_enemy','weakness_element','debuff_aoe_taken_10','debuff_crit_taken_10','block_shield','target_weakness_provoke','target_weakness_immunity','target_weakness_shield','atk_down_ennemy_count','bloom_stack','full_bloom','fox_fire_cond','fox_fire_burst','rockstar_i','rockstar_iii_cond','happy_box_cond','lifesteal_15_cond','provoke_status','dmg_down_provoked','weak_point_detect','weakness_elem_team']);
+const DEF_IDS=new Set(['def_15','hp_max_15_cond','res_lp_30','dmg_resist_10','dmg_resist_15_cond','dmg_resist_20_cond','dmg_resist_20_team','dmg_resist_80_cond','shield_hits_3_team','shield_hits_5','stealth_shield','protection_shield','endurance_cond','dodge_3s','limit_shield','cc_immune_team_30','cc_immune_self_react','fran_blessing_team']);
+const TEAM_IDS=new Set(['spd_team_20','shield_hits_3_team','dmg_resist_20_team','cc_immune_team_30','fran_blessing_team','merry_box_team_cond','crush_rate_10_team','weakness_elem_team','double_triple_dmg_team','teamwork_stack','one_team_one_spirit','perfect_team','limit_shield','class_share_melee','target_weakness_provoke','target_weakness_shield','weak_point_detect']);
+
 function rgb(h){h=h.replace('#','');return`${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)}`}
 function bVal(id){const b=BUFFS[id];return b?Math.round(b.power*(b.cond?CW:1)):0}
 function awkRaw(a){return(a.buffs||[]).reduce((s,id)=>s+bVal(id),0)}
@@ -620,7 +650,6 @@ const ALL_SC=Object.values(MONSTERS).flatMap(m=>(m.awakenings||[]).filter(a=>a.l
 const MAX_AW=Math.max(...ALL_SC,1);
 function awkPts(a){return a.level===3?AWK3_PTS:Math.round(awkRaw(a)/MAX_AW*100)}
 function totPts(m){return(m.awakenings||[]).reduce((s,a)=>s+awkPts(a),0)}
-
 function sCol(r){return r>=.68?'var(--hi)':r>=.38?'var(--mid)':'var(--lo)'}
 
 function genTagline(nm){
@@ -637,12 +666,12 @@ function genTagline(nm){
   if(any(['dmg_buff_scaling']))return'Plus il est buffé, plus il inflige des dégâts massifs';
   if(any(['perfect_team','one_team_one_spirit','teamwork_stack']))return"Brille avec des boost d'équipe bien orchestrés";
   if(any(['range_3','range_5'])&&any(['dmg_aoe_scaling','aoe_range_30','aoe_range_30_cond']))return'Longue portée — ravage les groupes';
-  if(any(['full_bloom','bloom_stack','double_triple_dmg_team']))return'Taux et dégâts des coups Double/Triple Hit augmentés';
+  if(any(['full_bloom','bloom_stack','double_triple_dmg_team']))return'Spécialiste des coups multiples';
   if(any(['dmg_frozen_50','dmg_stunned_50','dmg_cc_50','dmg_def_down_50','dmg_petrified_20','dmg_sleeping_20','target_weakness_provoke']))return'Punit sévèrement les ennemis sous contrôle';
   if(any(['dmg_dot_50','dmg_poisoned_20','dmg_bleed_20','dmg_burned_20','dot_poison','weakness_poison_enemy']))return'Exploite les DoT pour amplifier ses dégâts';
   if(any(['double_hit_15','triple_hit_10','double_hit_10_cond','double_hit_10']))return'Spécialiste des coups multiples';
   if(has('class_share_melee'))return'Tank qui se prend pour un mêlée';
-  if(any(['crush_rate_10_team','crush_rate_10','crush_dmg_20_ally','crush_rate_20_ally','crush_dmg_20']))return'Amplifie les coups puissants de l\'équipe';
+  if(any(['crush_rate_10_team','crush_rate_10','crush_dmg_20_ally','crush_rate_20_ally','crush_dmg_20']))return"Amplifie les coups puissants de l'équipe";
   if(any(['shield_hits_3_team','dmg_resist_20_team']))return'Bouclier vivant — protège ses alliés';
   if(any(['strip_shield','block_shield','target_weakness_shield']))return'Perce-bouclier';
   if(any(['cd_skill_cond','cd_reset_proc','no_crit_cd','exclusive_cd_down','skill_accel_20_cond','skill_accel_15']))return'Enchaîne ses compétences rapidement';
@@ -653,12 +682,23 @@ function genTagline(nm){
   return'Combattant polyvalent';
 }
 
+/* ── STATE ── */
 let selCmp=[null,null,null],selTb=[],activeTab='cmp',activeType='',activeCat='',teamSize=15;
 let tlData={S:[],A:[],B:[],C:[],D:[]},tlDragName=null,tlDragFrom=null;
-let tlCat='',meType='';
+let tlCat='',meType='',meRecapOpen=false;
 let myAwakenings=JSON.parse(localStorage.getItem('sw_my_awk')||'{}');
-let meRecapOpen=false;
 
+/* sauvegardes team : 5 slots */
+let teamSaves=JSON.parse(localStorage.getItem('sw_team_saves')||JSON.stringify([
+  {name:'Équipe 1',members:[],size:15},
+  {name:'Équipe 2',members:[],size:15},
+  {name:'Équipe 3',members:[],size:15},
+  {name:'Équipe 4',members:[],size:15},
+  {name:'Équipe 5',members:[],size:15}
+]));
+let activeSlot=-1;
+
+function saveTeamSaves(){localStorage.setItem('sw_team_saves',JSON.stringify(teamSaves));}
 function saveAwk(){localStorage.setItem('sw_my_awk',JSON.stringify(myAwakenings));}
 function getAwkSet(nm){const v=myAwakenings[nm];return new Set(Array.isArray(v)?v:(v?[v]:[]));}
 function getAwkLevel(nm){const s=getAwkSet(nm);return s.has(7)?7:s.has(5)?5:s.has(3)?3:0;}
@@ -670,7 +710,7 @@ function toggleAwk(nm,level){
   else myAwakenings[nm]=[...s];
   saveAwk();
   const grid=document.getElementById('meGridInner');
-  if(grid&&grid.children.length){updateMeCard(nm);}
+  if(grid&&grid.children.length)updateMeCard(nm);
   renderMeRecap();
 }
 
@@ -682,7 +722,7 @@ function switchTab(t){
     document.getElementById('panel'+id.charAt(0).toUpperCase()+id.slice(1)).className='panel '+(id===t?'on':'off');
   });
   const sb=document.getElementById('sb');
-  if(t==='me'){sb.classList.add('me-mode');}
+  if(t==='me')sb.classList.add('me-mode');
   else{sb.classList.remove('me-mode');buildGrid();}
   if(t==='tl')renderTierList();
   if(t==='me')renderMesEveils();
@@ -693,7 +733,7 @@ function onSearch(){
   else buildGrid();
 }
 
-/* ── FILTERS SIDEBAR ── */
+/* ── FILTERS ── */
 document.getElementById('typeRow').addEventListener('click',e=>{
   const b=e.target.closest('.fp');if(!b||!('t' in b.dataset))return;
   document.querySelectorAll('#typeRow .fp').forEach(x=>x.className='fp');
@@ -715,7 +755,6 @@ document.getElementById('meTypeRow').addEventListener('click',e=>{
   b.classList.add(meType===''?'fa':meType==='melee'?'fm':meType==='tank'?'ft':meType==='range'?'fr':'fs');
   renderMesEveils();
 });
-
 function hasBuffCat(nm){
   if(!activeCat)return true;
   const ids=new Set((BUFF_CATS[activeCat]||{ids:[]}).ids);
@@ -780,28 +819,23 @@ function buildGrid(){
 
 /* ══ COMPARATEUR ══ */
 function buffChips(buffs,nm){
-  const awkSet=getAwkSet(nm);
+  const s=getAwkSet(nm);
   const m=MONSTERS[nm];
-  const awk5buffs=new Set((m?.awakenings||[]).find(a=>a.level===5)?.buffs||[]);
-  const awk7buffs=new Set((m?.awakenings||[]).find(a=>a.level===7)?.buffs||[]);
-  const awk3buffs=new Set((m?.awakenings||[]).find(a=>a.level===3)?.buffs||[]);
+  const awk3b=new Set((m?.awakenings||[]).find(a=>a.level===3)?.buffs||[]);
+  const awk5b=new Set((m?.awakenings||[]).find(a=>a.level===5)?.buffs||[]);
+  const awk7b=new Set((m?.awakenings||[]).find(a=>a.level===7)?.buffs||[]);
   return buffs.map(id=>{
     const b=BUFFS[id];if(!b)return'';
-    let awkBadge='';
-    if(awkSet.has(3)&&awk3buffs.has(id))awkBadge='<span class="bchip-awk a3">Éveil 3</span>';
-    else if(awkSet.has(5)&&awk5buffs.has(id))awkBadge='<span class="bchip-awk a5">Éveil 5★</span>';
-    else if(awkSet.has(7)&&awk7buffs.has(id))awkBadge='<span class="bchip-awk a7">Éveil 7★</span>';
+    let ab='';
+    if(s.has(3)&&awk3b.has(id))ab='<span class="bchip-awk a3">Éveil 3</span>';
+    else if(s.has(5)&&awk5b.has(id))ab='<span class="bchip-awk a5">Éveil 5★</span>';
+    else if(s.has(7)&&awk7b.has(id))ab='<span class="bchip-awk a7">Éveil 7★</span>';
     return`<div class="bchip" style="border-color:${b.color}">
       <span class="bchip-text">${b.label}</span>
-      <span class="bchip-tags">
-        ${awkBadge}
-        ${b.team?'<span class="bchip-tag bt-team">Équipe</span>':''}
-        ${b.cond?'<span class="bchip-tag bt-cond">Condition</span>':''}
-      </span>
+      <span class="bchip-tags">${ab}${b.team?'<span class="bchip-tag bt-team">Équipe</span>':''}${b.cond?'<span class="bchip-tag bt-cond">Condition</span>':''}</span>
     </div>`;
   }).join('');
 }
-
 function renderCmpRow(nm,idx){
   const m=MONSTERS[nm],tot=totPts(m),r=tot/MAX_T,c=sCol(r),col=SCOLS[idx];
   const awks=(m.awakenings||[]).filter(a=>a.level!==3);
@@ -809,9 +843,7 @@ function renderCmpRow(nm,idx){
   const pts5=a5?awkPts(a5):0,pts7=a7?awkPts(a7):0;
   return`<div class="mrow" style="border-left:4px solid ${col}">
     <div class="mrow-head">
-      <div class="mrow-port">
-        <img src="${IP}${nm}.png" onerror="this.style.display='none'">
-      </div>
+      <div class="mrow-port"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
       <div class="mrow-port-rm" onclick="removeCmp(${idx})">×</div>
       <div class="mrow-info">
         <div class="mrow-name">${nm}</div>
@@ -826,18 +858,17 @@ function renderCmpRow(nm,idx){
     </div>
     <div class="mrow-body">
       <div class="mrow-awk">
-        ${a5?`<div class="awk-title lv5">Éveil 5★ <span class="awk-pts-badge" style="color:${sCol(pts5/100)};background:var(--s3)">${pts5} pts</span></div>${buffChips(a5.buffs||[],nm)}`:
+        ${a5?`<div class="awk-title lv5">Éveil 5★<span class="awk-pts-badge" style="color:${sCol(pts5/100)};background:var(--s3)">${pts5} pts</span></div>${buffChips(a5.buffs||[],nm)}`:
         '<div style="color:var(--tx2);font-size:.72rem;font-style:italic;padding:8px 0">Aucun éveil 5★</div>'}
       </div>
       <div class="mrow-div"></div>
       <div class="mrow-awk">
-        ${a7?`<div class="awk-title lv7">Éveil 7★ <span class="awk-pts-badge" style="color:${sCol(pts7/100)};background:var(--s3)">${pts7} pts</span></div>${buffChips(a7.buffs||[],nm)}`:
+        ${a7?`<div class="awk-title lv7">Éveil 7★<span class="awk-pts-badge" style="color:${sCol(pts7/100)};background:var(--s3)">${pts7} pts</span></div>${buffChips(a7.buffs||[],nm)}`:
         '<div style="color:var(--tx2);font-size:.72rem;font-style:italic;padding:8px 0">Aucun éveil 7★</div>'}
       </div>
     </div>
   </div>`;
 }
-
 function renderCmp(){
   const filled=selCmp.filter(Boolean);
   const scores=selCmp.map(nm=>nm?totPts(MONSTERS[nm]):0);
@@ -873,6 +904,77 @@ function setSize(s){
   renderTeam();buildGrid();
 }
 function clearTeam(){selTb=[];renderTeam();buildGrid();}
+
+/* calcul scores off/def/team */
+function calcTeamScores(members){
+  let off=0,def=0,team=0;
+  members.forEach(nm=>{
+    (MONSTERS[nm]?.awakenings||[]).filter(a=>a.level!==3).forEach(a=>{
+      (a.buffs||[]).forEach(id=>{
+        const pv=bVal(id);
+        if(OFF_IDS.has(id))off+=pv;
+        if(DEF_IDS.has(id))def+=pv;
+        if(TEAM_IDS.has(id))team+=pv;
+      });
+    });
+  });
+  return{off,def,team};
+}
+
+/* recommandation : top 10 monstres non déjà dans team qui maximisent les synergies avec la team courante */
+function calcReco(){
+  if(!selTb.length)return[];
+  /* buffs déjà présents dans la team */
+  const teamBufSet={};
+  selTb.forEach(nm=>{
+    (MONSTERS[nm]?.awakenings||[]).filter(a=>a.level!==3).forEach(a=>{
+      (a.buffs||[]).forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
+    });
+  });
+  /* score synergy d'un candidat = somme des bVal des buffs qu'il apporte ET qui sont déjà présents ≥1 fois dans la team */
+  const candidates=Object.keys(MONSTERS).filter(nm=>!selTb.includes(nm));
+  const scored=candidates.map(nm=>{
+    const buffsCandidate=new Set((MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]));
+    let syn=0;
+    buffsCandidate.forEach(id=>{if(teamBufSet[id])syn+=bVal(id);});
+    /* bonus si éveil activé */
+    const awk=getAwkLevel(nm);
+    if(awk>0)syn+=awk*5;
+    return{nm,syn};
+  }).sort((a,b)=>b.syn-a.syn);
+  return scored.slice(0,10).map(x=>x.nm);
+}
+
+function renderSavesBar(){
+  const bar=document.getElementById('tbSavesBar');
+  bar.innerHTML=teamSaves.map((s,i)=>`
+    <div class="tb-save-slot${i===activeSlot?' active':''}" id="saveSlot${i}">
+      <input class="tb-save-name" value="${s.name}" onchange="renameSave(${i},this.value)" title="Renommer">
+      <button class="tb-save-load" onclick="loadSave(${i})" title="Charger">▶</button>
+      <button class="tb-save-save" onclick="saveCurrent(${i})" title="Sauvegarder">💾</button>
+    </div>`).join('');
+}
+
+function saveCurrent(i){
+  teamSaves[i]={...teamSaves[i],members:[...selTb],size:teamSize};
+  activeSlot=i;
+  saveTeamSaves();
+  renderSavesBar();
+}
+function loadSave(i){
+  const s=teamSaves[i];
+  teamSize=s.size||15;
+  document.querySelectorAll('#szRow .sz').forEach(b=>b.classList.toggle('on',+b.dataset.s===teamSize));
+  selTb=[...(s.members||[]).filter(nm=>MONSTERS[nm])];
+  activeSlot=i;
+  saveTeamSaves();
+  renderTeam();buildGrid();renderSavesBar();
+}
+function renameSave(i,v){
+  teamSaves[i].name=v||`Équipe ${i+1}`;
+  saveTeamSaves();
+}
+
 function renderTeam(){
   const n=selTb.length;
   document.getElementById('tbCtr').textContent=`${n} / ${teamSize}`;
@@ -884,6 +986,29 @@ function renderTeam(){
     else h+=`<div class="tslot"><span class="tslot-plus">+</span></div>`;
   }
   slots.innerHTML=h;
+
+  /* scores */
+  const {off,def,team}=calcTeamScores(selTb);
+  const maxVal=300;
+  document.getElementById('scoreOff').textContent=off;
+  document.getElementById('scoreDef').textContent=def;
+  document.getElementById('scoreTeam').textContent=team;
+  document.getElementById('fillOff').style.width=Math.min(off/maxVal*100,100)+'%';
+  document.getElementById('fillDef').style.width=Math.min(def/maxVal*100,100)+'%';
+  document.getElementById('fillTeam').style.width=Math.min(team/maxVal*100,100)+'%';
+
+  /* recommandations */
+  const reco=calcReco();
+  const recoEl=document.getElementById('tbReco');
+  const recoChips=document.getElementById('recoChips');
+  if(reco.length&&selTb.length<teamSize){
+    recoEl.className='reco-lbl show';
+    recoEl.style.display='flex';
+    recoChips.innerHTML=reco.map(nm=>`<div class="reco-chip" onclick="addFromReco('${nm}')" title="Ajouter ${nm}"><img src="${IP}${nm}.png" onerror="this.src=''">${nm}</div>`).join('');
+  }else{
+    recoEl.style.display='none';
+  }
+
   const syn=document.getElementById('tbSyn');
   if(!n){syn.innerHTML='<div class="syn-empty">Ajoutez des monstres pour voir les synergies</div>';return;}
   const agg={};
@@ -910,6 +1035,10 @@ function renderTeam(){
         return`<div class="syn-row${b.cond?' cond':''}"><div class="syn-dot" style="background:${b.color}"></div><span class="syn-lbl">${b.label}</span><span class="syn-src">${src}</span><span class="syn-cnt" style="color:${b.color}">×${count}</span></div>`;
       }).join('')}</div>
     </div>`).join('');
+}
+
+function addFromReco(nm){
+  if(!selTb.includes(nm)&&selTb.length<teamSize){selTb.push(nm);renderTeam();buildGrid();}
 }
 function rmTb(nm){selTb=selTb.filter(n=>n!==nm);renderTeam();buildGrid();}
 
@@ -964,55 +1093,28 @@ function renderMesEveils(){
   const q=document.getElementById('srch').value.toLowerCase();
   const grid=document.getElementById('meGridInner');
   if(!grid)return;
-
   const filtered=ME_ORDER.filter(nm=>{
     if(meType&&MONSTERS[nm].type!==meType)return false;
     if(q&&!nm.toLowerCase().includes(q))return false;
     return true;
   });
-
-  // recalc score inline selon filtre
-  const filteredMax=filtered.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
-  const filteredEarned=filtered.reduce((s,nm)=>s+myPts(nm),0);
-  const pctF=filteredMax>0?Math.round(filteredEarned/filteredMax*100):0;
-  const colF=sCol(pctF/100);
-  const scoreEl=document.getElementById('meScoreInline');
-  if(scoreEl)scoreEl.innerHTML=`<span style="color:${colF}">${filteredEarned}</span><span style="color:var(--tx2);font-size:.7rem"> / ${filteredMax} pts (${pctF}%)</span>`;
-
-  // build ou recycle cartes
+  const fMax=filtered.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
+  const fEarned=filtered.reduce((s,nm)=>s+myPts(nm),0);
+  const pct=fMax>0?Math.round(fEarned/fMax*100):0;
+  const col=sCol(pct/100);
+  const si=document.getElementById('meScoreInline');
+  if(si)si.innerHTML=`<span style="color:${col}">${fEarned}</span><span style="color:var(--tx2);font-size:.7rem"> / ${fMax} pts (${pct}%)</span>`;
   const existing=new Set([...grid.querySelectorAll('[data-me-nm]')].map(el=>el.dataset.meNm));
   const needed=new Set(filtered);
-
-  // remove cartes hors filtre
-  [...grid.querySelectorAll('[data-me-nm]')].forEach(el=>{
-    if(!needed.has(el.dataset.meNm))el.remove();
-  });
-
-  // ajouter manquantes
-  filtered.forEach(nm=>{
-    if(!existing.has(nm)){
-      const el=buildMeCard(nm);
-      grid.appendChild(el);
-    }
-  });
-
-  // réordonner
-  filtered.forEach(nm=>{
-    const el=grid.querySelector(`[data-me-nm="${nm}"]`);
-    if(el)grid.appendChild(el);
-  });
-
-  // update toutes les cartes visibles
+  [...grid.querySelectorAll('[data-me-nm]')].forEach(el=>{if(!needed.has(el.dataset.meNm))el.remove();});
+  filtered.forEach(nm=>{if(!existing.has(nm))grid.appendChild(buildMeCard(nm));});
+  filtered.forEach(nm=>{const el=grid.querySelector(`[data-me-nm="${nm}"]`);if(el)grid.appendChild(el);});
   filtered.forEach(nm=>updateMeCard(nm));
   renderMeRecap();
 }
 
 function buildMeCard(nm){
   const m=MONSTERS[nm];
-  const awks=m.awakenings||[];
-  const lv3=awks.find(a=>a.level===3);
-  const a5=awks.find(a=>a.level===5);
-  const a7=awks.find(a=>a.level===7);
   const mxPts=totPts(m);
   const div=document.createElement('div');
   div.className='me-card';
@@ -1057,20 +1159,15 @@ function updateMeCard(nm){
     btn.className='me-awk-btn'+(s.has(lv)?' awk'+lv+'-on':'');
   });
   const awks=m.awakenings||[];
-  const lv3=awks.find(a=>a.level===3);
-  const a5=awks.find(a=>a.level===5);
-  const a7=awks.find(a=>a.level===7);
   const activeBuffs=[];
-  if(has3&&lv3)activeBuffs.push(...(lv3.buffs||[]));
-  if(has5&&a5)activeBuffs.push(...(a5.buffs||[]));
-  if(has7&&a7)activeBuffs.push(...(a7.buffs||[]));
+  if(has3){const a=awks.find(a=>a.level===3);if(a)activeBuffs.push(...(a.buffs||[]));}
+  if(has5){const a=awks.find(a=>a.level===5);if(a)activeBuffs.push(...(a.buffs||[]));}
+  if(has7){const a=awks.find(a=>a.level===7);if(a)activeBuffs.push(...(a.buffs||[]));}
   const buffsEl=card.querySelector('.me-card-buffs');
-  if(buffsEl){
-    buffsEl.innerHTML=activeBuffs.map(id=>{
-      const b=BUFFS[id];if(!b)return'';
-      return`<div class="me-mini-chip" style="border-color:${b.color}">${b.label}</div>`;
-    }).join('');
-  }
+  if(buffsEl)buffsEl.innerHTML=activeBuffs.map(id=>{
+    const b=BUFFS[id];if(!b)return'';
+    return`<div class="me-mini-chip" style="border-color:${b.color}">${b.label}</div>`;
+  }).join('');
 }
 
 function renderMeRecap(){
@@ -1083,28 +1180,6 @@ function renderMeRecap(){
   if(s3)s3.textContent=cnt3;
   if(s5)s5.textContent=cnt5;
   if(s7)s7.textContent=cnt7;
-
-  // score global (tous monstres)
-  const totalEarned=Object.keys(myAwakenings).reduce((s,nm)=>s+myPts(nm),0);
-  const totalMax=Object.values(MONSTERS).reduce((s,m)=>s+totPts(m),0);
-  const pct=totalMax>0?Math.round(totalEarned/totalMax*100):0;
-  const col=sCol(pct/100);
-
-  // aussi mettre à jour le score inline filtré
-  const q=document.getElementById('srch').value.toLowerCase();
-  const filtered=ME_ORDER.filter(nm=>{
-    if(meType&&MONSTERS[nm].type!==meType)return false;
-    if(q&&!nm.toLowerCase().includes(q))return false;
-    return true;
-  });
-  const filteredMax=filtered.reduce((s,nm)=>s+totPts(MONSTERS[nm]),0);
-  const filteredEarned=filtered.reduce((s,nm)=>s+myPts(nm),0);
-  const pctF=filteredMax>0?Math.round(filteredEarned/filteredMax*100):0;
-  const colF=sCol(pctF/100);
-  const scoreEl=document.getElementById('meScoreInline');
-  if(scoreEl)scoreEl.innerHTML=`<span style="color:${colF}">${filteredEarned}</span><span style="color:var(--tx2);font-size:.7rem"> / ${filteredMax} pts (${pctF}%)</span>`;
-
-  // buffs conditionnels uniquement
   const buffAgg={};
   Object.entries(myAwakenings).forEach(([nm,lvArr])=>{
     const m=MONSTERS[nm];if(!m)return;
@@ -1112,16 +1187,13 @@ function renderMeRecap(){
     (m.awakenings||[]).forEach(a=>{
       if(!sv.has(a.level))return;
       (a.buffs||[]).forEach(id=>{
-        const b=BUFFS[id];
-        if(!b||!b.cond)return;
-        if(!buffAgg[id])buffAgg[id]=0;
-        buffAgg[id]++;
+        const b=BUFFS[id];if(!b||!b.cond)return;
+        if(!buffAgg[id])buffAgg[id]=0;buffAgg[id]++;
       });
     });
   });
-  const sorted=Object.entries(buffAgg).sort(([,a],[,b])=>b-a);
   const body=document.getElementById('meRecapBuffs');
-  if(body)body.innerHTML=sorted.map(([id,cnt])=>{
+  if(body)body.innerHTML=Object.entries(buffAgg).sort(([,a],[,b])=>b-a).map(([id,cnt])=>{
     const b=BUFFS[id];if(!b)return'';
     return`<div class="me-buff-chip" style="border-color:${b.color}">${b.label}<span class="me-buff-chip-cnt">×${cnt}</span></div>`;
   }).join('');
@@ -1129,9 +1201,8 @@ function renderMeRecap(){
 
 function toggleMeRecap(){
   meRecapOpen=!meRecapOpen;
-  const r=document.getElementById('meRecap');
+  document.getElementById('meRecap').className='me-recap '+(meRecapOpen?'expanded':'collapsed');
   const btn=document.getElementById('meRecapToggle');
-  r.className='me-recap '+(meRecapOpen?'expanded':'collapsed');
   if(btn)btn.textContent=meRecapOpen?'▲ Réduire':'▼ Détails';
 }
 
@@ -1145,13 +1216,7 @@ function importAwk(){
     const file=e.target.files[0];if(!file)return;
     const reader=new FileReader();
     reader.onload=ev=>{
-      try{
-        const data=JSON.parse(ev.target.result);
-        Object.assign(myAwakenings,data);
-        saveAwk();
-        document.getElementById('meGridInner').innerHTML='';
-        renderMesEveils();
-      }catch{}
+      try{Object.assign(myAwakenings,JSON.parse(ev.target.result));saveAwk();document.getElementById('meGridInner').innerHTML='';renderMesEveils();}catch{}
     };
     reader.readAsText(file);
   };
@@ -1159,11 +1224,11 @@ function importAwk(){
 }
 function resetAwk(){
   if(!confirm('Réinitialiser tous vos éveils ?'))return;
-  myAwakenings={};saveAwk();
-  document.getElementById('meGridInner').innerHTML='';
-  renderMesEveils();
+  myAwakenings={};saveAwk();document.getElementById('meGridInner').innerHTML='';renderMesEveils();
 }
 
+/* ── INIT ── */
+renderSavesBar();
 buildGrid();renderCmp();renderTeam();
 </script>
 </body>
