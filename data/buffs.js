@@ -269,4 +269,5 @@ export const BUFFS = { "atk_10":{label:"ATQ +10%",color:"#e05555",power:10},
   "floraison":{label:"Floraison (Crits peuvent déclenché Coups Multiples)",color:"#d06030",power:15},
   "full_bloom":{label:"Pleine Floraison (Crits déclenchent Coups Multiples)",color:"#e05555",power:36,cond:true},
   "rocknroll":{label:"A chaque coup, confère a l'allié Belle 1 cumul d'acclamation",color:"#00ffff",power:3,team:true},
-  "acclamation":{label:"A 250 cumuls, confère à la cible l'effet Rockstar et si elle le possède déjà confère en plus l'effet Rockstar II.",color:"#00ffff",power:15}, };
+  "acclamation":{label:"A 250 cumuls, confère à la cible l'effet Rockstar et si elle le possède déjà confère en plus l'effet Rockstar II.",color:"#00ffff",power:15}, 
+};
