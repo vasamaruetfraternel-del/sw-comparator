@@ -1872,7 +1872,7 @@ function calcReco(){
   selTb.forEach(nm=>{
     [
       ...(MONSTERS[nm]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
-      ...skillBuffsRaw(nm)   // ← ajout
+      ...skillBuffsRaw(nm)
     ].forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
   });
   return Object.keys(MONSTERS).filter(nm=>!selTb.includes(nm))
@@ -1881,7 +1881,18 @@ function calcReco(){
         ...(MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
         ...skillBuffsRaw(nm)
       ]);
-      let syn=0;ids.forEach(id=>{if(teamBufSet[id])syn+=bVal(id);});
+      let syn=0;
+      ids.forEach(id=>{
+        const b=BUFFS[id];if(!b)return;
+        const v=bVal(id);
+        if(!teamBufSet[id]){
+          syn+=v; // buff absent = apport net
+        } else if(b.team){
+          syn+=v*0.5; // buff équipe cumulable = toujours utile même en doublon
+        } else {
+          syn-=v*0.3; // doublon non-team = léger malus
+        }
+      });
       syn+=getAwkLevel(nm)*5;
       return{nm,syn};
     }).sort((a,b)=>b.syn-a.syn).slice(0,10).map(x=>x.nm);
