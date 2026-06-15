@@ -7,6 +7,51 @@
 <script>
 const IP='./images/';
 //
+const STRATEGIES = {
+  balanced: {
+    label:'Équilibré', icon:'⚖',
+    buffWeight:{ off:1.0, def:1.0, team:1.0 },
+    typeRatio:{ front:.35, range:.45, support:.20 },
+  },
+  offensive: {
+    label:'Offensif', icon:'⚔',
+    buffWeight:{ off:1.8, def:0.3, team:0.8 },
+    typeRatio:{ front:.40, range:.50, support:.10 },
+  },
+  defensive: {
+    label:'Défensif', icon:'🛡',
+    buffWeight:{ off:0.4, def:2.0, team:1.0 },
+    typeRatio:{ front:.45, range:.30, support:.25 },
+  },
+  team: {
+    label:'Team Buff', icon:'👥',
+    buffWeight:{ off:0.8, def:0.8, team:2.2 },
+    typeRatio:{ front:.25, range:.45, support:.30 },
+  },
+  rush: {
+    label:'Full Rush', icon:'💥',
+    buffWeight:{ off:2.5, def:0.1, team:0.5 },
+    typeRatio:{ front:.50, range:.50, support:.00 },
+  },
+  // Dual focus
+  offteam: {
+    label:'Offensif + Team', icon:'⚔👥',
+    buffWeight:{ off:1.6, def:0.3, team:1.6 },
+    typeRatio:{ front:.35, range:.45, support:.20 },
+  },
+  defteam: {
+    label:'Défensif + Team', icon:'🛡👥',
+    buffWeight:{ off:0.3, def:1.6, team:1.6 },
+    typeRatio:{ front:.35, range:.35, support:.30 },
+  },
+  offdef: {
+    label:'Offensif + Défensif', icon:'⚔🛡',
+    buffWeight:{ off:1.5, def:1.5, team:0.6 },
+    typeRatio:{ front:.45, range:.40, support:.15 },
+  },
+};
+
+let teamStrategy = 'balanced';
 
 const BUFF_CATS={
   atk:{label:"⚔ ATQ/Dégâts",ids:["atk_10","atk_20","atk_25_delay","atk_100","atk_80","atk_up_stack","dmg_15","dmg_20","dmg_150","dmg_aoe_scaling","dmg_buff_scaling","dmg_debuff_scaling","dmg_unique_target","dmg_frozen_50","dmg_stunned_50","dmg_stunned_20","dmg_def_down_50","dmg_cc_50","dmg_poisoned_20","dmg_bleed_20","dmg_burned_20","dmg_sleeping_20","dmg_dot_50","dmg_petrified_20","dmg_blinded_20","dmg_melee_def_target","target_weakness_provoke","target_weakness_immunity","target_weakness_shield","atk_down_ennemy_count","atk_nerf_20"]},
@@ -1456,7 +1501,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
     </div>
     <div class="panel off" id="panelTb">
       <div id="tbPanel">
-        <div class="tb-topbar">
+        <div class="tb-topbar" id="tbTopbar">
           <span class="tb-title">Team Builder</span>
           <div id="szRow" style="display:flex;gap:4px">
             <button class="sz" data-s="10" onclick="setSize(10)">10</button>
@@ -1605,6 +1650,7 @@ function switchTab(t){
   else{sb.classList.remove('me-mode');buildGrid();}
   if(t==='tl')renderTierList();
   if(t==='me')renderMesEveils();
+  if(t==='tb') renderStrategyPicker();
 }
 
 function onSearch(){
@@ -1867,115 +1913,103 @@ function calcTeamScores(members){
 }
 
 function calcReco(){
-  if(!selTb.length)return[];
-
+  if(!selTb.length) return [];
   const remaining = teamSize - selTb.length;
-  if(remaining <= 0) return[];
+  if(remaining <= 0) return [];
 
-  // ── 1. Buffs déjà présents dans l'équipe ──────────────────────────────────
+  const strat = STRATEGIES[teamStrategy] || STRATEGIES.balanced;
+  const W = strat.buffWeight;
+
+  // 1. Buffs déjà présents
   const teamBufSet={};
   selTb.forEach(nm=>{
     [...(MONSTERS[nm]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
      ...skillBuffsRaw(nm)
-    ].forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
+    ].forEach(id=>{ teamBufSet[id]=(teamBufSet[id]||0)+1; });
   });
 
-  // ── 2. Composition actuelle ───────────────────────────────────────────────
+  // 2. Composition actuelle
   const typeCounts={melee:0,tank:0,range:0,support:0};
-  selTb.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]=(typeCounts[MONSTERS[nm].type]||0)+1; });
+  selTb.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]++; });
 
-  // Ratios cibles selon taille d'équipe (melee+tank / range / support)
-  // Logique : ~40% front, ~45% range, ~15% support (ajusté selon taille)
-  const frontTarget  = Math.round(teamSize * 0.35);
-  const rangeTarget  = Math.round(teamSize * 0.45);
-  const supportTarget= teamSize - frontTarget - rangeTarget;
+  const frontTarget   = Math.round(teamSize * strat.typeRatio.front);
+  const rangeTarget   = Math.round(teamSize * strat.typeRatio.range);
+  const supportTarget = teamSize - frontTarget - rangeTarget;
 
-  const frontCurrent  = (typeCounts.melee||0) + (typeCounts.tank||0);
-  const rangeCurrent  = typeCounts.range||0;
-  const supportCurrent= typeCounts.support||0;
+  const frontNeed   = frontTarget   - ((typeCounts.melee||0)+(typeCounts.tank||0));
+  const rangeNeed   = rangeTarget   - (typeCounts.range||0);
+  const supportNeed = supportTarget - (typeCounts.support||0);
 
-  // Manque par catégorie (positif = besoin, négatif = surplus)
-  const frontNeed   = frontTarget   - frontCurrent;
-  const rangeNeed   = rangeTarget   - rangeCurrent;
-  const supportNeed = supportTarget - supportCurrent;
+  // 3. Classifier chaque buff ID selon OFF/DEF/TEAM
+  function buffCategory(id){
+    if(OFF_IDS.has(id))  return 'off';
+    if(DEF_IDS.has(id))  return 'def';
+    if(TEAM_IDS.has(id)) return 'team';
+    return 'off'; // défaut
+  }
 
-  // ── 3. Scoring candidats ──────────────────────────────────────────────────
+  // 4. Scorer chaque candidat
   return Object.keys(MONSTERS).filter(nm=>!selTb.includes(nm))
     .map(nm=>{
-      const m=MONSTERS[nm];
-      const ids=new Set([
+      const m = MONSTERS[nm];
+      const ids = new Set([
         ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
         ...skillBuffsRaw(nm)
       ]);
 
-      // A) Score synergie buffs
+      // A) Synergie buffs pondérée par la stratégie
       let synScore=0;
       ids.forEach(id=>{
         const b=BUFFS[id]; if(!b) return;
-        const v=bVal(id);
+        const v   = bVal(id);
+        const cat = buffCategory(id);
+        const w   = W[cat] ?? 1.0;
+
         if(!teamBufSet[id]){
-          // Buff absent de l'équipe = apport net
-          // Bonus si c'est un buff d'équipe manquant (valeur double)
-          synScore += b.team ? v*1.4 : v;
+          synScore += b.team ? v*w*1.4 : v*w;
         } else if(b.team){
-          // Buff équipe cumulable déjà présent = encore utile
-          synScore += v * 0.5;
+          synScore += v*w*0.5;
         } else {
-          // Doublon non-team = malus
-          synScore -= v * 0.3;
+          synScore -= v*0.3; // malus doublon indépendant de la strat
         }
       });
 
-      // B) Score composition (bonus si le type est demandé, malus si surplus)
+      // B) Composition
       let compScore=0;
       const isFront   = m.type==='melee'||m.type==='tank';
       const isRange   = m.type==='range';
       const isSupport = m.type==='support';
+      const compW     = W.off+W.def+W.team; // amplitude globale comme multiplicateur
 
-      if(isFront){
-        compScore += frontNeed > 0
-          ? 40 + frontNeed*15          // fortement encouragé si manque
-          : frontNeed < -1 ? -30 : 0; // pénalisé si déjà trop de front
-      }
-      if(isRange){
-        compScore += rangeNeed > 0
-          ? 40 + rangeNeed*15
-          : rangeNeed < -1 ? -30 : 0;
-      }
-      if(isSupport){
-        compScore += supportNeed > 0
-          ? 60 + supportNeed*20        // support très valorisé s'il manque
-          : supportNeed < -1 ? -40 : 0;
-      }
+      if(isFront)   compScore += frontNeed   > 0 ? (35+frontNeed*12)*(compW/3)   : (frontNeed   < -1 ? -30 : 0);
+      if(isRange)   compScore += rangeNeed   > 0 ? (35+rangeNeed*12)*(compW/3)   : (rangeNeed   < -1 ? -30 : 0);
+      if(isSupport) compScore += supportNeed > 0 ? (55+supportNeed*18)*(compW/3) : (supportNeed < -1 ? -40 : 0);
 
-      // C) Bonus éveil débloqué (monstre déjà investi)
+      // Pénalité hard si la strat exclut presque le support (ex: Full Rush)
+      if(isSupport && strat.typeRatio.support === 0) compScore -= 80;
+
+      // C) Éveil
       const awkBonus = getAwkLevel(nm)*6;
 
-      // D) Bonus synergies croisées : le candidat booste-t-il des buffs
-      //    que l'équipe utilise déjà mais en version équipe ?
+      // D) Cross-synergie version team
       let crossSyn=0;
       ids.forEach(id=>{
         const b=BUFFS[id]; if(!b||!b.team) return;
-        // Si l'équipe a déjà des monstres avec le même buff non-team,
-        // apporter la version team est très précieux
-        const baseId=id.replace('_team','').replace('_20_team','_20').replace('_10_team','_10');
-        if(teamBufSet[baseId]){
-          crossSyn += bVal(id)*0.4;
-        }
+        const cat=buffCategory(id);
+        const baseId=id.replace(/_team$/,'').replace(/_20_team$/,'_20').replace(/_10_team$/,'_10');
+        if(teamBufSet[baseId]) crossSyn += bVal(id)*(W[cat]??1)*0.4;
       });
 
-      // E) Pénalité si la place restante est critique et le type est déjà saturé
+      // E) Urgence dernière place
       let urgencyPenalty=0;
       if(remaining===1){
-        // Dernière place : priorité absolue à ce qui manque le plus
         const maxNeed=Math.max(frontNeed,rangeNeed,supportNeed);
-        if(isSupport && supportNeed < maxNeed) urgencyPenalty=-20;
-        if(isFront   && frontNeed   < maxNeed) urgencyPenalty=-20;
-        if(isRange   && rangeNeed   < maxNeed) urgencyPenalty=-20;
+        if(isFront   && frontNeed   < maxNeed) urgencyPenalty=-25;
+        if(isRange   && rangeNeed   < maxNeed) urgencyPenalty=-25;
+        if(isSupport && supportNeed < maxNeed) urgencyPenalty=-25;
       }
 
-      const total = synScore + compScore + awkBonus + crossSyn + urgencyPenalty;
-      return{nm, total};
+      return{ nm, total: synScore+compScore+awkBonus+crossSyn+urgencyPenalty };
     })
     .sort((a,b)=>b.total-a.total)
     .slice(0,10)
@@ -2228,8 +2262,132 @@ function resetAwk(){
   if(!confirm('Réinitialiser tous vos éveils ?'))return;
   myAwakenings={};saveAwk();document.getElementById('meGridInner').innerHTML='';renderMesEveils();
 }
+function renderStrategyPicker(){
+  const bar = document.getElementById('tbTopbar');
+  if(!bar) return;
+  const old = document.getElementById('stratPicker');
+  if(old) old.remove();
+
+  const wrap = document.createElement('div');
+  wrap.id = 'stratPicker';
+  wrap.style.cssText = 'display:flex;align-items:center;gap:4px;flex-shrink:0;overflow-x:auto;margin-left:4px;';
+  wrap.innerHTML =
+    `<span style="font-size:.7rem;font-weight:700;color:var(--tx2);white-space:nowrap;flex-shrink:0">Strat :</span>` +
+    Object.entries(STRATEGIES).map(([k,s]) =>
+      `<button class="sz${k===teamStrategy?' on':''}" data-strat="${k}"
+        onclick="setStrategy('${k}')"
+        title="${s.label}"
+        style="white-space:nowrap;font-size:.7rem;padding:3px 8px;flex-shrink:0">
+        ${s.icon} ${s.label}
+      </button>`
+    ).join('') +
+    `<button onclick="autoBuildTeam()"
+      style="white-space:nowrap;font-size:.7rem;padding:3px 10px;flex-shrink:0;
+             border-radius:3px;border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);
+             color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700;margin-left:6px;"
+      title="Construire automatiquement une équipe optimisée">
+      ⚡ Auto-Build
+    </button>`;
+  bar.appendChild(wrap);
+}
+function autoBuildTeam(){
+  selTb = [];
+
+  const strat = STRATEGIES[teamStrategy] || STRATEGIES.balanced;
+  const W = strat.buffWeight;
+
+  const frontTarget   = Math.round(teamSize * strat.typeRatio.front);
+  const rangeTarget   = Math.round(teamSize * strat.typeRatio.range);
+  const supportTarget = teamSize - frontTarget - rangeTarget;
+
+  // Scoring initial (équipe vide) : score brut pondéré par la strat
+  function scoreAlone(nm){
+    const m = MONSTERS[nm]; if(!m) return 0;
+    const ids = new Set([
+      ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
+      ...skillBuffsRaw(nm)
+    ]);
+    let s = 0;
+    ids.forEach(id=>{
+      const b = BUFFS[id]; if(!b) return;
+      const v = bVal(id);
+      const cat = OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+      s += v * (W[cat]??1) * (b.team?1.4:1);
+    });
+    s += getAwkLevel(nm)*6;
+    return s;
+  }
+
+  for(let i = 0; i < teamSize; i++){
+    // Si l'équipe est vide, scorer seul ; sinon utiliser calcReco
+    let candidates;
+    if(selTb.length === 0){
+      candidates = Object.keys(MONSTERS)
+        .map(nm=>({nm, score:scoreAlone(nm)}))
+        .sort((a,b)=>b.score-a.score)
+        .slice(0,10)
+        .map(x=>x.nm);
+    } else {
+      candidates = calcReco();
+    }
+    if(!candidates.length) break;
+
+    // calcReco retourne déjà les 10 meilleurs — on prend le premier
+    // MAIS on vérifie qu'on ne dépasse pas les quotas de rôle
+    const typeCounts = {melee:0,tank:0,range:0,support:0};
+    selTb.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]++; });
+
+    const frontCurrent   = (typeCounts.melee||0)+(typeCounts.tank||0);
+    const rangeCurrent   = typeCounts.range||0;
+    const supportCurrent = typeCounts.support||0;
+
+    // Chercher le meilleur candidat qui respecte encore les quotas
+    // (on autorise un dépassement de +2 max pour ne pas bloquer)
+    let chosen = null;
+    for(const nm of candidates){
+      const t = MONSTERS[nm]?.type;
+      const isFront   = t==='melee'||t==='tank';
+      const isRange   = t==='range';
+      const isSupport = t==='support';
+
+      // Refuser si le rôle est TRÈS saturé (>cible+2) ET qu'il reste des manques ailleurs
+      const frontLeft   = frontTarget   - frontCurrent;
+      const rangeLeft   = rangeTarget   - rangeCurrent;
+      const supportLeft = supportTarget - supportCurrent;
+      const remaining   = teamSize - selTb.length;
+      const slotsLeft   = remaining - 1; // après cet ajout
+
+      let ok = true;
+      if(isFront   && frontCurrent   >= frontTarget+2   && (rangeLeft>0||supportLeft>0) && slotsLeft>=rangeLeft+supportLeft) ok=false;
+      if(isRange   && rangeCurrent   >= rangeTarget+2   && (frontLeft>0||supportLeft>0) && slotsLeft>=frontLeft+supportLeft) ok=false;
+      if(isSupport && supportCurrent >= supportTarget+2 && (frontLeft>0||rangeLeft>0)   && slotsLeft>=frontLeft+rangeLeft)   ok=false;
+      // En Full Rush, jamais de support
+      if(isSupport && strat.typeRatio.support===0) ok=false;
+
+      if(ok){ chosen=nm; break; }
+    }
+
+    // Si aucun ne passe le filtre, prendre le 1er quand même (éviter le blocage)
+    if(!chosen) chosen = candidates[0];
+    if(!chosen) break;
+
+    selTb.push(chosen);
+  }
+
+  renderTeam();
+  buildGrid();
+}
+
+function setStrategy(k){
+  teamStrategy = k;
+  document.querySelectorAll('#stratPicker .sz').forEach(b=>{
+    b.classList.toggle('on', b.dataset.strat===k);
+  });
+  renderTeam(); // rafraîchit les suggestions
+}
 
 renderSavesBar();
+renderStrategyPicker();
 buildGrid();renderCmp();renderTeam();
 </script>
 </body>
