@@ -937,34 +937,187 @@ function allMonsterBuffIds(nm){
   return[...new Set([...awk,...skillBuffsRaw(nm)])];
 }
 
-function genTagline(nm){
-  const m=MONSTERS[nm];if(!m)return'Combattant polyvalent';
-  const buffs=allMonsterBuffIds(nm);
-  const has=id=>buffs.includes(id);
-  const any=ids=>ids.some(id=>has(id));
-  if(has('dmg_150'))return'Explose sous Furtivité';
-  if(any(['atk_80','atk_100']))return'Attaquant redoutable avec une attaque de base élevée';
-  if(has('cc_immune_team_30'))return"Protège toute l'équipe contre les CC";
-  if(has('fran_blessing_team'))return'Immunité + dégâts groupés pour les alliés';
-  if(has('spd_team_20'))return"Accélère l'équipe en combat";
-  if(any(['dmg_debuff_scaling']))return"Plus l'ennemi est affaibli, plus il est détruit";
-  if(any(['dmg_buff_scaling']))return'Plus il est buffé, plus il inflige des dégâts massifs';
-  if(any(['perfect_team','one_team_one_spirit','teamwork_stack']))return"Brille avec des boost d'équipe bien orchestrés";
-  if(any(['range_3','range_5'])&&any(['dmg_aoe_scaling','aoe_range_30','aoe_range_30_cond']))return'Longue portée — ravage les groupes';
-  if(any(['full_bloom','bloom_stack','double_triple_dmg_team']))return'Spécialiste des coups multiples';
-  if(any(['dmg_frozen_50','dmg_stunned_50','dmg_cc_50','dmg_def_down_50','dmg_petrified_20','dmg_sleeping_20','target_weakness_provoke']))return'Punit sévèrement les ennemis sous contrôle';
-  if(any(['dmg_dot_50','dmg_poisoned_20','dmg_bleed_20','dmg_burned_20','dot_poison','weakness_poison_enemy']))return'Exploite les DoT pour amplifier ses dégâts';
-  if(any(['double_hit_15','triple_hit_10','double_hit_10_cond','double_hit_10']))return'Spécialiste des coups multiples';
-  if(has('class_share_melee'))return'Tank qui se prend pour un mêlée';
-  if(any(['crush_rate_10_team','crush_rate_10','crush_dmg_20_ally','crush_rate_20_ally','crush_dmg_20']))return"Amplifie les coups puissants de l'équipe";
-  if(any(['shield_hits_3_team','dmg_resist_20_team']))return'Bouclier vivant — protège ses alliés';
-  if(any(['strip_shield','block_shield','target_weakness_shield']))return'Perce-bouclier';
-  if(any(['cd_skill_cond','cd_reset_proc','no_crit_cd','exclusive_cd_down','skill_accel_20_cond','skill_accel_15']))return'Enchaîne ses compétences rapidement';
-  if(any(['dodge_3s','endurance_cond','dmg_resist_80_cond','dmg_resist_15_cond','dmg_resist_10','dmg_resist_20_cond','limit_shield','protection_shield','cc_immune_self_react']))return'Survivant hors pair';
-  if(any(['crit_rate_50','crit_rate_10','crit_rate_10_cond','crit_dmg_20','crit_dmg_10_cond']))return'Spécialiste des coups critiques';
-  if(any(['weak_point_detect','weakness_elem_team','weakness_element','debuff_aoe_taken_10','debuff_crit_taken_10','target_weakness_immunity','bleed']))return'Détecte et exploite les failles ennemies';
-  return'Combattant polyvalent';
+function genTagline(nm) {
+  const m = MONSTERS[nm]; if (!m) return 'Combattant polyvalent';
+  const buffs = allMonsterBuffIds(nm);
+  const has = id => buffs.includes(id);
+  const any = ids => ids.some(id => has(id));
+  const all = ids => ids.every(id => has(id));
+  const type = m.type;
+
+  // ── Mécaniques uniques / signatures ────────────────────────────────────────
+  if (has('dmg_150'))                        return 'Explose sous Furtivité';
+  if (any(['atk_80', 'atk_100']))            return 'Attaquant avec une attaque de base exceptionnelle';
+  if (has('dmg_buff_scaling') && has('dmg_debuff_scaling')) return 'Punit les ennemis boostés ET affaiblis';
+  if (has('dmg_buff_scaling'))               return 'Plus il est buffé, plus ses dégâts explosent';
+  if (has('dmg_debuff_scaling'))             return "Détruit les ennemis chargés de debuffs";
+  if (has('dmg_aoe_scaling'))                return 'Dévaste les groupes — plus ils sont nombreux, plus il fait mal';
+  if (any(['perfect_team', 'one_team_one_spirit'])) return "Récompense les équipes bien coordonnées";
+  if (has('teamwork_stack'))                 return "Monte en puissance avec les buffs d'équipe";
+  if (any(['full_bloom', 'bloom_stack']))    return 'Transforme chaque critique en avalanche de coups';
+  if (has('double_triple_dmg_team') && any(['full_bloom', 'bloom_stack'])) return 'Expert des coups multiples critiques';
+  if (any(['fox_fire_burst', 'fox_fire_cond'])) return 'Accumule des charges pour déchaîner la puissance du Feu du renard';
+  if (any(['rockstar_i', 'rockstar_iii_cond'])) return 'Star du combat — les applaudissements décuplent sa force';
+  if (any(['merry_box_team_cond', 'happy_box_burst'])) return "Offre des bonus d'équipe via ses coups puissants";
+  if (any(['grand_froid_cumul', 'grand_froid_stack', 'archdemon_grand_froid'])) return 'Archidémon du Grand Froid — gèle et fracasse';
+  if (has('atk_up_stack'))                   return 'Grandit en puissance à chaque coup reçu';
+  if (has('atk_down_ennemy_count'))          return 'Réduit la menace ennemie selon leur nombre';
+  if (has('dmg_cc_state_scaling'))           return 'Chaque altération ennemie amplifie ses dégâts';
+
+  // ── CC / Contrôle ──────────────────────────────────────────────────────────
+  if (has('cc_immune_team_30'))              return "Bouclier anti-CC pour toute l'équipe";
+  if (has('fran_blessing_team'))             return 'Bénédiction de Fran — immunité et dégâts pour les alliés';
+  if (has('cc_immune_self_react'))           return 'Réagit instantanément aux CC pour les annuler';
+  if (any(['freeze', 'stun']) && any(['dmg_frozen_50', 'dmg_stunned_50'])) return 'Gèle ou étourdit, puis frappe deux fois plus fort';
+  if (has('freeze'))                         return 'Spécialiste du Gel';
+  if (has('stun'))                           return 'Maître de l\'Étourdissement';
+  if (has('sleep'))                          return 'Endort les ennemis au moment critique';
+  if (has('petrify'))                        return 'Pétrifie ses cibles pour les rendre vulnérables';
+  if (has('fear_25'))                        return 'Sème la Peur chez l\'ennemi';
+  if (has('blindness') && has('entrave'))    return 'Aveugle et entrave — immobilise le champ de bataille';
+  if (has('entrave') && has('pull_target')) return 'Entrave et attire — personne ne lui échappe';
+  if (has('entrave'))                        return 'Spécialiste de l\'Entrave';
+  if (has('blindness'))                      return 'Aveugle ses ennemis pour les rendre inefficaces';
+  if (has('provoke_status'))                 return "Provoque l'ennemi et l'empêche d'attaquer librement";
+  if (has('block_heal'))                     return 'Bloque la récupération ennemie au moment décisif';
+  if (has('strip_immunity'))                 return "Supprime l'immunité — aucun ennemi n'est intouchable";
+  if (has('remove_buff_target') || any(['remove_buff_target', 'remove_buff_target_team'])) return 'Dispelle les renforcements ennemis';
+
+  // ── Buffs dégâts conditionnels (cibles sous état) ─────────────────────────
+  if (any(['dmg_frozen_50', 'dmg_stunned_50', 'dmg_cc_50'])) return 'Punit sévèrement les ennemis sous contrôle';
+  if (any(['dmg_stunned_20', 'dmg_stunned_50']))              return 'Redouble de puissance face aux ennemis étourdis';
+  if (any(['dmg_def_down_50']))                               return 'Frappe doublement fort les ennemis sans défense';
+  if (any(['dmg_dot_50', 'dmg_poisoned_20', 'dmg_bleed_20', 'dmg_burned_20', 'dmg_sleeping_20', 'dmg_petrified_20', 'dmg_blinded_20'])) {
+    const states = [];
+    if (any(['dmg_dot_50']))            states.push('DoT');
+    if (any(['dmg_poisoned_20']))       states.push('empoisonnement');
+    if (any(['dmg_bleed_20']))          states.push('saignement');
+    if (any(['dmg_burned_20']))         states.push('brûlure');
+    if (any(['dmg_sleeping_20']))       states.push('sommeil');
+    if (any(['dmg_petrified_20']))      states.push('pétrification');
+    if (any(['dmg_blinded_20']))        states.push('aveuglement');
+    if (states.length >= 3)             return 'Exploite toutes les altérations pour maximiser ses dégâts';
+    if (states.length === 1)            return `Inflige des dégâts accrus sur les cibles sous ${states[0]}`;
+    return `Amplifie ses dégâts sur les cibles sous ${states[0]} ou ${states[1]}`;
+  }
+  if (has('dmg_melee_def_target'))       return 'Spécialiste contre les types Mêlée et Défense';
+  if (has('dmg_unique_target'))          return 'Anéantit les cibles isolées';
+  if (any(['dmg_100_immunity']))         return "Perce l'immunité pour infliger des dégâts doublés";
+  if (any(['dmg_100_solotarget']))       return 'Écrase les cibles seules avec une puissance redoublée';
+
+  // ── DoT / Dégâts continus ──────────────────────────────────────────────────
+  if (any(['dot_dark_flame', 'dot_love_disease', 'dot_deep_bleed'])) {
+    if (has('dot_dark_flame'))           return 'Brûle ses ennemis avec les Flammes Ténébreuses';
+    if (has('dot_love_disease'))         return 'Propage la Maladie d\'Amour sur ses cibles';
+    if (has('dot_deep_bleed'))           return 'Inflige un Saignement Profond dévastateur';
+  }
+  if (has('dot_poison') && has('weakness_poison_enemy')) return 'Empoisonne et exploite la faiblesse pour amplifier les dégâts';
+  if (has('dot_poison'))                 return 'Empoisonneur — inflige des dégâts continus';
+  if (has('dot_bleed') || has('bleed')) return 'Saigneur — maintient des dégâts continus constants';
+  if (has('dot_burn'))                   return 'Brûleur — maintient ses cibles en feu';
+  if (any(['weakness_poison_enemy', 'weakness_elem_team', 'weakness_element'])) return 'Révèle et exploite les faiblesses ennemies';
+  if (has('weak_point_detect'))          return 'Détecte les points faibles pour toute l\'équipe';
+
+  // ── Longue portée + Zone ───────────────────────────────────────────────────
+  if (any(['range_5']) && any(['aoe_range_30', 'aoe_range_30_cond', 'dmg_aoe_scaling'])) return 'Sniper de zone — détruit de loin en large';
+  if (any(['range_3', 'range_5']) && any(['aoe_range_30', 'aoe_range_30_cond', 'dmg_aoe_scaling'])) return 'Longue portée — ravage les groupes ennemis';
+  if (has('range_5'))                    return 'Portée exceptionnelle — frappe sans être touché';
+  if (has('range_3') && type === 'range') return 'Portée étendue pour rester hors de danger';
+  if (any(['aoe_range_30', 'aoe_range_30_cond'])) return 'Maître de la zone — aucun groupe ne lui résiste';
+
+  // ── Coups multiples ────────────────────────────────────────────────────────
+  if (any(['triple_hit_10']) && any(['double_hit_15', 'double_hit_10'])) return 'Déchaîne une pluie de coups doubles et triples';
+  if (any(['triple_hit_10']))            return 'Frappe jusqu\'à trois fois par attaque';
+  if (any(['double_hit_15']))            return 'Décuple ses dégâts avec des coups doubles fréquents';
+  if (any(['double_hit_10', 'double_hit_10_cond'])) return 'Spécialiste des coups doubles';
+  if (has('double_triple_dmg_team'))    return 'Amplifie les coups doubles et triples de l\'équipe';
+
+  // ── Coups puissants ────────────────────────────────────────────────────────
+  if (any(['crush_dmg_20_team', 'crush_dmg_20_ally']) && any(['crush_rate_10_team', 'crush_rate_20_ally'])) return "Booste le taux ET les dégâts des Coups puissants de l'équipe";
+  if (any(['crush_dmg_20_team', 'crush_dmg_20_ally'])) return "Amplifie les dégâts des Coups puissants de l'équipe";
+  if (any(['crush_rate_10_team', 'crush_rate_20_ally', 'crush_rate_10'])) return "Augmente le taux de Coups puissants de l'équipe";
+  if (any(['crush_dmg_20', 'crush_dmg_20_ally']))       return 'Spécialiste des Coups puissants dévastateurs';
+
+  // ── Critiques ──────────────────────────────────────────────────────────────
+  if (any(['crit_rate_team_20', 'crit_rate_50_team'])) return "Booste le taux critique de toute l'équipe";
+  if (any(['crit_dmg_team_20', 'crit_dmg_40_team']))   return "Amplifie les dégâts critiques de l'équipe";
+  if (all(['crit_rate_50', 'no_crit_cd']))              return 'Enchaîne les critiques sans relâche';
+  if (has('no_crit_cd'))                                return 'Réinitialise son CD sur chaque critique';
+  if (has('crit_rate_50'))                              return 'Taux critique massif pour des dégâts constants';
+  if (any(['crit_rate_10_team', 'crit_rate_team_15'])) return "Augmente la précision critique de l'équipe";
+  if (any(['crit_rate_10', 'crit_rate_10_cond']))       return 'Augmente sa précision critique';
+  if (any(['crit_dmg_20', 'crit_dmg_10_cond']))         return 'Critique — inflige des dégâts considérables';
+
+  // ── Vitesse / Accélération ─────────────────────────────────────────────────
+  if (has('spd_team_20') && any(['skill_accel_20_team', 'skill_accel_15_team'])) return "Accélère l'équipe en attaque ET en compétences";
+  if (has('spd_team_20'))                return "Accélère la vitesse d'attaque de l'équipe";
+  if (any(['skill_accel_20_range', 'skill_accel_20_melee', 'skill_accel_20_team'])) return "Accélère les compétences de l'équipe";
+  if (any(['cd_reset_proc', 'cd_skill_cond', 'exclusive_cd_down', 'no_crit_cd'])) return 'Enchaîne ses compétences à une vitesse folle';
+  if (any(['spd_30', 'spd_15', 'spd_15_cond'])) return 'Vitesse d\'attaque élevée pour dominer le rythme';
+  if (has('move_spd_200'))               return 'Repositionnement ultrarapide — insaisissable';
+  if (any(['skill_accel_15', 'skill_accel_20_cond'])) return 'Accélère ses propres compétences en combat';
+
+  // ── Défense / Survie ───────────────────────────────────────────────────────
+  if (has('limit_shield') && has('class_share_melee'))  return 'Tank hybride — absorbe pour toute l\'équipe';
+  if (has('limit_shield'))               return 'Absorbe les gros coups pour toute l\'équipe';
+  if (has('class_share_melee'))          return 'Tank qui se comporte comme un mêlée';
+  if (has('stealth_shield') && has('endurance_cond'))   return 'Invincible au départ, survit aux coups létaux';
+  if (has('stealth_shield'))             return 'Démarre invincible — prend position sans risque';
+  if (has('endurance_cond') && has('dodge_3s'))         return 'Esquive puis survit au pire — indestructible';
+  if (has('endurance_cond'))             return 'Survit aux coups létaux grâce à l\'Endurance';
+  if (has('dodge_3s'))                   return 'Esquive absolue — intouchable pendant 3 secondes';
+  if (has('dmg_resist_80_cond'))         return 'Encaisse 80% de résistance aux dégâts en réaction';
+  if (any(['dmg_resist_20_team', 'shield_hits_3_team', 'shield_hits_5'])) return "Bouclier vivant — protège ses alliés des dégâts";
+  if (any(['protection_shield_team', 'shield_100_team'])) return "Pose un bouclier massif sur toute l'équipe";
+  if (any(['dmg_resist_10', 'dmg_resist_15_cond', 'dmg_resist_20_cond'])) return 'Résistant — difficile à éliminer';
+  if (has('debuff_immune'))              return 'Immunisé aux affaiblissements';
+  if (has('regen_team'))                 return "Régénère continuellement les PV de l'équipe";
+  if (any(['res_lp_30', 'res_lp_20']))   return 'Réduit la résistance à la longue portée pour ses alliés';
+
+  // ── Précision / Esquive ────────────────────────────────────────────────────
+  if (has('accuracy_20_team'))           return "Améliore la précision de toute l'équipe";
+  if (has('accuracy_20_range'))          return 'Augmente la précision des alliés à distance';
+  if (any(['weak_hit_rate_20', 'weak_hit_rate_20_melee'])) return 'Augmente le taux de coups affaiblis';
+  if (has('dodge_rate_20'))              return 'Esquive améliorée — évite certaines attaques';
+  if (has('dodge_nerf_20'))              return "Réduit l'esquive ennemie pour sécuriser les frappes";
+
+  // ── Debuffs ennemis ────────────────────────────────────────────────────────
+  if (any(['strip_shield', 'block_shield']) && has('target_weakness_shield')) return 'Détruit les boucliers et frappe plus fort derrière';
+  if (has('strip_shield'))               return "Supprime les boucliers ennemis sans pitié";
+  if (has('block_shield'))               return "Empêche les boucliers ennemis d'être efficaces";
+  if (has('target_weakness_shield'))     return 'Perce les boucliers pour infliger des dégâts amplifiés';
+  if (any(['strip_debuff_team']))        return "Purge les debuffs de l'équipe";
+  if (has('target_weakness_immunity'))   return "Inflige des dégâts amplifiés sur les cibles sous immunité";
+  if (has('target_weakness_provoke'))    return 'Provoque et frappe plus fort les cibles provoquées';
+  if (any(['def_nerf_20', 'def_nerf_20_cond'])) return 'Réduit la défense ennemie pour toute l\'équipe';
+  if (any(['resist_nerf_20', 'resist_nerf_30'])) return 'Diminue la résistance aux dégâts des ennemis';
+  if (any(['atk_nerf_20']))              return 'Affaiblit l\'attaque ennemie pour protéger ses alliés';
+  if (any(['debuff_aoe_taken_10', 'debuff_crit_taken_10'])) return 'Amplifie les dégâts reçus par les ennemis';
+  if (any(['crit_rate_nerf_20']))        return "Réduit le taux critique ennemi";
+
+  // ── Lifesteal ──────────────────────────────────────────────────────────────
+  if (any(['lifesteal_15_cond', 'lifesteal_20', 'lifesteal_30'])) return 'Se soigne en attaquant — durable et dangereux';
+  if (has('lifesteal_15_cond'))          return 'Aspiration de dégâts conditionnelle pour tenir en combat';
+
+  // ── Furtivité ──────────────────────────────────────────────────────────────
+  if (has('stealth') && type === 'melee') return 'Mêlée furtif — frappe dans l\'ombre';
+  if (has('stealth'))                    return 'Se met en furtivité pour attaquer par surprise';
+
+  // ── Profils par type avec buffs ATQ génériques ────────────────────────────
+  if (any(['atk_20', 'atk_20_melee', 'atk_20_range']) && type === 'range') return 'Attaquant à distance qui booste ses alliés';
+  if (any(['atk_20', 'atk_team_20']) && type === 'support')                 return 'Support offensif — renforce l\'attaque de l\'équipe';
+  if (any(['atk_20', 'atk_15']) && type === 'melee')                        return 'Guerrier offensif qui augmente sa propre puissance';
+  if (any(['dmg_20', 'dmg_15']) && type === 'range')                        return 'Tireur qui amplifie ses propres dégâts';
+  if (any(['dmg_20_team', 'dmg_team_20']) && type === 'support')            return "Support — augmente les dégâts de l'équipe";
+
+  // ── Fallback par type ──────────────────────────────────────────────────────
+  if (type === 'tank')    return 'Tank solide — résiste et protège ses alliés';
+  if (type === 'support') return 'Support polyvalent au service de l\'équipe';
+  if (type === 'melee')   return 'Combattant mêlée polyvalent';
+  if (type === 'range')   return 'Attaquant à distance polyvalent';
+  return 'Combattant polyvalent';
 }
+
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
