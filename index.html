@@ -1868,34 +1868,118 @@ function calcTeamScores(members){
 
 function calcReco(){
   if(!selTb.length)return[];
+
+  const remaining = teamSize - selTb.length;
+  if(remaining <= 0) return[];
+
+  // ── 1. Buffs déjà présents dans l'équipe ──────────────────────────────────
   const teamBufSet={};
   selTb.forEach(nm=>{
-    [
-      ...(MONSTERS[nm]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
-      ...skillBuffsRaw(nm)
+    [...(MONSTERS[nm]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
+     ...skillBuffsRaw(nm)
     ].forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
   });
+
+  // ── 2. Composition actuelle ───────────────────────────────────────────────
+  const typeCounts={melee:0,tank:0,range:0,support:0};
+  selTb.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]=(typeCounts[MONSTERS[nm].type]||0)+1; });
+
+  // Ratios cibles selon taille d'équipe (melee+tank / range / support)
+  // Logique : ~40% front, ~45% range, ~15% support (ajusté selon taille)
+  const frontTarget  = Math.round(teamSize * 0.35);
+  const rangeTarget  = Math.round(teamSize * 0.45);
+  const supportTarget= teamSize - frontTarget - rangeTarget;
+
+  const frontCurrent  = (typeCounts.melee||0) + (typeCounts.tank||0);
+  const rangeCurrent  = typeCounts.range||0;
+  const supportCurrent= typeCounts.support||0;
+
+  // Manque par catégorie (positif = besoin, négatif = surplus)
+  const frontNeed   = frontTarget   - frontCurrent;
+  const rangeNeed   = rangeTarget   - rangeCurrent;
+  const supportNeed = supportTarget - supportCurrent;
+
+  // ── 3. Scoring candidats ──────────────────────────────────────────────────
   return Object.keys(MONSTERS).filter(nm=>!selTb.includes(nm))
     .map(nm=>{
+      const m=MONSTERS[nm];
       const ids=new Set([
-        ...(MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
+        ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
         ...skillBuffsRaw(nm)
       ]);
-      let syn=0;
+
+      // A) Score synergie buffs
+      let synScore=0;
       ids.forEach(id=>{
-        const b=BUFFS[id];if(!b)return;
+        const b=BUFFS[id]; if(!b) return;
         const v=bVal(id);
         if(!teamBufSet[id]){
-          syn+=v; // buff absent = apport net
+          // Buff absent de l'équipe = apport net
+          // Bonus si c'est un buff d'équipe manquant (valeur double)
+          synScore += b.team ? v*1.4 : v;
         } else if(b.team){
-          syn+=v*0.5; // buff équipe cumulable = toujours utile même en doublon
+          // Buff équipe cumulable déjà présent = encore utile
+          synScore += v * 0.5;
         } else {
-          syn-=v*0.3; // doublon non-team = léger malus
+          // Doublon non-team = malus
+          synScore -= v * 0.3;
         }
       });
-      syn+=getAwkLevel(nm)*5;
-      return{nm,syn};
-    }).sort((a,b)=>b.syn-a.syn).slice(0,10).map(x=>x.nm);
+
+      // B) Score composition (bonus si le type est demandé, malus si surplus)
+      let compScore=0;
+      const isFront   = m.type==='melee'||m.type==='tank';
+      const isRange   = m.type==='range';
+      const isSupport = m.type==='support';
+
+      if(isFront){
+        compScore += frontNeed > 0
+          ? 40 + frontNeed*15          // fortement encouragé si manque
+          : frontNeed < -1 ? -30 : 0; // pénalisé si déjà trop de front
+      }
+      if(isRange){
+        compScore += rangeNeed > 0
+          ? 40 + rangeNeed*15
+          : rangeNeed < -1 ? -30 : 0;
+      }
+      if(isSupport){
+        compScore += supportNeed > 0
+          ? 60 + supportNeed*20        // support très valorisé s'il manque
+          : supportNeed < -1 ? -40 : 0;
+      }
+
+      // C) Bonus éveil débloqué (monstre déjà investi)
+      const awkBonus = getAwkLevel(nm)*6;
+
+      // D) Bonus synergies croisées : le candidat booste-t-il des buffs
+      //    que l'équipe utilise déjà mais en version équipe ?
+      let crossSyn=0;
+      ids.forEach(id=>{
+        const b=BUFFS[id]; if(!b||!b.team) return;
+        // Si l'équipe a déjà des monstres avec le même buff non-team,
+        // apporter la version team est très précieux
+        const baseId=id.replace('_team','').replace('_20_team','_20').replace('_10_team','_10');
+        if(teamBufSet[baseId]){
+          crossSyn += bVal(id)*0.4;
+        }
+      });
+
+      // E) Pénalité si la place restante est critique et le type est déjà saturé
+      let urgencyPenalty=0;
+      if(remaining===1){
+        // Dernière place : priorité absolue à ce qui manque le plus
+        const maxNeed=Math.max(frontNeed,rangeNeed,supportNeed);
+        if(isSupport && supportNeed < maxNeed) urgencyPenalty=-20;
+        if(isFront   && frontNeed   < maxNeed) urgencyPenalty=-20;
+        if(isRange   && rangeNeed   < maxNeed) urgencyPenalty=-20;
+      }
+
+      const total = synScore + compScore + awkBonus + crossSyn + urgencyPenalty;
+      return{nm, total};
+    })
+    .sort((a,b)=>b.total-a.total)
+    .slice(0,10)
+    .map(x=>x.nm);
 }
 
 function renderSavesBar(){
