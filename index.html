@@ -1621,6 +1621,16 @@ let teamSaves=JSON.parse(localStorage.getItem('sw_team_saves')||JSON.stringify([
   {name:'Équipe 4',members:[],size:15},
   {name:'Équipe 5',members:[],size:15}
 ]));
+let tdoMode = false;
+let tdoTeams = JSON.parse(localStorage.getItem('sw_tdo_teams') || JSON.stringify([
+  {name:'Compo 1', teams:[{name:'Équipe A',members:[]},{name:'Équipe B',members:[]},{name:'Équipe C',members:[]}]},
+  {name:'Compo 2', teams:[{name:'Équipe A',members:[]},{name:'Équipe B',members:[]},{name:'Équipe C',members:[]}]},
+  {name:'Compo 3', teams:[{name:'Équipe A',members:[]},{name:'Équipe B',members:[]},{name:'Équipe C',members:[]}]},
+]));
+let tdoActiveCompo = 0;
+let tdoActiveTeam = 0;
+let tdoStrategies = ['balanced','balanced','balanced'];
+function saveTdo(){localStorage.setItem('sw_tdo_teams',JSON.stringify(tdoTeams));}
 let activeSlot=-1;
 
 function saveTeamSaves(){localStorage.setItem('sw_team_saves',JSON.stringify(teamSaves));}
@@ -1707,8 +1717,14 @@ function buildGrid(){
     const d=document.createElement('div');
     d.className='pc'+(iC!==-1?' sel':'');
     d.draggable=true;
+    const tdoUsed=tdoMode?getTdoUsed(tdoActiveTeam):new Set();
+    const tdoInCurrent=tdoMode&&tdoTeams[tdoActiveCompo].teams[tdoActiveTeam].members.includes(nm);
+    const tdoBlocked=tdoMode&&tdoUsed.has(nm);
     let badge='';
-    if(activeTab==='tl'&&tier){
+    if(tdoMode){
+      if(tdoBlocked)badge=`<div class="pc-badge" style="background:rgba(200,48,48,.4);color:#ff8888">✗</div>`;
+      else if(tdoInCurrent)badge=`<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`;
+    }else if(activeTab==='tl'&&tier){
       const bg=TIERS.find(t=>t.id===tier)?.bg||'#666';
       badge=`<div class="pc-badge" style="background:${bg};color:#fff;font-size:.55rem">${tier}</div>`;
     }else if(iC!==-1){
@@ -1716,10 +1732,11 @@ function buildGrid(){
     }else if(iT){
       badge=`<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`;
     }
-    d.innerHTML=`<img src="${IP}${nm}.png" loading="lazy" onerror="this.src=''">
+    d.innerHTML=`<img src="${IP}${nm}.png" loading="lazy" onerror="this.src=''" style="${tdoBlocked?'opacity:.35':''}">
       <div class="pc-type" style="color:${TCOL[m.type]}">${{melee:'⚔',tank:'🛡',range:'🏹',support:'💚'}[m.type]}</div>
       ${badge}
       <div class="pc-bot"><div class="pc-name">${nm}</div><div class="pc-score" style="color:${sc}">${tot}</div></div>`;
+    if(tdoBlocked)d.style.opacity='.35';
     d.addEventListener('dragstart',e=>{tlDragName=nm;tlDragFrom='pool';e.dataTransfer.effectAllowed='copy';});
     d.addEventListener('click',()=>{
       if(activeTab==='cmp'){
@@ -1728,10 +1745,8 @@ function buildGrid(){
         else{const fi=selCmp.indexOf(null);if(fi!==-1)selCmp[fi]=nm;}
         renderCmp();
       }else if(activeTab==='tb'){
-        const i=selTb.indexOf(nm);
-        if(i!==-1)selTb.splice(i,1);
-        else if(selTb.length<teamSize)selTb.push(nm);
-        renderTeam();
+        if(tdoMode){tdoAddMonster(nm);}
+        else{const i=selTb.indexOf(nm);if(i!==-1)selTb.splice(i,1);else if(selTb.length<teamSize)selTb.push(nm);renderTeam();}
       }else if(activeTab==='tl'){
         if(!tier){tlData['B'].push(nm);renderTierList();}
       }
@@ -2263,30 +2278,36 @@ function resetAwk(){
   myAwakenings={};saveAwk();document.getElementById('meGridInner').innerHTML='';renderMesEveils();
 }
 function renderStrategyPicker(){
-  const bar = document.getElementById('tbTopbar');
-  if(!bar) return;
-  const old = document.getElementById('stratPicker');
-  if(old) old.remove();
-
-  const wrap = document.createElement('div');
-  wrap.id = 'stratPicker';
-  wrap.style.cssText = 'display:flex;align-items:center;gap:4px;flex-shrink:0;overflow-x:auto;margin-left:4px;';
-  wrap.innerHTML =
-    `<span style="font-size:.7rem;font-weight:700;color:var(--tx2);white-space:nowrap;flex-shrink:0">Strat :</span>` +
-    Object.entries(STRATEGIES).map(([k,s]) =>
+  const bar=document.getElementById('tbTopbar');
+  if(!bar)return;
+  const old=document.getElementById('stratPicker');
+  if(old)old.remove();
+  const wrap=document.createElement('div');
+  wrap.id='stratPicker';
+  wrap.style.cssText='display:flex;align-items:center;gap:4px;flex-shrink:0;overflow-x:auto;margin-left:4px;';
+  wrap.innerHTML=
+    `<span style="font-size:.7rem;font-weight:700;color:var(--tx2);white-space:nowrap;flex-shrink:0">Strat :</span>`+
+    Object.entries(STRATEGIES).map(([k,s])=>
       `<button class="sz${k===teamStrategy?' on':''}" data-strat="${k}"
         onclick="setStrategy('${k}')"
         title="${s.label}"
         style="white-space:nowrap;font-size:.7rem;padding:3px 8px;flex-shrink:0">
         ${s.icon} ${s.label}
       </button>`
-    ).join('') +
+    ).join('')+
     `<button onclick="autoBuildTeam()"
       style="white-space:nowrap;font-size:.7rem;padding:3px 10px;flex-shrink:0;
              border-radius:3px;border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);
              color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700;margin-left:6px;"
       title="Construire automatiquement une équipe optimisée">
       ⚡ Auto-Build
+    </button>
+    <button onclick="toggleTdoMode()" id="tdoBtn"
+      style="white-space:nowrap;font-size:.7rem;padding:3px 10px;flex-shrink:0;
+             border-radius:3px;border:1px solid rgba(72,136,216,.4);background:rgba(72,136,216,.1);
+             color:var(--tnk);cursor:pointer;font-family:inherit;font-weight:700;margin-left:6px;"
+      title="Mode Tour des Origines">
+      🏆 TDO
     </button>`;
   bar.appendChild(wrap);
 }
@@ -2377,6 +2398,174 @@ function autoBuildTeam(){
   renderTeam();
   buildGrid();
 }
+function toggleTdoMode(){
+  tdoMode = !tdoMode;
+  const btn = document.getElementById('tdoBtn');
+  if(btn){
+    btn.style.background = tdoMode ? 'rgba(72,136,216,.3)' : 'rgba(72,136,216,.1)';
+    btn.style.color = tdoMode ? '#88ccff' : 'var(--tnk)';
+  }
+  if(tdoMode){
+    // Sauvegarder l'état normal
+    document.getElementById('tbSlots').style.display='none';
+    document.getElementById('tbScores').style.display='none';
+    document.getElementById('tbSyn').style.display='none';
+    document.getElementById('tbReco').style.display='none';
+    document.getElementById('szRow').style.display='none';
+    document.getElementById('tbClrBtn').style.display='none';
+    document.getElementById('tbCtr').style.display='none';
+    let tdoEl = document.getElementById('tdoContainer');
+    if(!tdoEl){ tdoEl=document.createElement('div'); tdoEl.id='tdoContainer'; tdoEl.style.flex='1'; tdoEl.style.overflow='auto'; document.getElementById('tbContent').prepend(tdoEl); }
+    renderTdo();
+  } else {
+    document.getElementById('tbSlots').style.display='';
+    document.getElementById('tbScores').style.display='';
+    document.getElementById('tbSyn').style.display='';
+    document.getElementById('szRow').style.display='';
+    document.getElementById('tbClrBtn').style.display='';
+    document.getElementById('tbCtr').style.display='';
+    const tdoEl=document.getElementById('tdoContainer');
+    if(tdoEl)tdoEl.remove();
+    renderTeam();
+  }
+}
+
+function getTdoUsed(excludeTeam){
+  const compo = tdoTeams[tdoActiveCompo];
+  const used = new Set();
+  compo.teams.forEach((t,i)=>{ if(i!==excludeTeam) t.members.forEach(nm=>used.add(nm)); });
+  return used;
+}
+
+function tdoAddMonster(nm){
+  const compo = tdoTeams[tdoActiveCompo];
+  const team = compo.teams[tdoActiveTeam];
+  const used = getTdoUsed(tdoActiveTeam);
+  if(used.has(nm)) return; // déjà dans une autre équipe
+  if(team.members.includes(nm)) { // retirer si déjà présent
+    team.members = team.members.filter(n=>n!==nm);
+  } else if(team.members.length < 15) {
+    team.members.push(nm);
+  }
+  saveTdo();
+  renderTdo();
+  buildGrid();
+}
+
+function tdoRemoveMember(teamIdx, nm){
+  tdoTeams[tdoActiveCompo].teams[teamIdx].members = tdoTeams[tdoActiveCompo].teams[teamIdx].members.filter(n=>n!==nm);
+  saveTdo();
+  renderTdo();
+  buildGrid();
+}
+
+function renderTdo(){
+  const el=document.getElementById('tdoContainer');
+  if(!el)return;
+  const compo=tdoTeams[tdoActiveCompo];
+  const TEAM_COLS=['#4888d8','#c89020','#c83030'];
+
+  const compoTabs=tdoTeams.map((c,i)=>`
+    <button onclick="tdoSetCompo(${i})" style="padding:5px 14px;border-radius:3px;border:1px solid ${i===tdoActiveCompo?'rgba(168,212,40,.5)':'var(--b1)'};background:${i===tdoActiveCompo?'rgba(168,212,40,.1)':'none'};color:${i===tdoActiveCompo?'var(--green2)':'var(--tx2)'};cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;flex-shrink:0">
+      ${c.name}
+    </button>`).join('');
+
+  const teamTabs=compo.teams.map((t,i)=>`
+    <button onclick="tdoSetTeam(${i})" style="padding:5px 14px;border-radius:3px;border:1px solid ${i===tdoActiveTeam?`rgba(${rgb(TEAM_COLS[i])},.5)`:'var(--b1)'};background:${i===tdoActiveTeam?`rgba(${rgb(TEAM_COLS[i])},.12)`:'none'};color:${i===tdoActiveTeam?TEAM_COLS[i]:'var(--tx2)'};cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;flex-shrink:0">
+      ${t.name} <span style="font-size:.7rem;opacity:.7">(${t.members.length}/15)</span>
+    </button>`).join('');
+
+  const stratSelect=Object.entries(STRATEGIES).map(([k,s])=>
+    `<option value="${k}"${tdoStrategies[tdoActiveTeam]===k?' selected':''}>${s.icon} ${s.label}</option>`
+  ).join('');
+
+  const teamsHtml=compo.teams.map((t,ti)=>{
+    const col=TEAM_COLS[ti];
+    const isActive=ti===tdoActiveTeam;
+    const {off,def,team:teamScore}=calcTeamScores(t.members);
+    const maxVal=300;
+
+    const slots=[];
+    for(let i=0;i<15;i++){
+      if(i<t.members.length){
+        const nm=t.members[i];
+        slots.push(`<div style="position:relative;width:70px;height:70px;border-radius:5px;overflow:hidden;border:1px solid ${col};flex-shrink:0">
+          <img src="${IP}${nm}.png" style="width:100%;height:100%;object-fit:cover;object-position:top center">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);font-size:.48rem;font-weight:700;color:#fff;text-align:center;padding:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nm}</div>
+          <div onclick="tdoRemoveMember(${ti},'${nm}')" style="position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer">×</div>
+        </div>`);
+      }else{
+        slots.push(`<div style="width:70px;height:70px;border-radius:5px;border:1px dashed var(--b2);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:var(--b2)">+</div>`);
+      }
+    }
+
+    const scoreBar=(label,val,barCol)=>{
+      const pct=Math.min(val/maxVal*100,100);
+      return`<div style="flex:1;display:flex;flex-direction:column;gap:3px">
+        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);display:flex;justify-content:space-between">
+          <span>${label}</span><span style="font-weight:900;color:var(--tx3)">${val}</span>
+        </div>
+        <div style="height:5px;background:var(--b1);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${barCol};border-radius:3px;transition:width .3s"></div>
+        </div>
+      </div>`;
+    };
+
+    return`<div style="background:var(--s2);border:1px solid ${isActive?col:'var(--b1)'};border-radius:8px;margin-bottom:8px;overflow:hidden">
+      <div onclick="tdoSetTeam(${ti})" style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:${isActive?`rgba(${rgb(col)},.08)`:'none'};cursor:pointer;border-bottom:1px solid var(--b1)">
+        <span style="font-size:.9rem;font-weight:800;color:${col}">${t.name}</span>
+        <span style="font-size:.75rem;color:var(--tx2)">${t.members.length} / 15 monstres</span>
+        ${isActive?`<span style="font-size:.65rem;font-weight:700;background:rgba(${rgb(col)},.15);color:${col};padding:2px 8px;border-radius:3px;margin-left:auto">Sélectionnée</span>`:''}
+      </div>
+      <div style="display:flex;gap:10px;padding:8px 14px;border-bottom:1px solid var(--b1);background:var(--s3)">
+        ${scoreBar('Offensif',off,'var(--mel)')}
+        ${scoreBar('Défensif',def,'var(--tnk)')}
+        ${scoreBar('Team',teamScore,'var(--gold)')}
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;padding:10px 12px">${slots.join('')}</div>
+    </div>`;
+  }).join('');
+
+  const usedInOther=getTdoUsed(tdoActiveTeam);
+  const conflictLegend=usedInOther.size?`<div style="font-size:.72rem;color:var(--tx2);padding:4px 0 6px"><span style="color:#c83030;font-weight:700">●</span> ${usedInOther.size} monstre(s) indisponible(s) (déjà assigné dans une autre équipe)</div>`:'';
+
+  el.innerHTML=`
+    <div style="padding:10px 14px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span style="font-size:.7rem;font-weight:700;color:var(--tx2);flex-shrink:0">Compo :</span>
+      ${compoTabs}
+    </div>
+    <div style="padding:8px 14px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span style="font-size:.7rem;font-weight:700;color:var(--tx2);flex-shrink:0">Équipe active :</span>
+      ${teamTabs}
+    </div>
+    <div style="padding:8px 14px;background:var(--s2);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:.7rem;font-weight:700;color:var(--tx2);flex-shrink:0">Strat :</span>
+      <select onchange="tdoStrategies[${tdoActiveTeam}]=this.value"
+        style="background:var(--s3);border:1px solid var(--b2);border-radius:3px;color:var(--tx);font-size:.78rem;padding:4px 8px;font-family:inherit;cursor:pointer;outline:none">
+        ${stratSelect}
+      </select>
+      <button onclick="tdoAutoBuild()"
+        style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
+               border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);
+               color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700;">
+        ⚡ Auto-Build
+      </button>
+      <button onclick="tdoClearTeam(${tdoActiveTeam})"
+        style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
+               border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);
+               color:var(--mel);cursor:pointer;font-family:inherit;font-weight:700;">
+        Vider
+      </button>
+    </div>
+    <div style="padding:10px 14px;flex:1;overflow-y:auto">
+      ${conflictLegend}
+      ${teamsHtml}
+    </div>`;
+}
+
+function tdoSetCompo(i){ tdoActiveCompo=i; tdoActiveTeam=0; renderTdo(); buildGrid(); }
+
+function tdoSetTeam(i){ tdoActiveTeam=i; renderTdo(); buildGrid(); }
 
 function setStrategy(k){
   teamStrategy = k;
@@ -2384,6 +2573,126 @@ function setStrategy(k){
     b.classList.toggle('on', b.dataset.strat===k);
   });
   renderTeam(); // rafraîchit les suggestions
+}
+function tdoClearTeam(ti){
+  tdoTeams[tdoActiveCompo].teams[ti].members=[];
+  saveTdo();renderTdo();buildGrid();
+}
+
+function tdoAutoBuild(){
+  const compo=tdoTeams[tdoActiveCompo];
+  const team=compo.teams[tdoActiveTeam];
+  team.members=[];
+
+  const strat=STRATEGIES[tdoStrategies[tdoActiveTeam]]||STRATEGIES.balanced;
+  const W=strat.buffWeight;
+
+  const frontTarget=Math.round(15*strat.typeRatio.front);
+  const rangeTarget=Math.round(15*strat.typeRatio.range);
+  const supportTarget=15-frontTarget-rangeTarget;
+
+  function scoreAlone(nm){
+    const m=MONSTERS[nm];if(!m)return 0;
+    const ids=new Set([
+      ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
+      ...skillBuffsRaw(nm)
+    ]);
+    let s=0;
+    ids.forEach(id=>{
+      const b=BUFFS[id];if(!b)return;
+      const v=bVal(id);
+      const cat=OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+      s+=v*(W[cat]??1)*(b.team?1.4:1);
+    });
+    s+=getAwkLevel(nm)*6;
+    return s;
+  }
+
+  function scoreWithTeam(nm,currentMembers){
+    const m=MONSTERS[nm];if(!m)return 0;
+    const teamBufSet={};
+    currentMembers.forEach(n=>{
+      [...(MONSTERS[n]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),...skillBuffsRaw(n)]
+        .forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
+    });
+    const ids=new Set([
+      ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
+      ...skillBuffsRaw(nm)
+    ]);
+    const typeCounts={melee:0,tank:0,range:0,support:0};
+    currentMembers.forEach(n=>{if(MONSTERS[n])typeCounts[MONSTERS[n].type]++;});
+    const frontNeed=frontTarget-((typeCounts.melee||0)+(typeCounts.tank||0));
+    const rangeNeed=rangeTarget-(typeCounts.range||0);
+    const supportNeed=supportTarget-(typeCounts.support||0);
+    let syn=0;
+    ids.forEach(id=>{
+      const b=BUFFS[id];if(!b)return;
+      const v=bVal(id);
+      const cat=OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+      const w=W[cat]??1;
+      if(!teamBufSet[id])syn+=b.team?v*w*1.4:v*w;
+      else if(b.team)syn+=v*w*0.5;
+      else syn-=v*0.3;
+    });
+    let comp=0;
+    const t=m.type;
+    const isFront=t==='melee'||t==='tank';
+    const isRange=t==='range';
+    const isSupport=t==='support';
+    const compW=W.off+W.def+W.team;
+    if(isFront)comp+=frontNeed>0?(35+frontNeed*12)*(compW/3):(frontNeed<-1?-30:0);
+    if(isRange)comp+=rangeNeed>0?(35+rangeNeed*12)*(compW/3):(rangeNeed<-1?-30:0);
+    if(isSupport)comp+=supportNeed>0?(55+supportNeed*18)*(compW/3):(supportNeed<-1?-40:0);
+    if(isSupport&&strat.typeRatio.support===0)comp-=80;
+    return syn+comp+getAwkLevel(nm)*6;
+  }
+
+  const usedElsewhere=getTdoUsed(tdoActiveTeam);
+
+  for(let i=0;i<15;i++){
+    const available=Object.keys(MONSTERS).filter(nm=>
+      !team.members.includes(nm)&&!usedElsewhere.has(nm)
+    );
+    if(!available.length)break;
+
+    let candidates;
+    if(team.members.length===0){
+      candidates=available.map(nm=>({nm,score:scoreAlone(nm)})).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>x.nm);
+    }else{
+      candidates=available.map(nm=>({nm,score:scoreWithTeam(nm,team.members)})).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>x.nm);
+    }
+    if(!candidates.length)break;
+
+    const typeCounts={melee:0,tank:0,range:0,support:0};
+    team.members.forEach(nm=>{if(MONSTERS[nm])typeCounts[MONSTERS[nm].type]++;});
+    const frontCurrent=(typeCounts.melee||0)+(typeCounts.tank||0);
+    const rangeCurrent=typeCounts.range||0;
+    const supportCurrent=typeCounts.support||0;
+    const remaining=15-team.members.length;
+
+    let chosen=null;
+    for(const nm of candidates){
+      const t=MONSTERS[nm]?.type;
+      const isFront=t==='melee'||t==='tank';
+      const isRange=t==='range';
+      const isSupport=t==='support';
+      const frontLeft=frontTarget-frontCurrent;
+      const rangeLeft=rangeTarget-rangeCurrent;
+      const supportLeft=supportTarget-supportCurrent;
+      const slotsLeft=remaining-1;
+      let ok=true;
+      if(isFront&&frontCurrent>=frontTarget+2&&(rangeLeft>0||supportLeft>0)&&slotsLeft>=rangeLeft+supportLeft)ok=false;
+      if(isRange&&rangeCurrent>=rangeTarget+2&&(frontLeft>0||supportLeft>0)&&slotsLeft>=frontLeft+supportLeft)ok=false;
+      if(isSupport&&supportCurrent>=supportTarget+2&&(frontLeft>0||rangeLeft>0)&&slotsLeft>=frontLeft+rangeLeft)ok=false;
+      if(isSupport&&strat.typeRatio.support===0)ok=false;
+      if(ok){chosen=nm;break;}
+    }
+    if(!chosen)chosen=candidates[0];
+    if(!chosen)break;
+    team.members.push(chosen);
+  }
+
+  saveTdo();renderTdo();buildGrid();
 }
 
 renderSavesBar();
