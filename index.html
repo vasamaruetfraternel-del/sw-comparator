@@ -2759,17 +2759,17 @@ function renderTdo(){
                color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700;">
         ⚡ Auto-Build
       </button>
+      <button onclick="tdoAutoBuildAllBalanced()"
+        style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
+               border:1px solid rgba(72,136,216,.4);background:rgba(72,136,216,.1);
+               color:#4888d8;cursor:pointer;font-family:inherit;font-weight:700;">
+        ⚖️ Équilibrer 3 Équipes.
+      </button>
       <button onclick="tdoClearTeam(${tdoActiveTeam})"
         style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
                border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);
                color:var(--mel);cursor:pointer;font-family:inherit;font-weight:700;">
-        Vider
-      </button>
-	  <button onclick="tdoAutoBuildAllBalanced()"
-        style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
-               border:1px solid rgba(72,136,216,.4);background:rgba(72,136,216,.1);
-               color:#4888d8;cursor:pointer;font-family:inherit;font-weight:700;">
-        ⚖️ Équilibrer 3 Éqs.
+        Vider l'équipe actuelle
       </button>
     </div>
     <div style="padding:10px 14px;flex:1;overflow-y:auto">
