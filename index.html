@@ -159,7 +159,7 @@ const BUFFS={
 "archdemon_grand_froid":{label:"Dégâts supp. = 100% de la puissance d'attaque",color:"#dd6644",power:12,cond:true},
 "grand_froid_cumul"  :{label:"Cumul Grand Froid ×1 sur la cible / 20s",color:"#dd6644",power:3,cond:true},
 "grand_froid_stack"  :{label:"À 5 cumuls : Gel 2.5s + Dég. Crit reçus +20% + Trace de givre 7s",color:"#dd6644",power:10,cond:true},
-"trace de givre"     :{label:"Immunité aux cumuls Grand Froid temporaire",color:"#dd6644",power:0,cond:true},
+"trace_de_givre"     :{label:"Immunité aux cumuls Grand Froid temporaire",color:"#dd6644",power:0,cond:true},
 "dmg_aoe_15"         :{label:"Dégâts de zone supp. +15% (×cibles, max 10)",color:"#dd6644",power:16,cond:true},
 "dmg_aoe_30"         :{label:"Dégâts de zone supp. +30% (×cibles, max 10)",color:"#dd6644",power:20,cond:true},
 "dmg_aoe_team_20"    :{label:"Dégâts de zone +20% ALLIÉS",color:"#dd6644",power:25,cond:true,team:true},
@@ -810,7 +810,7 @@ const EXCLUSIVE_SKILLS={
   "Trinity":{name:"Ragnarök",desc:"Inflige 840% de la puissance d'attaque en dégâts dans un rayon de 3m autour de la cible.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation du taux critique de 20% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, attribue à la cible l'effet d'affaiblissement Diminution de la vitesse d'attaque de 10% pendant 10 sec. (Effet cumulable)",cd:10,buffs:["crit_rate_team_20","atk_spd_nerf_10"],atk_pct:840,aoe:true},
   "Belle":{name:"Sur scène",desc:"Inflige 2 fois 650% de la puissance d'attaque en dégâts dans un rayon de 3m autour de soi.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation des dégâts infligés de 20% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, confère aux alliés l'effet Rock'n'roll pendant 10 sec.",cd:10,buffs:["dmg_team_20","rocknroll"],atk_pct:650,hits:2,aoe:true},
   "Artamiel":{name:"Lames du justicier",desc:"Inflige 750% de la puissance d'attaque en dégâts dans un rayon de 3m autour de la cible.\nEn cas d'attaque réussie, attribue à la cible l'effet d'affaiblissement Diminution de la résistance de 20% pendant 10 sec.",cd:10,buffs:["resist_nerf_20"],atk_pct:750,aoe:true},
-  "Theomars":{name:"Zéro absolu",desc:"Inflige 3 fois 470% de la puissance d'attaque en dégâts dans un rayon de 2m autour de la cible.\nEn cas d'attaque réussie, confère à soi-même l'effet de renforcement Archidémon du Grand Froid pendant 10 sec.",cd:10,buffs:["grand_froid_cumul","grand_froid_stack","trace de givre"],atk_pct:470,hits:3,aoe:true},
+  "Theomars":{name:"Zéro absolu",desc:"Inflige 3 fois 470% de la puissance d'attaque en dégâts dans un rayon de 2m autour de la cible.\nEn cas d'attaque réussie, confère à soi-même l'effet de renforcement Archidémon du Grand Froid pendant 10 sec.",cd:10,buffs:["grand_froid_cumul","grand_froid_stack","trace_de_givre"],atk_pct:470,hits:3,aoe:true},
   "Sekhmet":{name:"Fièvre",desc:"Inflige 2 fois 630% de la puissance d'attaque en dégâts dans un rayon de 2m autour de la cible.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation des dégâts de zone de 20% pendant 10 sec. (Effet cumulable)",cd:10,buffs:["dmg_aoe_team_20"],atk_pct:630,hits:2,aoe:true},
   "Harmonia":{name:"Champ du repos",desc:"Inflige 2 fois 390% de la puissance d'attaque en dégâts dans un rayon de 5m autour de soi.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation de la puissance d'attaque de 20% pendant 10 sec. (Effet cumulable)",cd:10,buffs:["atk_team_20"],atk_pct:390,hits:2,aoe:true},
   "Barbara":{name:"Début d'assaut",desc:"Inflige 2 fois 460% de la puissance d'attaque en dégâts dans une zone de 2m de large et de 10m de long devant soi.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation de la précision de 20% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation du taux de Coup triple de 10% pendant 10 sec. (Effet cumulable)",cd:10,buffs:["accuracy_20_team","triple_hit_10"],atk_pct:460,hits:2,aoe:true},
@@ -1434,6 +1434,36 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .me-card-buffs{padding:5px 12px 10px;display:flex;flex-direction:column;gap:5px}
 .me-mini-chip{font-size:.78rem;padding:4px 10px;border-radius:3px;background:var(--s3);color:var(--tx3);border-left:3px solid transparent}
 
+.faq-cat-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:.78rem;font-weight:700;cursor:pointer;border:1px solid var(--b1);background:var(--s3);color:var(--tx2);transition:all .15s;white-space:nowrap;user-select:none;font-family:inherit}
+.faq-cat-btn:hover{border-color:var(--green);color:var(--green2)}
+.faq-cat-btn.on{background:var(--green2);border-color:var(--green2);color:#0a120a}
+.faq-section-hd{font-size:.72rem;text-transform:uppercase;letter-spacing:1.1px;font-weight:800;color:var(--tx2);padding:0 4px 9px;border-bottom:1px solid var(--b1);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.faq-item{background:var(--s2);border:1px solid var(--b1);border-radius:6px;margin-bottom:7px;overflow:hidden;transition:border-color .15s}
+.faq-item:hover{border-color:var(--b2)}
+.faq-item.open{border-color:var(--green)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;user-select:none;gap:10px}
+.faq-q-left{display:flex;align-items:flex-start;gap:9px}
+.faq-qtag{font-size:.63rem;font-weight:800;padding:2px 7px;border-radius:4px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.faq-qtext{font-size:.9rem;font-weight:700;color:var(--tx);line-height:1.4}
+.faq-arrow{color:var(--tx2);font-size:.72rem;transition:transform .18s ease;flex-shrink:0}
+.faq-item.open .faq-arrow{transform:rotate(180deg);color:var(--green2)}
+.faq-ans{display:none;padding:0 16px 14px;font-size:.87rem;color:var(--tx3);line-height:1.7;border-top:1px solid var(--b1)}
+.faq-ans.show{display:block}
+.faq-ans p{margin-top:9px}
+.faq-ans ul{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:7px}
+.faq-ans ul li{padding-left:15px;position:relative}
+.faq-ans ul li::before{content:'◆';position:absolute;left:0;color:var(--green);font-size:.58rem;top:5px}
+.faq-ans strong{color:var(--tx)}
+.faq-hi{background:var(--gold-bg,rgba(212,160,23,.1));border:1px solid rgba(212,160,23,.3);border-radius:5px;padding:9px 12px;margin-top:9px;color:#c8a060;font-size:.84rem}
+.faq-warn{background:rgba(200,48,48,.1);border:1px solid rgba(200,48,48,.3);border-radius:5px;padding:9px 12px;margin-top:9px;color:#dd8888;font-size:.84rem}
+.faq-tip{background:rgba(168,212,40,.07);border:1px solid rgba(168,212,40,.25);border-radius:5px;padding:9px 12px;margin-top:9px;color:var(--green2);font-size:.84rem}
+.faq-empty{text-align:center;padding:40px;color:var(--tx2);font-size:.9rem}
+.ftag-score{background:rgba(168,212,40,.1);border-color:rgba(168,212,40,.35);color:var(--green2)}
+.ftag-tb{background:rgba(224,80,80,.1);border-color:rgba(224,80,80,.35);color:var(--mel)}
+.ftag-reco{background:rgba(72,136,216,.1);border-color:rgba(72,136,216,.35);color:var(--tnk)}
+.ftag-strat{background:rgba(212,168,48,.1);border-color:rgba(212,168,48,.35);color:var(--gold)}
+.ftag-me{background:rgba(192,57,192,.1);border-color:rgba(192,57,192,.35);color:#cc88cc}
+
 @media(max-width:640px){
   html,body{overflow:auto;height:auto}
   #root{flex-direction:column;height:auto;overflow:visible}
@@ -1462,6 +1492,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
   <button class="ntab" id="tab-tb" onclick="switchTab('tb')">Team Builder</button>
   <button class="ntab" id="tab-tl" onclick="switchTab('tl')">Tier List</button>
   <button class="ntab" id="tab-me" onclick="switchTab('me')">Mes Éveils</button>
+  <button class="ntab" id="tab-faq" onclick="switchTab('faq')">F.A.Q</button>
   <div class="nav-right">
     <div class="nav-search">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1496,7 +1527,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
     <div class="panel on" id="panelCmp">
       <div id="cmpPanel">
         <div id="cmpShared"><span class="sh-lbl">Buffs communs :</span><div id="sharedChips"></div></div>
-        <div id="cmpList"><div class="cmp-empty">Cliquez sur un monstre pour commencer.\nNote : Les valeurs par monstres ne sont pas une valeur sûr et dépendent de beaucoup de facteur ils sont là à titre informatif.</div></div>
+        <div id="cmpList"><div class="cmp-empty">Cliquez sur un monstre pour commencer.</div></div>
       </div>
     </div>
     <div class="panel off" id="panelTb">
@@ -1597,6 +1628,27 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
         </div>
       </div>
     </div>
+    <div class="panel off" id="panelFaq">
+      <div style="flex:1;overflow-y:auto;padding:24px 32px;max-width:900px;margin:0 auto;width:100%">
+
+        <div style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--b1)">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--green2);margin-bottom:4px">F.A.Q — SW Rush Tool</div>
+          <div style="font-size:.85rem;color:var(--tx2)">Toutes les réponses sur le fonctionnement du comparateur, du Team Builder et des scores.</div>
+        </div>
+
+        <div style="position:relative;margin-bottom:20px">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--tx2);pointer-events:none">🔍</span>
+          <input type="text" id="faqSearch" placeholder="Rechercher une question, un mot-clé…"
+            oninput="filterFaq()"
+            style="width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--tx);padding:10px 14px 10px 36px;border-radius:6px;font-size:.9rem;outline:none;font-family:inherit;transition:.15s">
+        </div>
+
+        <div id="faqCats" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px"></div>
+
+        <div id="faqContainer"></div>
+
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -1621,6 +1673,14 @@ let teamSaves=JSON.parse(localStorage.getItem('sw_team_saves')||JSON.stringify([
   {name:'Équipe 4',members:[],size:15},
   {name:'Équipe 5',members:[],size:15}
 ]));
+let excludedFromReco=JSON.parse(localStorage.getItem('sw_excluded_reco')||'[]');
+function saveExcluded(){localStorage.setItem('sw_excluded_reco',JSON.stringify(excludedFromReco));}
+function toggleExclude(nm){
+  const i=excludedFromReco.indexOf(nm);
+  if(i!==-1)excludedFromReco.splice(i,1);else excludedFromReco.push(nm);
+  saveExcluded();
+  updateMeCard(nm);
+}
 let tdoMode = false;
 let tdoTeams = JSON.parse(localStorage.getItem('sw_tdo_teams') || JSON.stringify([
   {name:'Compo 1', teams:[{name:'Équipe A',members:[]},{name:'Équipe B',members:[]},{name:'Équipe C',members:[]}]},
@@ -1651,16 +1711,17 @@ function toggleAwk(nm,level){
 
 function switchTab(t){
   activeTab=t;
-  ['cmp','tb','tl','me'].forEach(id=>{
+  ['cmp','tb','tl','me','faq'].forEach(id=>{
     document.getElementById('tab-'+id).classList.toggle('on',id===t);
     document.getElementById('panel'+id.charAt(0).toUpperCase()+id.slice(1)).className='panel '+(id===t?'on':'off');
   });
   const sb=document.getElementById('sb');
-  if(t==='me')sb.classList.add('me-mode');
+  if(t==='me'||t==='faq')sb.classList.add('me-mode');
   else{sb.classList.remove('me-mode');buildGrid();}
   if(t==='tl')renderTierList();
   if(t==='me')renderMesEveils();
-  if(t==='tb') renderStrategyPicker();
+  if(t==='tb')renderStrategyPicker();
+  if(t==='faq'){buildSwFaqCats();renderSwFaq();}
 }
 
 function onSearch(){
@@ -1883,7 +1944,7 @@ function renderCmp(){
   const list=document.getElementById('cmpList');
   const sb=document.getElementById('cmpShared');
   if(!filled.length){
-    list.innerHTML='<div class="cmp-empty" style="flex-direction:column;gap:6px;text-align:center"><span>Cliquez sur des portraits pour comparer jusqu\'à 3 monstres</span><span style="font-size:.8rem;color:var(--tx2)">Note : Les valeurs par monstre ne sont pas une valeur sûre et dépendent de beaucoup de facteurs — elles sont là à titre indicatif.</span></div>';
+    list.innerHTML='<div class="cmp-empty" style="flex-direction:column;gap:6px;text-align:center"><span>Cliquez sur des portraits pour comparer jusqu\'à 3 monstres</span><span style="font-size:.8rem;color:var(--tx2)">Ps : Les valeurs sont pour avoir un visuel, ils ne représente en rien la réalité du terrain étant donner qu\'un monstre dépend surtout de la compo qui l\'entoure.</span></div>';
     if(sb)sb.className='';return;
   }
   list.innerHTML=selCmp.map((nm,i)=>nm?renderCmpRow(nm,i):'').filter(Boolean).join('');
@@ -1935,7 +1996,6 @@ function calcReco(){
   const strat = STRATEGIES[teamStrategy] || STRATEGIES.balanced;
   const W = strat.buffWeight;
 
-  // 1. Buffs déjà présents
   const teamBufSet={};
   selTb.forEach(nm=>{
     [...(MONSTERS[nm]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
@@ -1943,7 +2003,6 @@ function calcReco(){
     ].forEach(id=>{ teamBufSet[id]=(teamBufSet[id]||0)+1; });
   });
 
-  // 2. Composition actuelle
   const typeCounts={melee:0,tank:0,range:0,support:0};
   selTb.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]++; });
 
@@ -1955,16 +2014,26 @@ function calcReco(){
   const rangeNeed   = rangeTarget   - (typeCounts.range||0);
   const supportNeed = supportTarget - (typeCounts.support||0);
 
-  // 3. Classifier chaque buff ID selon OFF/DEF/TEAM
+  const synPairs={
+    'crush_dmg_20_team':['crush_rate_10','crush_rate_10_team','crush_rate_20'],
+    'crush_rate_10_team':['crush_dmg_20','crush_dmg_20_team'],
+    'crit_dmg_team_20':['crit_rate_10','crit_rate_team_20','crit_rate_50'],
+    'crit_rate_team_20':['crit_dmg_20','crit_dmg_team_20'],
+    'double_hit_team_20':['double_triple_dmg_team','full_bloom'],
+    'triple_hit_team_10':['double_triple_dmg_team','full_bloom'],
+    'full_bloom':['double_triple_dmg_team','crit_rate_team_20'],
+    'spd_team_20':['skill_accel_20_team','skill_accel_15_team'],
+    'dmg_resist_20_team':['shield_hits_3_team','limit_shield'],
+  };
+
   function buffCategory(id){
     if(OFF_IDS.has(id))  return 'off';
     if(DEF_IDS.has(id))  return 'def';
     if(TEAM_IDS.has(id)) return 'team';
-    return 'off'; // défaut
+    return 'off';
   }
 
-  // 4. Scorer chaque candidat
-  return Object.keys(MONSTERS).filter(nm=>!selTb.includes(nm))
+  return Object.keys(MONSTERS).filter(nm=>!selTb.includes(nm)&&!excludedFromReco.includes(nm))
     .map(nm=>{
       const m = MONSTERS[nm];
       const ids = new Set([
@@ -1972,50 +2041,43 @@ function calcReco(){
         ...skillBuffsRaw(nm)
       ]);
 
-      // A) Synergie buffs pondérée par la stratégie
       let synScore=0;
       ids.forEach(id=>{
         const b=BUFFS[id]; if(!b) return;
         const v   = bVal(id);
         const cat = buffCategory(id);
         const w   = W[cat] ?? 1.0;
-
         if(!teamBufSet[id]){
           synScore += b.team ? v*w*1.4 : v*w;
         } else if(b.team){
           synScore += v*w*0.5;
         } else {
-          synScore -= v*0.3; // malus doublon indépendant de la strat
+          synScore -= v*0.3;
         }
+        // Bonus synergie paires
+        if(synPairs[id]){
+          synPairs[id].forEach(pid=>{
+            if(teamBufSet[pid]) synScore += bVal(id)*(w)*0.5;
+          });
+        }
+        // Cross-synergie base→team
+        const baseId=id.replace(/_team$/,'').replace(/_20_team$/,'_20').replace(/_10_team$/,'_10');
+        if(b.team&&teamBufSet[baseId]) synScore += v*w*0.7;
       });
 
-      // B) Composition
       let compScore=0;
       const isFront   = m.type==='melee'||m.type==='tank';
       const isRange   = m.type==='range';
       const isSupport = m.type==='support';
-      const compW     = W.off+W.def+W.team; // amplitude globale comme multiplicateur
+      const compW     = W.off+W.def+W.team;
 
       if(isFront)   compScore += frontNeed   > 0 ? (35+frontNeed*12)*(compW/3)   : (frontNeed   < -1 ? -30 : 0);
       if(isRange)   compScore += rangeNeed   > 0 ? (35+rangeNeed*12)*(compW/3)   : (rangeNeed   < -1 ? -30 : 0);
       if(isSupport) compScore += supportNeed > 0 ? (55+supportNeed*18)*(compW/3) : (supportNeed < -1 ? -40 : 0);
-
-      // Pénalité hard si la strat exclut presque le support (ex: Full Rush)
       if(isSupport && strat.typeRatio.support === 0) compScore -= 80;
 
-      // C) Éveil
       const awkBonus = getAwkLevel(nm)*6;
 
-      // D) Cross-synergie version team
-      let crossSyn=0;
-      ids.forEach(id=>{
-        const b=BUFFS[id]; if(!b||!b.team) return;
-        const cat=buffCategory(id);
-        const baseId=id.replace(/_team$/,'').replace(/_20_team$/,'_20').replace(/_10_team$/,'_10');
-        if(teamBufSet[baseId]) crossSyn += bVal(id)*(W[cat]??1)*0.4;
-      });
-
-      // E) Urgence dernière place
       let urgencyPenalty=0;
       if(remaining===1){
         const maxNeed=Math.max(frontNeed,rangeNeed,supportNeed);
@@ -2024,7 +2086,7 @@ function calcReco(){
         if(isSupport && supportNeed < maxNeed) urgencyPenalty=-25;
       }
 
-      return{ nm, total: synScore+compScore+awkBonus+crossSyn+urgencyPenalty };
+      return{ nm, total: synScore+compScore+awkBonus+urgencyPenalty };
     })
     .sort((a,b)=>b.total-a.total)
     .slice(0,10)
@@ -2145,7 +2207,7 @@ const ME_ORDER=Object.keys(MONSTERS).sort((a,b)=>totPts(MONSTERS[b],b)-totPts(MO
 function myPts(nm){
   const m=MONSTERS[nm];if(!m)return 0;
   const s=getAwkSet(nm);
-  return(m.awakenings||[]).filter(a=>s.has(a.level)).reduce((sum,a)=>sum+awkPts(a),0);
+  return Math.min((m.awakenings||[]).filter(a=>s.has(a.level)).reduce((sum,a)=>sum+awkPts(a),0),225);
 }
 
 function renderMesEveils(){
@@ -2157,7 +2219,10 @@ function renderMesEveils(){
     if(q&&!nm.toLowerCase().includes(q))return false;
     return true;
   });
-  const fMax=filtered.reduce((s,nm)=>s+totPts(MONSTERS[nm],nm),0);
+  const fMax=filtered.reduce((s,nm)=>{
+    const m=MONSTERS[nm];
+    return s+Math.min((m.awakenings||[]).reduce((sum,a)=>sum+awkPts(a),0),225);
+  },0);
   const fEarned=filtered.reduce((s,nm)=>s+myPts(nm),0);
   const pct=fMax>0?Math.round(fEarned/fMax*100):0;
   const col=sCol(pct/100);
@@ -2174,7 +2239,7 @@ function renderMesEveils(){
 
 function buildMeCard(nm){
   const m=MONSTERS[nm];
-  const mxPts=totPts(m,nm);
+  const mxPts=Math.min((m.awakenings||[]).reduce((s,a)=>s+awkPts(a),0),225);
   const div=document.createElement('div');
   div.className='me-card';
   div.dataset.meNm=nm;
@@ -2195,6 +2260,7 @@ function buildMeCard(nm){
       <button class="me-awk-btn" data-lv="3" onclick="toggleAwk('${nm}',3)">Éveil 3</button>
       <button class="me-awk-btn" data-lv="5" onclick="toggleAwk('${nm}',5)">Éveil 5★</button>
       <button class="me-awk-btn" data-lv="7" onclick="toggleAwk('${nm}',7)">Éveil 7★</button>
+      <button class="me-awk-btn me-excl-btn" onclick="toggleExclude('${nm}')">🚫 Exclure</button>
     </div>
     <div class="me-card-buffs"></div>`;
   return div;
@@ -2204,7 +2270,7 @@ function updateMeCard(nm){
   const m=MONSTERS[nm];if(!m)return;
   const s=getAwkSet(nm);
   const has3=s.has(3),has5=s.has(5),has7=s.has(7);
-  const mxPts=totPts(m,nm);
+  const mxPts=Math.min((m.awakenings||[]).reduce((sum,a)=>sum+awkPts(a),0),225);
   const earned=myPts(nm);
   const scoreCol=earned>0?sCol(earned/mxPts):'var(--tx2)';
   const cardCls=has7?'awk7':has5?'awk5':has3?'awk3':'';
@@ -2213,10 +2279,18 @@ function updateMeCard(nm){
   card.className='me-card'+(cardCls?' '+cardCls:'');
   const sc=card.querySelector('.sc-earned');
   if(sc){sc.textContent=earned;sc.style.color=scoreCol;}
-  card.querySelectorAll('.me-awk-btn').forEach(btn=>{
+  card.querySelectorAll('.me-awk-btn:not(.me-excl-btn)').forEach(btn=>{
     const lv=+btn.dataset.lv;
     btn.className='me-awk-btn'+(s.has(lv)?' awk'+lv+'-on':'');
   });
+  // Bouton exclusion
+  const exclBtn=card.querySelector('.me-excl-btn');
+  if(exclBtn){
+    const isExcl=excludedFromReco.includes(nm);
+    exclBtn.className='me-awk-btn me-excl-btn'+(isExcl?' awk7-on':'');
+    exclBtn.textContent=isExcl?'✅ Inclus':'🚫 Exclure';
+    exclBtn.title=isExcl?'Réactiver dans les suggestions':'Exclure des suggestions d\'équipe';
+  }
   const activeBuffs=[];
   if(has3){const a=(m.awakenings||[]).find(a=>a.level===3);if(a)activeBuffs.push(...(a.buffs||[]));}
   if(has5){const a=(m.awakenings||[]).find(a=>a.level===5);if(a)activeBuffs.push(...(a.buffs||[]));}
@@ -2321,7 +2395,13 @@ function autoBuildTeam(){
   const rangeTarget   = Math.round(teamSize * strat.typeRatio.range);
   const supportTarget = teamSize - frontTarget - rangeTarget;
 
-  // Scoring initial (équipe vide) : score brut pondéré par la strat
+  function buffCategory(id){
+    if(OFF_IDS.has(id))return'off';
+    if(DEF_IDS.has(id))return'def';
+    if(TEAM_IDS.has(id))return'team';
+    return'off';
+  }
+
   function scoreAlone(nm){
     const m = MONSTERS[nm]; if(!m) return 0;
     const ids = new Set([
@@ -2332,29 +2412,25 @@ function autoBuildTeam(){
     ids.forEach(id=>{
       const b = BUFFS[id]; if(!b) return;
       const v = bVal(id);
-      const cat = OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+      const cat = buffCategory(id);
       s += v * (W[cat]??1) * (b.team?1.4:1);
     });
     s += getAwkLevel(nm)*6;
     return s;
   }
 
-  for(let i = 0; i < teamSize; i++){
-    // Si l'équipe est vide, scorer seul ; sinon utiliser calcReco
-    let candidates;
-    if(selTb.length === 0){
-      candidates = Object.keys(MONSTERS)
-        .map(nm=>({nm, score:scoreAlone(nm)}))
-        .sort((a,b)=>b.score-a.score)
-        .slice(0,10)
-        .map(x=>x.nm);
-    } else {
-      candidates = calcReco();
-    }
+  // On place d'abord le meilleur monstre solo
+  const first = Object.keys(MONSTERS)
+    .filter(nm=>!excludedFromReco.includes(nm))
+    .map(nm=>({nm, score:scoreAlone(nm)}))
+    .sort((a,b)=>b.score-a.score)[0];
+  if(first) selTb.push(first.nm);
+
+  // Ensuite calcReco gère tout le reste avec les synergies
+  for(let i = 1; i < teamSize; i++){
+    const candidates = calcReco();
     if(!candidates.length) break;
 
-    // calcReco retourne déjà les 10 meilleurs — on prend le premier
-    // MAIS on vérifie qu'on ne dépasse pas les quotas de rôle
     const typeCounts = {melee:0,tank:0,range:0,support:0};
     selTb.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]++; });
 
@@ -2362,8 +2438,6 @@ function autoBuildTeam(){
     const rangeCurrent   = typeCounts.range||0;
     const supportCurrent = typeCounts.support||0;
 
-    // Chercher le meilleur candidat qui respecte encore les quotas
-    // (on autorise un dépassement de +2 max pour ne pas bloquer)
     let chosen = null;
     for(const nm of candidates){
       const t = MONSTERS[nm]?.type;
@@ -2371,27 +2445,23 @@ function autoBuildTeam(){
       const isRange   = t==='range';
       const isSupport = t==='support';
 
-      // Refuser si le rôle est TRÈS saturé (>cible+2) ET qu'il reste des manques ailleurs
       const frontLeft   = frontTarget   - frontCurrent;
       const rangeLeft   = rangeTarget   - rangeCurrent;
       const supportLeft = supportTarget - supportCurrent;
       const remaining   = teamSize - selTb.length;
-      const slotsLeft   = remaining - 1; // après cet ajout
+      const slotsLeft   = remaining - 1;
 
       let ok = true;
       if(isFront   && frontCurrent   >= frontTarget+2   && (rangeLeft>0||supportLeft>0) && slotsLeft>=rangeLeft+supportLeft) ok=false;
       if(isRange   && rangeCurrent   >= rangeTarget+2   && (frontLeft>0||supportLeft>0) && slotsLeft>=frontLeft+supportLeft) ok=false;
       if(isSupport && supportCurrent >= supportTarget+2 && (frontLeft>0||rangeLeft>0)   && slotsLeft>=frontLeft+rangeLeft)   ok=false;
-      // En Full Rush, jamais de support
       if(isSupport && strat.typeRatio.support===0) ok=false;
 
       if(ok){ chosen=nm; break; }
     }
 
-    // Si aucun ne passe le filtre, prendre le 1er quand même (éviter le blocage)
     if(!chosen) chosen = candidates[0];
     if(!chosen) break;
-
     selTb.push(chosen);
   }
 
@@ -2694,9 +2764,151 @@ function tdoAutoBuild(){
 
   saveTdo();renderTdo();buildGrid();
 }
+const SW_FAQ_CATS = [
+  {id:'all',   label:'Tout voir', icon:'📋'},
+  {id:'score', label:'Scores',    icon:'🏆'},
+  {id:'tb',    label:'Team Builder', icon:'⚔'},
+  {id:'reco',  label:'Suggestions',  icon:'💡'},
+  {id:'strat', label:'Stratégies',   icon:'⚡'},
+  {id:'me',    label:'Mes Éveils',   icon:'⭐'},
+];
+const SW_FAQ = [
+  {cat:'score', q:"Comment est calculé le score d'un monstre ?",
+   a:`<p>Chaque monstre est noté sur <strong>500 points</strong>, composés de deux parties :</p>
+   <ul><li><strong>Éveils (max 200 pts)</strong> — Éveil 3★ vaut 25 pts fixes. Les éveils 5★ et 7★ sont normalisés sur 100 pts chacun selon la valeur de leurs buffs.</li><li><strong>Sorts (max 300 pts)</strong> — 3 sorts × 100 pts chacun.</li></ul>
+   <div class="faq-hi">⭐ Ces scores sont indicatifs. La puissance réelle en combat dépend surtout de la composition qui entoure le monstre.</div>`},
+  {cat:'score', q:"Comment est noté chaque sort ?",
+   a:`<p>Chaque sort (Attaque de base, Critique, Exclusive) est noté sur <strong>100 pts</strong> selon 4 critères :</p>
+   <ul><li><strong>Puissance d'attaque</strong> — plafonné à 30 pts</li><li><strong>Buffs apportés</strong> — plafonné à 40 pts</li><li><strong>Coups multiples</strong> — +8 pts/coup supplémentaire, max 20 pts</li><li><strong>Zone (AoE)</strong> — +10 pts</li></ul>`},
+  {cat:'score', q:"Les buffs conditionnels valent-ils moins ?",
+   a:`<p>Oui. Un buff conditionnel voit sa valeur réduite de <strong>40%</strong> par rapport à un buff permanent du même type.</p>
+   <div class="faq-tip">💡 Les buffs d'équipe (alliés) ont toujours un bonus de valeur car ils profitent à toute la composition.</div>`},
+  {cat:'score', q:"Que mesure le score dans 'Mes Éveils' ?",
+   a:`<p>Dans l'onglet <strong>Mes Éveils</strong>, seuls les éveils activés comptent — les sorts ne sont pas inclus. Le maximum par monstre est de <strong>225 pts</strong> (25 + 100 + 100).</p>`},
+  {cat:'tb', q:"Comment fonctionne l'Auto-Build ?",
+   a:`<p>L'Auto-Build construit une équipe complète depuis zéro selon la stratégie choisie :</p>
+   <ul><li>Le <strong>premier monstre</strong> est choisi sur son score individuel pondéré par la stratégie.</li><li>Les <strong>suivants</strong> sont évalués en contexte — synergies, doublons, et quotas de rôle.</li><li>Les <strong>monstres exclus</strong> (🚫 dans Mes Éveils) sont ignorés.</li></ul>
+   <div class="faq-tip">💡 Changez la stratégie avant de lancer l'Auto-Build pour obtenir des compositions radicalement différentes.</div>`},
+  {cat:'tb', q:"Comment sauvegarder et charger une équipe ?",
+   a:`<p>La barre sous le Team Builder propose <strong>5 emplacements de sauvegarde</strong>. Pour chaque slot :</p>
+   <ul><li>Cliquez sur 💾 pour <strong>sauvegarder</strong> l'équipe et la taille actuelles.</li><li>Cliquez sur ▶ pour <strong>charger</strong> un slot.</li><li>Le champ texte permet de <strong>renommer</strong> le slot.</li></ul>`},
+  {cat:'tb', q:"Comment fonctionne le Mode Tour des Origines ?",
+   a:`<p>Le bouton <strong>🏆 Mode Tour des Origines</strong> active un mode spécial qui gère <strong>3 compos × 3 équipes</strong>.</p>
+   <ul><li>Un monstre assigné à une équipe est <strong>verrouillé</strong> pour les autres (portrait grisé).</li><li>Chaque équipe a sa propre stratégie et son propre Auto-Build.</li><li>Les compos sont sauvegardées automatiquement.</li></ul>
+   <div class="faq-warn">⚠ Un même monstre ne peut pas apparaître dans deux équipes d'une même compo.</div>`},
+  {cat:'reco', q:"Comment sont calculées les suggestions manuelles ?",
+   a:`<p>Quand vous ajoutez des monstres manuellement, les <strong>10 meilleures suggestions</strong> sont calculées selon 4 critères :</p>
+   <ul><li><strong>Synergie de buffs</strong> — buff nouveau = bonus, team buff = ×1.4, doublon solo = malus.</li><li><strong>Synergies de paires</strong> — Taux CP + Dégâts CP, Taux Crit + Dégâts Crit, Floraison + Coups Multiples…</li><li><strong>Quota de rôles</strong> — rôle manquant = bonus, rôle saturé = malus.</li><li><strong>Niveau d'éveil</strong> — un monstre éveillé dans Mes Éveils reçoit un léger bonus.</li></ul>`},
+  {cat:'reco', q:"Pourquoi un monstre n'apparaît-il pas dans les suggestions ?",
+   a:`<p>Deux raisons possibles :</p>
+   <ul><li>Le monstre est <strong>déjà dans l'équipe</strong>.</li><li>Il a été marqué <strong>🚫 Exclure</strong> dans l'onglet Mes Éveils — cliquez sur le bouton pour le réintégrer.</li></ul>`},
+  {cat:'strat', q:"Quelle stratégie choisir ?",
+   a:`<p>Tout dépend de votre objectif :</p>
+   <ul><li><strong>Équilibré</strong> — bon point de départ, sans parti pris.</li><li><strong>Offensif / Full Rush</strong> — maximise les dégâts, ignore les supports.</li><li><strong>Défensif</strong> — privilégie résistances et boucliers.</li><li><strong>Team Buff</strong> — favorise les buffs qui profitent à toute l'équipe.</li><li><strong>Offensif + Team / Défensif + Team</strong> — compromis entre buff personnel et soutien d'équipe.</li></ul>
+   <div class="faq-tip">💡 Consultez la section Stratégies disponibles pour voir les ratios exacts de chaque mode.</div>`},
+  {cat:'strat', q:"Qu'est-ce que le ratio de rôles dans une stratégie ?",
+   a:`<p>Chaque stratégie définit une cible de <strong>répartition Mêlée/Tank — Range — Support</strong> pour l'équipe. L'Auto-Build et les suggestions utilisent ce ratio pour équilibrer les types de personnages.</p>
+   <div class="faq-hi">⭐ Exemple : Full Rush impose 50% front + 50% range et 0% support — aucun support ne sera jamais suggéré.</div>`},
+  {cat:'me', q:"À quoi sert l'onglet Mes Éveils ?",
+   a:`<p>Il vous permet de <strong>déclarer vos éveils actifs</strong> (3★, 5★, 7★) pour chaque monstre. Ces données servent à :</p>
+   <ul><li>Calculer votre <strong>score personnel</strong> d'éveil.</li><li>Donner un <strong>bonus de priorité</strong> dans les suggestions du Team Builder.</li><li>Alimenter le résumé des buffs conditionnels actifs.</li></ul>`},
+  {cat:'me', q:"Comment exclure un monstre des suggestions ?",
+   a:`<p>Dans l'onglet Mes Éveils, cliquez sur le bouton <strong>🚫 Exclure</strong> sur la carte du monstre. Il disparaîtra des suggestions et de l'Auto-Build. Cliquez à nouveau (<strong>✅ Inclus</strong>) pour le réintégrer.</p>`},
+  {cat:'me', q:"Les données d'éveil sont-elles sauvegardées ?",
+   a:`<p>Oui, elles sont sauvegardées dans le <strong>localStorage</strong> de votre navigateur. Vous pouvez également les exporter/importer via les boutons ⬆ Importer et ⬇ Exporter pour les transférer entre appareils.</p>
+   <div class="faq-warn">⚠ Vider le cache du navigateur efface les données. Pensez à exporter régulièrement.</div>`},
+];
 
+let swFaqCat = 'all', swFaqQ = '';
+const TL_FAQ = {score:'Scores', tb:'Team Builder', reco:'Suggestions', strat:'Stratégies', me:'Mes Éveils'};
+const TI_FAQ = {score:'🏆', tb:'⚔', reco:'💡', strat:'⚡', me:'⭐'};
+const TCLS_FAQ = {score:'ftag-score', tb:'ftag-tb', reco:'ftag-reco', strat:'ftag-strat', me:'ftag-me'};
+
+function buildSwFaqCats() {
+  document.getElementById('faqCats').innerHTML = SW_FAQ_CATS.map(c =>
+    `<button class="faq-cat-btn${c.id === 'all' ? ' on' : ''}" onclick="setSwFaqCat('${c.id}',this)">
+      <span>${c.icon}</span>${c.label}
+    </button>`
+  ).join('');
+}
+
+function setSwFaqCat(id, btn) {
+  swFaqCat = id;
+  document.querySelectorAll('.faq-cat-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderSwFaq();
+}
+
+function filterFaq() {
+  swFaqQ = document.getElementById('faqSearch').value.toLowerCase().trim();
+  renderSwFaq();
+}
+
+function renderSwFaq() {
+  const c = document.getElementById('faqContainer');
+  const f = SW_FAQ.filter(x =>
+    (swFaqCat === 'all' || x.cat === swFaqCat) &&
+    (!swFaqQ || x.q.toLowerCase().includes(swFaqQ) || x.a.toLowerCase().includes(swFaqQ))
+  );
+  if (!f.length) {
+    c.innerHTML = `<div class="faq-empty"><div style="font-size:2rem;opacity:.3;margin-bottom:8px">🔍</div>Aucune question trouvée.</div>`;
+    return;
+  }
+  if (swFaqCat === 'all' && !swFaqQ) {
+    const g = {};
+    f.forEach(x => { if (!g[x.cat]) g[x.cat] = []; g[x.cat].push(x); });
+    c.innerHTML = Object.entries(g).map(([cat, items]) =>
+      `<div style="margin-bottom:22px">
+        <div class="faq-section-hd"><span>${TI_FAQ[cat]}</span>${TL_FAQ[cat]}</div>
+        ${items.map((x, i) => swFaqHtml(x, cat + i)).join('')}
+      </div>`
+    ).join('');
+  } else {
+    c.innerHTML = f.map((x, i) => swFaqHtml(x, 'fq' + i)).join('');
+  }
+  c.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const it = q.closest('.faq-item');
+      const an = it.querySelector('.faq-ans');
+      const op = it.classList.contains('open');
+      it.classList.toggle('open', !op);
+      an.classList.toggle('show', !op);
+    });
+  });
+}
+
+function swFaqHtml(f, uid) {
+  return `<div class="faq-item" id="sfaq-${uid}">
+    <div class="faq-q">
+      <div class="faq-q-left">
+        <span class="faq-qtag ${TCLS_FAQ[f.cat]}">${TL_FAQ[f.cat]}</span>
+        <span class="faq-qtext">${f.q}</span>
+      </div>
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-ans">${f.a}</div>
+  </div>`;
+}
+
+function renderFaqStrats() {
+  const el = document.getElementById('faqStratGrid');
+  if (!el) return;
+  el.innerHTML = Object.entries(STRATEGIES).map(([k, s]) => `
+    <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:12px 14px">
+      <div style="font-size:.9rem;font-weight:800;color:var(--tx);margin-bottom:6px">${s.icon} ${s.label}</div>
+      <div style="font-size:.75rem;color:var(--tx2);line-height:1.9">
+        Offensif ×${s.buffWeight.off}<br>
+        Défensif ×${s.buffWeight.def}<br>
+        Team ×${s.buffWeight.team}<br>
+        Front ${Math.round(s.typeRatio.front * 100)}% · Range ${Math.round(s.typeRatio.range * 100)}% · Support ${Math.round(s.typeRatio.support * 100)}%
+      </div>
+    </div>`).join('');
+}
 renderSavesBar();
 renderStrategyPicker();
+buildSwFaqCats();
+renderSwFaq();
+renderFaqStrats();
 buildGrid();renderCmp();renderTeam();
 </script>
 </body>
