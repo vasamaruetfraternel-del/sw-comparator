@@ -6,7 +6,16 @@
 <title>SW Rush Tool Tool</title>
 <script>
 const IP='./images/';
-//
+
+const SW_FAQ_CATS = [
+  {id:'all',   label:'Tout',          icon:'📋'},
+  {id:'score', label:'Scores',        icon:'🏆'},
+  {id:'tb',    label:'Team Builder',  icon:'⚔'},
+  {id:'reco',  label:'Suggestions',   icon:'💡'},
+  {id:'strat', label:'Stratégies',    icon:'⚡'},
+  {id:'me',    label:'Mes Éveils',    icon:'⭐'},
+];
+
 const STRATEGIES = {
   balanced: {
     label:'Équilibré', icon:'⚖',
@@ -1488,7 +1497,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 <body>
 <div id="nav">
   <div class="logo">★ SW Rush Tool</div>
-  <button class="ntab on" id="tab-cmp" onclick="switchTab('cmp')">Comparateur</button>
+  <button class="ntab on" id="tab-cmp" onclick="switchTab('cmp')">Fiche des monstre</button>
   <button class="ntab" id="tab-tb" onclick="switchTab('tb')">Team Builder</button>
   <button class="ntab" id="tab-tl" onclick="switchTab('tl')">Tier List</button>
   <button class="ntab" id="tab-me" onclick="switchTab('me')">Mes Éveils</button>
@@ -1633,7 +1642,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 
         <div style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--b1)">
           <div style="font-size:1.4rem;font-weight:900;color:var(--green2);margin-bottom:4px">F.A.Q — SW Rush Tool</div>
-          <div style="font-size:.85rem;color:var(--tx2)">Toutes les réponses sur le fonctionnement du comparateur, du Team Builder et des scores.</div>
+          <div style="font-size:.85rem;color:var(--tx2)">Toutes les réponses sur le fonctionnement du Fiche des monstre, du Team Builder et des scores.</div>
         </div>
 
         <div style="position:relative;margin-bottom:20px">
@@ -1698,6 +1707,18 @@ function saveAwk(){localStorage.setItem('sw_my_awk',JSON.stringify(myAwakenings)
 function getAwkSet(nm){const v=myAwakenings[nm];return new Set(Array.isArray(v)?v:(v?[v]:[]));}
 function getAwkLevel(nm){const s=getAwkSet(nm);return s.has(7)?7:s.has(5)?5:s.has(3)?3:0;}
 
+let gdgMode = false;
+let gdgTeams = JSON.parse(localStorage.getItem('sw_gdg_teams') || JSON.stringify([
+  {name:'Compo 1', teams:[{name:'Équipe A',members:[]},{name:'Équipe B',members:[]},{name:'Équipe C',members:[]}]},
+  {name:'Compo 2', teams:[{name:'Équipe A',members:[]},{name:'Équipe B',members:[]},{name:'Équipe C',members:[]}]},
+  {name:'Compo 3', teams:[{name:'Équipe A',members:[]},{name:'Équipe B',members:[]},{name:'Équipe C',members:[]}]},
+]));
+let gdgActiveCompo = 0;
+let gdgActiveTeam = 0;
+let gdgStrategies = ['balanced','balanced','balanced'];
+const GDG_TEAM_SIZE = 10;
+function saveGdg(){localStorage.setItem('sw_gdg_teams',JSON.stringify(gdgTeams));}
+
 function toggleAwk(nm,level){
   const s=getAwkSet(nm);
   if(s.has(level))s.delete(level);else s.add(level);
@@ -1758,7 +1779,6 @@ function hasBuffCat(nm){
   const skBuffs=skillBuffsRaw(nm).some(id=>ids.has(id));
   return awkBuffs||skBuffs;
 }
-
 function buildGrid(){
   const q=document.getElementById('srch').value.toLowerCase();
   const g=document.getElementById('grid');
@@ -1781,10 +1801,16 @@ function buildGrid(){
     const tdoUsed=tdoMode?getTdoUsed(tdoActiveTeam):new Set();
     const tdoInCurrent=tdoMode&&tdoTeams[tdoActiveCompo].teams[tdoActiveTeam].members.includes(nm);
     const tdoBlocked=tdoMode&&tdoUsed.has(nm);
+    const gdgUsed=gdgMode?getGdgUsed(gdgActiveTeam):new Set();
+    const gdgInCurrent=gdgMode&&gdgTeams[gdgActiveCompo].teams[gdgActiveTeam].members.includes(nm);
+    const gdgBlocked=gdgMode&&gdgUsed.has(nm);
     let badge='';
     if(tdoMode){
       if(tdoBlocked)badge=`<div class="pc-badge" style="background:rgba(200,48,48,.4);color:#ff8888">✗</div>`;
       else if(tdoInCurrent)badge=`<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`;
+    }else if(gdgMode){
+      if(gdgBlocked)badge=`<div class="pc-badge" style="background:rgba(200,48,48,.4);color:#ff8888">✗</div>`;
+      else if(gdgInCurrent)badge=`<div class="pc-badge" style="background:rgba(220,140,40,.2);color:#dc8c28">✓</div>`;
     }else if(activeTab==='tl'&&tier){
       const bg=TIERS.find(t=>t.id===tier)?.bg||'#666';
       badge=`<div class="pc-badge" style="background:${bg};color:#fff;font-size:.55rem">${tier}</div>`;
@@ -1793,11 +1819,11 @@ function buildGrid(){
     }else if(iT){
       badge=`<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`;
     }
-    d.innerHTML=`<img src="${IP}${nm}.png" loading="lazy" onerror="this.src=''" style="${tdoBlocked?'opacity:.35':''}">
+    d.innerHTML=`<img src="${IP}${nm}.png" loading="lazy" onerror="this.src=''" style="${(tdoBlocked||gdgBlocked)?'opacity:.35':''}">
       <div class="pc-type" style="color:${TCOL[m.type]}">${{melee:'⚔',tank:'🛡',range:'🏹',support:'💚'}[m.type]}</div>
       ${badge}
       <div class="pc-bot"><div class="pc-name">${nm}</div><div class="pc-score" style="color:${sc}">${tot}</div></div>`;
-    if(tdoBlocked)d.style.opacity='.35';
+    if(tdoBlocked||gdgBlocked)d.style.opacity='.35';
     d.addEventListener('dragstart',e=>{tlDragName=nm;tlDragFrom='pool';e.dataTransfer.effectAllowed='copy';});
     d.addEventListener('click',()=>{
       if(activeTab==='cmp'){
@@ -1807,6 +1833,7 @@ function buildGrid(){
         renderCmp();
       }else if(activeTab==='tb'){
         if(tdoMode){tdoAddMonster(nm);}
+        else if(gdgMode){gdgAddMonster(nm);}
         else{const i=selTb.indexOf(nm);if(i!==-1)selTb.splice(i,1);else if(selTb.length<teamSize)selTb.push(nm);renderTeam();}
       }else if(activeTab==='tl'){
         if(!tier){tlData['B'].push(nm);renderTierList();}
@@ -2056,11 +2083,12 @@ function renderCmpRow(nm,idx){
         <div class="mrow-tagline">${genTagline(nm)}</div>
       </div>
       <div class="mrow-score-wrap">
-        <div class="mrow-score" style="color:${c}">${tot}</div>
-        <div class="mrow-score-sub">/ ${MAX_T}</div>
-        <div class="score-breakdown">Éveils : ${awkSum} pts<br>Sorts : ${skPts} pts</div>
-        <div class="mrow-bar"><div class="mrow-barf" style="width:${Math.round(Math.min(r,1)*100)}%;background:${c}"></div></div>
-      </div>
+		<div class="mrow-score" style="color:${c}">${tot}</div>
+		<div class="mrow-score-sub">/ ${MAX_T}</div>
+		<div class="score-breakdown">Éveils : ${awkSum} pts<br>Sorts : ${skPts} pts</div>
+		<div class="mrow-bar"><div class="mrow-barf" style="width:${Math.round(Math.min(r,1)*100)}%;background:${c}"></div></div>
+		<button onclick="showSimilarMonsters('${nm}')" style="margin-top:10px;font-size:.78rem;font-weight:700;padding:7px 14px;border-radius:5px;border:1px solid rgba(168,212,40,.45);background:rgba(168,212,40,.12);color:var(--green2);cursor:pointer;font-family:inherit;white-space:nowrap">🔗 Voir les monstres similaires</button>
+	  </div>
     </div>
     ${renderSpellPanel(nm)}
     <div class="mrow-body">
@@ -2074,6 +2102,7 @@ function renderCmpRow(nm,idx){
         '<div style="color:var(--tx2);font-size:.85rem;font-style:italic;padding:10px 0">Aucun éveil 7★</div>'}
       </div>
     </div>
+	<div id="simWrap_${nm.replace(/[^a-z0-9]/gi,'')}" style="display:none;padding:0 18px 14px"></div>
   </div>`;
 }
 
@@ -2520,6 +2549,13 @@ function renderStrategyPicker(){
              color:var(--tnk);cursor:pointer;font-family:inherit;font-weight:700;margin-left:6px;"
       title="Mode Tour des Origines">
       🏆 Mode Tour des Origines
+    </button>
+    <button onclick="toggleGdgMode()" id="gdgBtn"
+      style="white-space:nowrap;font-size:.7rem;padding:3px 10px;flex-shrink:0;
+             border-radius:3px;border:1px solid rgba(220,140,40,.4);background:rgba(220,140,40,.1);
+             color:#dc8c28;cursor:pointer;font-family:inherit;font-weight:700;margin-left:6px;"
+      title="Mode Guerre de Guilde">
+      ⚔ Guerre de Guilde
     </button>`;
   bar.appendChild(wrap);
 }
@@ -2608,13 +2644,13 @@ function autoBuildTeam(){
 }
 function toggleTdoMode(){
   tdoMode = !tdoMode;
+  if(gdgMode){ gdgMode=false; const gb=document.getElementById('gdgBtn'); if(gb){gb.style.background='rgba(220,140,40,.1)';gb.style.color='#dc8c28';} const gdgEl=document.getElementById('gdgContainer'); if(gdgEl)gdgEl.remove(); }
   const btn = document.getElementById('tdoBtn');
   if(btn){
     btn.style.background = tdoMode ? 'rgba(72,136,216,.3)' : 'rgba(72,136,216,.1)';
     btn.style.color = tdoMode ? '#88ccff' : 'var(--tnk)';
   }
   if(tdoMode){
-    // Sauvegarder l'état normal
     document.getElementById('tbSlots').style.display='none';
     document.getElementById('tbScores').style.display='none';
     document.getElementById('tbSyn').style.display='none';
@@ -2624,6 +2660,7 @@ function toggleTdoMode(){
     document.getElementById('tbCtr').style.display='none';
     let tdoEl = document.getElementById('tdoContainer');
     if(!tdoEl){ tdoEl=document.createElement('div'); tdoEl.id='tdoContainer'; tdoEl.style.flex='1'; tdoEl.style.overflow='auto'; document.getElementById('tbContent').prepend(tdoEl); }
+    tdoEl.innerHTML='';
     renderTdo();
   } else {
     document.getElementById('tbSlots').style.display='';
@@ -2636,6 +2673,7 @@ function toggleTdoMode(){
     if(tdoEl)tdoEl.remove();
     renderTeam();
   }
+  buildGrid();
 }
 
 function getTdoUsed(excludeTeam){
@@ -2666,7 +2704,6 @@ function tdoRemoveMember(teamIdx, nm){
   renderTdo();
   buildGrid();
 }
-
 function renderTdo(){
   const el=document.getElementById('tdoContainer');
   if(!el)return;
@@ -2678,13 +2715,8 @@ function renderTdo(){
       ${c.name}
     </button>`).join('');
 
-  const teamTabs=compo.teams.map((t,i)=>`
-    <button onclick="tdoSetTeam(${i})" style="padding:5px 14px;border-radius:3px;border:1px solid ${i===tdoActiveTeam?`rgba(${rgb(TEAM_COLS[i])},.5)`:'var(--b1)'};background:${i===tdoActiveTeam?`rgba(${rgb(TEAM_COLS[i])},.12)`:'none'};color:${i===tdoActiveTeam?TEAM_COLS[i]:'var(--tx2)'};cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;flex-shrink:0">
-      ${t.name} <span style="font-size:.7rem;opacity:.7">(${t.members.length}/15)</span>
-    </button>`).join('');
-
-  const stratSelect=Object.entries(STRATEGIES).map(([k,s])=>
-    `<option value="${k}"${tdoStrategies[tdoActiveTeam]===k?' selected':''}>${s.icon} ${s.label}</option>`
+  const stratSelect=(idx)=>Object.entries(STRATEGIES).map(([k,s])=>
+    `<option value="${k}"${tdoStrategies[idx]===k?' selected':''}>${s.icon} ${s.label}</option>`
   ).join('');
 
   const teamsHtml=compo.teams.map((t,ti)=>{
@@ -2692,46 +2724,37 @@ function renderTdo(){
     const isActive=ti===tdoActiveTeam;
     const {off,def,team:teamScore}=calcTeamScores(t.members);
     const maxVal=300;
-
-	const slots=[];
-	for(let i=0;i<15;i++){
-		if(i<t.members.length){
-		const nm=t.members[i];
-		// CORRECTION : width:100px; au lieu de width:100;
-		slots.push(`<div style="position:relative;width:100px;height:100px;border-radius:5px;overflow:hidden;border:1px solid ${col};flex-shrink:0">
-        <img src="${IP}${nm}.png" style="width:100%;height:100%;object-fit:cover;object-position:top center">
-        <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);font-size:.48rem;font-weight:700;color:#fff;text-align:center;padding:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nm}</div>
-       <div onclick="tdoRemoveMember(${ti},'${nm}')" style="position:absolute;top:2px;right:2px;width:14px;height:14px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer">×</div>
-    </div>`);
-	}else{
-    slots.push(`<div style="width:100px;height:100px;border-radius:5px;border:1px dashed var(--b2);background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:var(--b2)">+</div>`);
-  }
-}
+    const gridHtml=renderStrategicGrid(t.members,GRID_TDO_W,GRID_TDO_H,col,`tdoRemoveMember(${ti},'__NM__')`);
 
     const scoreBar=(label,val,barCol)=>{
       const pct=Math.min(val/maxVal*100,100);
-      return`<div style="flex:1;display:flex;flex-direction:column;gap:3px">
-        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);display:flex;justify-content:space-between">
+      return`<div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);display:flex;justify-content:space-between">
           <span>${label}</span><span style="font-weight:900;color:var(--tx3)">${val}</span>
         </div>
-        <div style="height:5px;background:var(--b1);border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${pct}%;background:${barCol};border-radius:3px;transition:width .3s"></div>
+        <div style="height:4px;background:var(--b1);border-radius:2px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${barCol};border-radius:2px"></div>
         </div>
       </div>`;
     };
 
-    return`<div style="background:var(--s2);border:1px solid ${isActive?col:'var(--b1)'};border-radius:8px;margin-bottom:8px;overflow:hidden">
-      <div onclick="tdoSetTeam(${ti})" style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:${isActive?`rgba(${rgb(col)},.08)`:'none'};cursor:pointer;border-bottom:1px solid var(--b1)">
-        <span style="font-size:.9rem;font-weight:800;color:${col}">${t.name}</span>
-        <span style="font-size:.75rem;color:var(--tx2)">${t.members.length} / 15 monstres</span>
-        ${isActive?`<span style="font-size:.65rem;font-weight:700;background:rgba(${rgb(col)},.15);color:${col};padding:2px 8px;border-radius:3px;margin-left:auto">Sélectionnée</span>`:''}
+    return`<div onclick="tdoSetTeam(${ti})" style="flex:1;min-width:0;background:var(--s2);border:1px solid ${isActive?col:'var(--b1)'};border-radius:8px;overflow:hidden;cursor:pointer">
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 10px;background:${isActive?`rgba(${rgb(col)},.1)`:'none'};border-bottom:1px solid var(--b1)">
+        <span style="font-size:.82rem;font-weight:800;color:${col}">${t.name}</span>
+        <span style="font-size:.68rem;color:var(--tx2)">${t.members.length}/15</span>
+        ${isActive?`<span style="font-size:.62rem;font-weight:700;background:rgba(${rgb(col)},.15);color:${col};padding:2px 7px;border-radius:3px;margin-left:auto">Sélectionnée</span>`:''}
       </div>
-      <div style="display:flex;gap:10px;padding:8px 14px;border-bottom:1px solid var(--b1);background:var(--s3)">
-        ${scoreBar('Offensif',off,'var(--mel)')}
-        ${scoreBar('Défensif',def,'var(--tnk)')}
-        ${scoreBar('Team',teamScore,'var(--gold)')}
+      <div style="display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--b1)">
+        ${scoreBar('Off',off,'var(--mel)')}${scoreBar('Déf',def,'var(--tnk)')}${scoreBar('Team',teamScore,'var(--gold)')}
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;padding:10px 12px">${slots.join('')}</div>
+      <select onclick="event.stopPropagation()" onchange="tdoStrategies[${ti}]=this.value" style="width:calc(100% - 16px);margin:6px 8px;background:var(--s3);border:1px solid var(--b2);border-radius:3px;color:var(--tx);font-size:.7rem;padding:3px 6px;font-family:inherit">
+        ${stratSelect(ti)}
+      </select>
+      <div style="padding:8px 10px" onclick="event.stopPropagation()">${gridHtml}</div>
+      <div style="padding:0 8px 8px" onclick="event.stopPropagation()">
+        <button onclick="tdoAutoBuild(${ti})" style="width:100%;font-size:.66rem;padding:5px 0;margin-bottom:5px;border-radius:3px;border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700">⚡ Auto-Build</button>
+        <button onclick="tdoClearTeam(${ti})" style="width:100%;font-size:.66rem;padding:5px 0;border-radius:3px;border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);color:var(--mel);cursor:pointer;font-family:inherit;font-weight:700">Vider</button>
+      </div>
     </div>`;
   }).join('');
 
@@ -2742,39 +2765,11 @@ function renderTdo(){
     <div style="padding:10px 14px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
       <span style="font-size:.7rem;font-weight:700;color:var(--tx2);flex-shrink:0">Compo :</span>
       ${compoTabs}
+      <button onclick="tdoAutoBuildAllBalanced()" style="margin-left:auto;white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;border:1px solid rgba(72,136,216,.4);background:rgba(72,136,216,.1);color:#4888d8;cursor:pointer;font-family:inherit;font-weight:700">⚖️ Équilibrer 3 Équipes</button>
     </div>
-    <div style="padding:8px 14px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-      <span style="font-size:.7rem;font-weight:700;color:var(--tx2);flex-shrink:0">Équipe active :</span>
-      ${teamTabs}
-    </div>
-    <div style="padding:8px 14px;background:var(--s2);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <span style="font-size:.7rem;font-weight:700;color:var(--tx2);flex-shrink:0">Strat :</span>
-      <select onchange="tdoStrategies[${tdoActiveTeam}]=this.value"
-        style="background:var(--s3);border:1px solid var(--b2);border-radius:3px;color:var(--tx);font-size:.78rem;padding:4px 8px;font-family:inherit;cursor:pointer;outline:none">
-        ${stratSelect}
-      </select>
-      <button onclick="tdoAutoBuild()"
-        style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
-               border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);
-               color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700;">
-        ⚡ Auto-Build
-      </button>
-      <button onclick="tdoAutoBuildAllBalanced()"
-        style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
-               border:1px solid rgba(72,136,216,.4);background:rgba(72,136,216,.1);
-               color:#4888d8;cursor:pointer;font-family:inherit;font-weight:700;">
-        ⚖️ Équilibrer 3 Équipes.
-      </button>
-      <button onclick="tdoClearTeam(${tdoActiveTeam})"
-        style="white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;
-               border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);
-               color:var(--mel);cursor:pointer;font-family:inherit;font-weight:700;">
-        Vider l'équipe actuelle
-      </button>
-    </div>
-    <div style="padding:10px 14px;flex:1;overflow-y:auto">
+    <div style="padding:10px 14px">
       ${conflictLegend}
-      ${teamsHtml}
+      <div style="display:flex;gap:10px;align-items:stretch">${teamsHtml}</div>
     </div>`;
 }
 
@@ -2794,129 +2789,25 @@ function tdoClearTeam(ti){
   saveTdo();renderTdo();buildGrid();
 }
 
-function tdoAutoBuild(){
+function tdoAutoBuild(ti){
+  const teamIdx = ti!==undefined ? ti : tdoActiveTeam;
   const compo=tdoTeams[tdoActiveCompo];
-  const team=compo.teams[tdoActiveTeam];
-  team.members=[];
+  const team=compo.teams[teamIdx];
+  const strat=STRATEGIES[tdoStrategies[teamIdx]]||STRATEGIES.balanced;
+  const usedElsewhere=getTdoUsed(teamIdx);
 
-  const strat=STRATEGIES[tdoStrategies[tdoActiveTeam]]||STRATEGIES.balanced;
-  const W=strat.buffWeight;
-
-  const frontTarget=Math.round(15*strat.typeRatio.front);
-  const rangeTarget=Math.round(15*strat.typeRatio.range);
-  const supportTarget=15-frontTarget-rangeTarget;
-
-  function scoreAlone(nm){
-    const m=MONSTERS[nm];if(!m)return 0;
-    const ids=new Set([
-      ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
-      ...skillBuffsRaw(nm)
-    ]);
-    let s=0;
-    ids.forEach(id=>{
-      const b=BUFFS[id];if(!b)return;
-      const v=bVal(id);
-      const cat=OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
-      s+=v*(W[cat]??1)*(b.team?1.4:1);
-    });
-    s+=getAwkLevel(nm)*6;
-    return s;
+  const ATTEMPTS=25;
+  let best=null, bestScore=-Infinity;
+  for(let a=0;a<ATTEMPTS;a++){
+    const randomness = a<5 ? 1 : 3;
+    let candidate = randomizedGreedyBuild(15, strat, usedElsewhere, randomness);
+    const improved = localSearchImprove(candidate, strat, usedElsewhere, 3);
+    if(improved.score>bestScore){ bestScore=improved.score; best=improved.members; }
   }
 
-  function scoreWithTeam(nm,currentMembers){
-    const m=MONSTERS[nm];if(!m)return 0;
-    const teamBufSet={};
-    currentMembers.forEach(n=>{
-      [...(MONSTERS[n]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),...skillBuffsRaw(n)]
-        .forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
-    });
-    const ids=new Set([
-      ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
-      ...skillBuffsRaw(nm)
-    ]);
-    const typeCounts={melee:0,tank:0,range:0,support:0};
-    currentMembers.forEach(n=>{if(MONSTERS[n])typeCounts[MONSTERS[n].type]++;});
-    const frontNeed=frontTarget-((typeCounts.melee||0)+(typeCounts.tank||0));
-    const rangeNeed=rangeTarget-(typeCounts.range||0);
-    const supportNeed=supportTarget-(typeCounts.support||0);
-    let syn=0;
-    ids.forEach(id=>{
-      const b=BUFFS[id];if(!b)return;
-      const v=bVal(id);
-      const cat=OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
-      const w=W[cat]??1;
-      if(!teamBufSet[id])syn+=b.team?v*w*1.4:v*w;
-      else if(b.team)syn+=v*w*0.5;
-      else syn-=v*0.3;
-    });
-    let comp=0;
-    const t=m.type;
-    const isFront=t==='melee'||t==='tank';
-    const isRange=t==='range';
-    const isSupport=t==='support';
-    const compW=W.off+W.def+W.team;
-    if(isFront)comp+=frontNeed>0?(35+frontNeed*12)*(compW/3):(frontNeed<-1?-30:0);
-    if(isRange)comp+=rangeNeed>0?(35+rangeNeed*12)*(compW/3):(rangeNeed<-1?-30:0);
-    if(isSupport)comp+=supportNeed>0?(55+supportNeed*18)*(compW/3):(supportNeed<-1?-40:0);
-    if(isSupport&&strat.typeRatio.support===0)comp-=80;
-    return syn+comp+getAwkLevel(nm)*6;
-  }
-
-  const usedElsewhere=getTdoUsed(tdoActiveTeam);
-
-  for(let i=0;i<15;i++){
-    const available=Object.keys(MONSTERS).filter(nm=>
-      !team.members.includes(nm)&&!usedElsewhere.has(nm)
-    );
-    if(!available.length)break;
-
-    let candidates;
-    if(team.members.length===0){
-      candidates=available.map(nm=>({nm,score:scoreAlone(nm)})).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>x.nm);
-    }else{
-      candidates=available.map(nm=>({nm,score:scoreWithTeam(nm,team.members)})).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>x.nm);
-    }
-    if(!candidates.length)break;
-
-    const typeCounts={melee:0,tank:0,range:0,support:0};
-    team.members.forEach(nm=>{if(MONSTERS[nm])typeCounts[MONSTERS[nm].type]++;});
-    const frontCurrent=(typeCounts.melee||0)+(typeCounts.tank||0);
-    const rangeCurrent=typeCounts.range||0;
-    const supportCurrent=typeCounts.support||0;
-    const remaining=15-team.members.length;
-
-    let chosen=null;
-    for(const nm of candidates){
-      const t=MONSTERS[nm]?.type;
-      const isFront=t==='melee'||t==='tank';
-      const isRange=t==='range';
-      const isSupport=t==='support';
-      const frontLeft=frontTarget-frontCurrent;
-      const rangeLeft=rangeTarget-rangeCurrent;
-      const supportLeft=supportTarget-supportCurrent;
-      const slotsLeft=remaining-1;
-      let ok=true;
-      if(isFront&&frontCurrent>=frontTarget+2&&(rangeLeft>0||supportLeft>0)&&slotsLeft>=rangeLeft+supportLeft)ok=false;
-      if(isRange&&rangeCurrent>=rangeTarget+2&&(frontLeft>0||supportLeft>0)&&slotsLeft>=frontLeft+supportLeft)ok=false;
-      if(isSupport&&supportCurrent>=supportTarget+2&&(frontLeft>0||rangeLeft>0)&&slotsLeft>=frontLeft+rangeLeft)ok=false;
-      if(isSupport&&strat.typeRatio.support===0)ok=false;
-      if(ok){chosen=nm;break;}
-    }
-    if(!chosen)chosen=candidates[0];
-    if(!chosen)break;
-    team.members.push(chosen);
-  }
-
+  team.members = best || [];
   saveTdo();renderTdo();buildGrid();
 }
-const SW_FAQ_CATS = [
-  {id:'all',   label:'Tout voir', icon:'📋'},
-  {id:'score', label:'Scores',    icon:'🏆'},
-  {id:'tb',    label:'Team Builder', icon:'⚔'},
-  {id:'reco',  label:'Suggestions',  icon:'💡'},
-  {id:'strat', label:'Stratégies',   icon:'⚡'},
-  {id:'me',    label:'Mes Éveils',   icon:'⭐'},
-];
 const SW_FAQ = [
   {cat:'score', q:"Comment est calculé le score d'un monstre ?",
    a:`<p>Chaque monstre est noté sur <strong>500 points</strong>, composés de deux parties :</p>
@@ -3035,6 +2926,55 @@ function swFaqHtml(f, uid) {
   </div>`;
 }
 
+function findSimilarMonsters(nm,limit=6){
+  const m=MONSTERS[nm];if(!m)return[];
+  const myBuffs=new Set(allMonsterBuffIds(nm));
+  if(!myBuffs.size)return[];
+
+  const scored=Object.keys(MONSTERS).filter(n=>n!==nm).map(n=>{
+    const otherBuffs=new Set(allMonsterBuffIds(n));
+    let exactShared=0;
+    myBuffs.forEach(id=>{ if(otherBuffs.has(id)) exactShared++; });
+    const sameType=MONSTERS[n].type===m.type;
+    const score=exactShared*10+(sameType?1:0);
+    return{nm:n,score,exactShared,sameType};
+  })
+    .filter(x=>x.exactShared>=2)
+    .sort((a,b)=>b.score-a.score || b.exactShared-a.exactShared)
+    .slice(0,limit);
+  return scored;
+}
+
+function showSimilarMonsters(nm){
+  const results=findSimilarMonsters(nm);
+  const wrap=document.getElementById('simWrap_'+nm.replace(/[^a-z0-9]/gi,''));
+  if(!wrap)return;
+  if(!results.length){
+    wrap.innerHTML='<div style="color:var(--tx2);font-size:.8rem;font-style:italic;padding:8px 0">Aucun monstre vraiment similaire trouvé.</div>';
+    wrap.style.display='block';
+    return;
+  }
+  wrap.innerHTML=`<div style="font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--tx2);margin:10px 0 7px">Monstres similaires</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      ${results.map(r=>{
+        const mm=MONSTERS[r.nm];
+        return`<div style="display:flex;align-items:center;gap:6px;background:var(--s3);border:1px solid var(--b1);border-radius:5px;padding:4px 8px 4px 4px;cursor:pointer" onclick="addSimilarToCmp('${r.nm}')" title="Voir ${r.nm}">
+          <img src="${IP}${r.nm}.png" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:3px;object-fit:cover;object-position:top center">
+          <span style="font-size:.78rem;color:var(--tx3);font-weight:600">${r.nm}</span>
+          <span style="font-size:.65rem;color:${TCOL[mm.type]}">${r.exactShared} buff${r.exactShared>1?'s':''} commun${r.exactShared>1?'s':''}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  wrap.style.display='block';
+}
+
+function addSimilarToCmp(nm){
+  const fi=selCmp.indexOf(null);
+  if(fi!==-1){selCmp[fi]=nm;}
+  else{selCmp[2]=nm;}
+  renderCmp();buildGrid();
+}
+
 function renderFaqStrats() {
   const el = document.getElementById('faqStratGrid');
   if (!el) return;
@@ -3049,12 +2989,510 @@ function renderFaqStrats() {
       </div>
     </div>`).join('');
 }
+const GRID_TDO_W=5, GRID_TDO_H=5;
+const GRID_GDG_W=5, GRID_GDG_H=4;
+
+function computeStrategicSlot(nm,idx,total,w,h){
+  const m=MONSTERS[nm];
+  const buffs=allMonsterBuffIds(nm);
+  const has=id=>buffs.includes(id);
+  const hasRange=has('range_3')||has('range_5')||has('range_1')||has('range_2');
+  let col;
+  if(m.type==='melee'||m.type==='tank') col=hasRange?w-2:w-1;
+  else if(m.type==='support') col=0;
+  else col=hasRange?1:2;
+  return col;
+}
+
+function layoutStrategicGrid(members,w,h){
+  const cells=Array.from({length:h},()=>Array(w).fill(null));
+  const colTargets=members.map((nm,i)=>({nm,col:computeStrategicSlot(nm,i,members.length,w,h)}));
+  const byCol={};
+  colTargets.forEach(({nm,col})=>{ (byCol[col]=byCol[col]||[]).push(nm); });
+  Object.keys(byCol).forEach(col=>{
+    const list=byCol[col];
+    let row=0;
+    for(const nm of list){
+      while(row<h && cells[row][col]) row++;
+      if(row>=h){
+        let placed=false;
+        for(let c=0;c<w && !placed;c++){
+          for(let r=0;r<h;r++){
+            if(!cells[r][c]){ cells[r][c]=nm; placed=true; break; }
+          }
+        }
+      } else {
+        cells[row][col]=nm;
+      }
+      row++;
+    }
+  });
+  return cells;
+}
+
+function renderStrategicGrid(members,w,h,teamColor,onRemove){
+  const cells=layoutStrategicGrid(members,w,h);
+  let html=`<div style="display:grid;grid-template-columns:repeat(${w},1fr);gap:4px;width:100%;aspect-ratio:${w}/${h}">`;
+  for(let r=0;r<h;r++){
+    for(let c=0;c<w;c++){
+      const nm=cells[r][c];
+      if(nm){
+        const m=MONSTERS[nm];
+        const rmAttr=onRemove?` onclick="${onRemove.replace('__NM__',nm)}"`:'';
+        html+=`<div style="position:relative;width:100%;height:100%;border-radius:5px;overflow:hidden;border:1.5px solid ${teamColor||TCOL[m.type]}">
+          <img src="${IP}${nm}.png" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover;object-position:top center">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.85);font-size:.55rem;font-weight:700;color:#fff;text-align:center;padding:9px 1px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nm}</div>
+          ${onRemove?`<div${rmAttr} style="position:absolute;top:0;right:0;width:16px;height:16px;border-radius:50%;background:rgba(180,30,30,.9);color:#fff;font-size:.6rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2">×</div>`:''}
+        </div>`;
+      } else {
+        html+=`<div style="width:100%;height:100%;border-radius:5px;border:1px dashed var(--b1);background:var(--s2)"></div>`;
+      }
+    }
+  }
+  html+='</div>';
+  return html;
+}
+function getGdgUsed(excludeTeam){
+  const compo = gdgTeams[gdgActiveCompo];
+  const used = new Set();
+  compo.teams.forEach((t,i)=>{ if(i!==excludeTeam) t.members.forEach(nm=>used.add(nm)); });
+  return used;
+}
+
+function gdgAddMonster(nm){
+  const compo = gdgTeams[gdgActiveCompo];
+  const team = compo.teams[gdgActiveTeam];
+  const used = getGdgUsed(gdgActiveTeam);
+  if(used.has(nm)) return;
+  if(team.members.includes(nm)){
+    team.members = team.members.filter(n=>n!==nm);
+  } else if(team.members.length < GDG_TEAM_SIZE){
+    team.members.push(nm);
+  }
+  saveGdg();renderGdg();buildGrid();
+}
+
+function gdgRemoveMember(teamIdx,nm){
+  gdgTeams[gdgActiveCompo].teams[teamIdx].members = gdgTeams[gdgActiveCompo].teams[teamIdx].members.filter(n=>n!==nm);
+  saveGdg();renderGdg();buildGrid();
+}
+
+function gdgSetCompo(i){ gdgActiveCompo=i; gdgActiveTeam=0; renderGdg(); buildGrid(); }
+function gdgSetTeam(i){ gdgActiveTeam=i; renderGdg(); buildGrid(); }
+
+function gdgClearTeam(ti){
+  gdgTeams[gdgActiveCompo].teams[ti].members=[];
+  saveGdg();renderGdg();buildGrid();
+}
+function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn){
+  const baseUsed = getUsedFn ? getUsedFn() : new Set();
+
+  function buildOneAttempt(randomness){
+    const result = teamsArr.map(()=>[]);
+    const strats = strategies.map(k=>STRATEGIES[k]||STRATEGIES.balanced);
+
+    // Pré-assigne un tank différent par équipe
+    const allTanks = Object.keys(MONSTERS).filter(nm=>MONSTERS[nm].type==='tank'&&!baseUsed.has(nm)&&!excludedFromReco.includes(nm));
+    const tankScored = allTanks.map(nm=>({nm,score:bVal('')+getAwkLevel(nm)*6+Math.random()*5})).sort((a,b)=>b.score-a.score);
+    for(let i=0;i<result.length && i<tankScored.length;i++) result[i].push(tankScored[i].nm);
+
+    for(let round=0; round<teamSize; round++){
+      const order=[...result.keys()];
+      if(round%2!==0) order.reverse();
+      for(const ti of order){
+        if(result[ti].length>=teamSize) continue;
+        const allUsed = new Set(baseUsed);
+        result.forEach(t=>t.forEach(m=>allUsed.add(m)));
+        const available = Object.keys(MONSTERS).filter(nm=>!allUsed.has(nm)&&!excludedFromReco.includes(nm));
+        if(!available.length) continue;
+
+        const strat=strats[ti], W=strat.buffWeight;
+        const teamBufSet={};
+        result[ti].forEach(n=>{
+          [...(MONSTERS[n]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),...skillBuffsRaw(n)]
+            .forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
+        });
+        const typeCounts={melee:0,tank:0,range:0,support:0};
+        result[ti].forEach(n=>{if(MONSTERS[n])typeCounts[MONSTERS[n].type]++;});
+        const frontTarget=Math.round(teamSize*strat.typeRatio.front);
+        const rangeTarget=Math.round(teamSize*strat.typeRatio.range);
+        const supportTarget=teamSize-frontTarget-rangeTarget;
+        const frontNeed=frontTarget-((typeCounts.melee||0)+typeCounts.tank);
+        const rangeNeed=rangeTarget-(typeCounts.range||0);
+        const supportNeed=supportTarget-(typeCounts.support||0);
+
+        const scored = available.map(nm=>{
+          const m=MONSTERS[nm];
+          const ids=new Set([...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),...skillBuffsRaw(nm)]);
+          let syn=0;
+          ids.forEach(id=>{
+            const b=BUFFS[id];if(!b)return;
+            const v=bVal(id);
+            const cat=OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+            const w=W[cat]??1;
+            if(!teamBufSet[id])syn+=b.team?v*w*1.4:v*w;
+            else if(b.team)syn+=v*w*0.5;
+            else syn-=v*0.3;
+          });
+          let comp=0;
+          const t=m.type;
+          const isFront=t==='melee'||t==='tank', isRange=t==='range', isSupport=t==='support';
+          const compW=W.off+W.def+W.team;
+          if(isFront)comp+=frontNeed>0?(35+frontNeed*12)*(compW/3):(frontNeed<-1?-30:0);
+          if(isRange)comp+=rangeNeed>0?(35+rangeNeed*12)*(compW/3):(rangeNeed<-1?-30:0);
+          if(isSupport)comp+=supportNeed>0?(55+supportNeed*18)*(compW/3):(supportNeed<-1?-40:0);
+          if(isSupport&&strat.typeRatio.support===0)comp-=80;
+          return {nm, score: syn+comp+getAwkLevel(nm)*6};
+        }).sort((a,b)=>b.score-a.score);
+
+        const k=Math.max(1,Math.round(randomness));
+        const pool=scored.slice(0,k);
+        const pick=pool[Math.floor(Math.random()*pool.length)];
+        if(pick) result[ti].push(pick.nm);
+      }
+    }
+    return result;
+  }
+
+  function evalAll(teamsState){
+    return teamsState.reduce((sum,members,i)=>sum+evalTeamScore(members, STRATEGIES[strategies[i]]||STRATEGIES.balanced),0);
+  }
+
+  function localSearchAll(teamsState, maxPasses){
+    let best = teamsState.map(t=>[...t]);
+    let bestTotal = evalAll(best);
+    let improved=true, pass=0;
+    while(improved && pass<maxPasses){
+      improved=false; pass++;
+      for(let ti=0; ti<best.length; ti++){
+        const strat=STRATEGIES[strategies[ti]]||STRATEGIES.balanced;
+        const allUsed=new Set(baseUsed);
+        best.forEach((t,j)=>{ if(j!==ti) t.forEach(m=>allUsed.add(m)); });
+        const available=Object.keys(MONSTERS).filter(nm=>!allUsed.has(nm)&&!best[ti].includes(nm)&&!excludedFromReco.includes(nm));
+        for(let i=0;i<best[ti].length;i++){
+          let localBestSwap=null, localBestTotal=bestTotal;
+          for(const cand of available){
+            const trial=best.map(t=>[...t]);
+            trial[ti][i]=cand;
+            const tot=evalAll(trial);
+            if(tot>localBestTotal){ localBestTotal=tot; localBestSwap=cand; }
+          }
+          if(localBestSwap){ best[ti][i]=localBestSwap; bestTotal=localBestTotal; improved=true; }
+        }
+      }
+    }
+    return {teams:best, total:bestTotal};
+  }
+
+  const ATTEMPTS=15;
+  let bestOverall=null, bestOverallScore=-Infinity;
+  for(let a=0;a<ATTEMPTS;a++){
+    const randomness = a<3 ? 1 : 3;
+    const attempt = buildOneAttempt(randomness);
+    const refined = localSearchAll(attempt, 2);
+    if(refined.total>bestOverallScore){ bestOverallScore=refined.total; bestOverall=refined.teams; }
+  }
+
+  bestOverall.forEach((members,i)=>{ teamsArr[i].members = members; });
+}
+
+function tdoAutoBuildAllBalanced(){
+  const compo=tdoTeams[tdoActiveCompo];
+  autoBuildBalancedTeams(compo.teams, tdoStrategies, 15, null);
+  saveTdo();renderTdo();buildGrid();
+}
+
+function gdgAutoBuildAllBalanced(){
+  const compo=gdgTeams[gdgActiveCompo];
+  autoBuildBalancedTeams(compo.teams, gdgStrategies, GDG_TEAM_SIZE, null);
+  saveGdg();renderGdg();buildGrid();
+}
+function toggleGdgMode(){
+  gdgMode = !gdgMode;
+  if(tdoMode){ tdoMode=false; const tb=document.getElementById('tdoBtn'); if(tb){tb.style.background='rgba(72,136,216,.1)';tb.style.color='var(--tnk)';} const tdoEl=document.getElementById('tdoContainer'); if(tdoEl)tdoEl.remove(); }
+  const btn = document.getElementById('gdgBtn');
+  if(btn){
+    btn.style.background = gdgMode ? 'rgba(220,140,40,.3)' : 'rgba(220,140,40,.1)';
+    btn.style.color = gdgMode ? '#ffaa44' : '#dc8c28';
+  }
+  if(gdgMode){
+    document.getElementById('tbSlots').style.display='none';
+    document.getElementById('tbScores').style.display='none';
+    document.getElementById('tbSyn').style.display='none';
+    document.getElementById('tbReco').style.display='none';
+    document.getElementById('szRow').style.display='none';
+    document.getElementById('tbClrBtn').style.display='none';
+    document.getElementById('tbCtr').style.display='none';
+    let gdgEl = document.getElementById('gdgContainer');
+    if(!gdgEl){ gdgEl=document.createElement('div'); gdgEl.id='gdgContainer'; gdgEl.style.flex='1'; gdgEl.style.overflow='auto'; document.getElementById('tbContent').prepend(gdgEl); }
+    gdgEl.innerHTML='';
+    renderGdg();
+  } else {
+    document.getElementById('tbSlots').style.display='';
+    document.getElementById('tbScores').style.display='';
+    document.getElementById('tbSyn').style.display='';
+    document.getElementById('szRow').style.display='';
+    document.getElementById('tbClrBtn').style.display='';
+    document.getElementById('tbCtr').style.display='';
+    const gdgEl=document.getElementById('gdgContainer');
+    if(gdgEl)gdgEl.remove();
+    renderTeam();
+  }
+  buildGrid();
+}
+function renderGdg(){
+  const el=document.getElementById('gdgContainer');
+  if(!el)return;
+  const compo=gdgTeams[gdgActiveCompo];
+  const TEAM_COLS=['#4888d8','#c89020','#c83030'];
+
+  const compoTabs=gdgTeams.map((c,i)=>`
+    <button onclick="gdgSetCompo(${i})" style="padding:5px 14px;border-radius:3px;border:1px solid ${i===gdgActiveCompo?'rgba(220,140,40,.5)':'var(--b1)'};background:${i===gdgActiveCompo?'rgba(220,140,40,.1)':'none'};color:${i===gdgActiveCompo?'#dc8c28':'var(--tx2)'};cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;flex-shrink:0">
+      ${c.name}
+    </button>`).join('');
+
+  const stratSelect=(idx)=>Object.entries(STRATEGIES).map(([k,s])=>
+    `<option value="${k}"${gdgStrategies[idx]===k?' selected':''}>${s.icon} ${s.label}</option>`
+  ).join('');
+
+  const teamsHtml=compo.teams.map((t,ti)=>{
+    const col=TEAM_COLS[ti];
+    const isActive=ti===gdgActiveTeam;
+    const {off,def,team:teamScore}=calcTeamScores(t.members);
+    const maxVal=200;
+    const gridHtml=renderStrategicGrid(t.members,GRID_GDG_W,GRID_GDG_H,col,`gdgRemoveMember(${ti},'__NM__')`);
+    const scoreBar=(label,val,barCol)=>{
+      const pct=Math.min(val/maxVal*100,100);
+      return`<div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:var(--tx2);display:flex;justify-content:space-between">
+          <span>${label}</span><span style="font-weight:900;color:var(--tx3)">${val}</span>
+        </div>
+        <div style="height:4px;background:var(--b1);border-radius:2px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${barCol};border-radius:2px"></div>
+        </div>
+      </div>`;
+    };
+    return`<div onclick="gdgSetTeam(${ti})" style="flex:1;min-width:0;background:var(--s2);border:1px solid ${isActive?col:'var(--b1)'};border-radius:8px;overflow:hidden;cursor:pointer">
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 10px;background:${isActive?`rgba(${rgb(col)},.1)`:'none'};border-bottom:1px solid var(--b1)">
+        <span style="font-size:.82rem;font-weight:800;color:${col}">${t.name}</span>
+        <span style="font-size:.68rem;color:var(--tx2)">${t.members.length}/${GDG_TEAM_SIZE}</span>
+        ${isActive?`<span style="font-size:.62rem;font-weight:700;background:rgba(${rgb(col)},.15);color:${col};padding:2px 7px;border-radius:3px;margin-left:auto">Sélectionnée</span>`:''}
+      </div>
+      <div style="display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--b1)">
+        ${scoreBar('Off',off,'var(--mel)')}${scoreBar('Déf',def,'var(--tnk)')}${scoreBar('Team',teamScore,'var(--gold)')}
+      </div>
+      <select onclick="event.stopPropagation()" onchange="gdgStrategies[${ti}]=this.value" style="width:calc(100% - 16px);margin:6px 8px;background:var(--s3);border:1px solid var(--b2);border-radius:3px;color:var(--tx);font-size:.7rem;padding:3px 6px;font-family:inherit">
+        ${stratSelect(ti)}
+      </select>
+      <div style="padding:8px 10px" onclick="event.stopPropagation()">${gridHtml}</div>
+      <div style="padding:0 8px 8px" onclick="event.stopPropagation()">
+        <button onclick="gdgAutoBuild(${ti})" style="width:100%;font-size:.66rem;padding:5px 0;margin-bottom:5px;border-radius:3px;border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700">⚡ Auto-Build</button>
+        <button onclick="gdgClearTeam(${ti})" style="width:100%;font-size:.66rem;padding:5px 0;border-radius:3px;border:1px solid rgba(200,48,48,.35);background:rgba(200,48,48,.08);color:var(--mel);cursor:pointer;font-family:inherit;font-weight:700">Vider</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const usedInOther=getGdgUsed(gdgActiveTeam);
+  const conflictLegend=usedInOther.size?`<div style="font-size:.72rem;color:var(--tx2);padding:4px 0 6px"><span style="color:#c83030;font-weight:700">●</span> ${usedInOther.size} monstre(s) indisponible(s) (déjà assigné dans une autre équipe)</div>`:'';
+
+  el.innerHTML=`
+    <div style="padding:10px 14px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span style="font-size:.7rem;font-weight:700;color:var(--tx2);flex-shrink:0">Compo :</span>
+      ${compoTabs}
+      <button onclick="gdgAutoBuildAllBalanced()" style="margin-left:auto;white-space:nowrap;font-size:.75rem;padding:5px 14px;border-radius:3px;border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);color:var(--green2);cursor:pointer;font-family:inherit;font-weight:700">⚖️ Équilibrer 3 Équipes</button>
+    </div>
+    <div style="padding:10px 14px">
+      ${conflictLegend}
+      <div style="display:flex;gap:10px;align-items:stretch">${teamsHtml}</div>
+    </div>`;
+}
+function gdgAutoBuild(ti){
+  const teamIdx = ti!==undefined ? ti : gdgActiveTeam;
+  const compo=gdgTeams[gdgActiveCompo];
+  const team=compo.teams[teamIdx];
+  const strat=STRATEGIES[gdgStrategies[teamIdx]]||STRATEGIES.balanced;
+  const usedElsewhere=getGdgUsed(teamIdx);
+
+  const ATTEMPTS=25;
+  let best=null, bestScore=-Infinity;
+  for(let a=0;a<ATTEMPTS;a++){
+    const randomness = a<5 ? 1 : 3;
+    let candidate = randomizedGreedyBuild(GDG_TEAM_SIZE, strat, usedElsewhere, randomness);
+    const improved = localSearchImprove(candidate, strat, usedElsewhere, 3);
+    if(improved.score>bestScore){ bestScore=improved.score; best=improved.members; }
+  }
+
+  team.members = best || [];
+  saveGdg();renderGdg();buildGrid();
+}
 renderSavesBar();
 renderStrategyPicker();
 buildSwFaqCats();
 renderSwFaq();
 renderFaqStrats();
 buildGrid();renderCmp();renderTeam();
+
+function forceGridReflow(){
+  const g=document.getElementById('grid');
+  if(!g)return;
+  // Force un reflow réel du conteneur (pas juste un repaint)
+  g.style.display='none';
+  void g.offsetHeight;
+  g.style.display='grid';
+  buildGrid();
+}
+function evalTeamScore(members, strat){
+  const W = strat.buffWeight;
+  const teamBufSeen = {};
+  let total = 0;
+
+  members.forEach(nm=>{
+    const m = MONSTERS[nm]; if(!m) return;
+    const ids = new Set([
+      ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
+      ...skillBuffsRaw(nm)
+    ]);
+    ids.forEach(id=>{
+      const b = BUFFS[id]; if(!b) return;
+      const v = bVal(id);
+      const cat = OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+      const w = W[cat] ?? 1;
+      if(b.team){
+        if(!teamBufSeen[id]){ total += v*w*1.4; teamBufSeen[id]=1; }
+        else total += v*w*0.5;
+      } else {
+        total += v*w;
+      }
+    });
+    total += getAwkLevel(nm)*6;
+  });
+
+  const typeCounts = {melee:0,tank:0,range:0,support:0};
+  members.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]++; });
+  const teamSize = members.length;
+  const frontTarget   = Math.round(teamSize*strat.typeRatio.front);
+  const rangeTarget   = Math.round(teamSize*strat.typeRatio.range);
+  const supportTarget = teamSize - frontTarget - rangeTarget;
+  const frontHave   = (typeCounts.melee||0)+(typeCounts.tank||0);
+  const rangeHave   = typeCounts.range||0;
+  const supportHave = typeCounts.support||0;
+  const compW = W.off+W.def+W.team;
+
+  total -= Math.abs(frontHave-frontTarget)*14*(compW/3);
+  total -= Math.abs(rangeHave-rangeTarget)*14*(compW/3);
+  total -= Math.abs(supportHave-supportTarget)*18*(compW/3);
+  if(strat.typeRatio.support===0) total -= supportHave*80;
+  if(typeCounts.tank===0 && (strat.typeRatio.front>0)) total -= 60;
+
+  return total;
+}
+function randomizedGreedyBuild(teamSize, strat, usedElsewhere, randomness){
+  const W = strat.buffWeight;
+  const frontTarget   = Math.round(teamSize*strat.typeRatio.front);
+  const rangeTarget   = Math.round(teamSize*strat.typeRatio.range);
+  const supportTarget = teamSize - frontTarget - rangeTarget;
+  const members = [];
+
+  function scoreAlone(nm){
+    const m=MONSTERS[nm];if(!m)return 0;
+    const ids=new Set([...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),...skillBuffsRaw(nm)]);
+    let s=0;
+    ids.forEach(id=>{
+      const b=BUFFS[id];if(!b)return;
+      const v=bVal(id);
+      const cat=OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+      s+=v*(W[cat]??1)*(b.team?1.4:1);
+    });
+    s+=getAwkLevel(nm)*6;
+    return s;
+  }
+
+  function scoreWithTeam(nm, currentMembers){
+    const m=MONSTERS[nm];if(!m)return 0;
+    const teamBufSet={};
+    currentMembers.forEach(n=>{
+      [...(MONSTERS[n]?.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),...skillBuffsRaw(n)]
+        .forEach(id=>{teamBufSet[id]=(teamBufSet[id]||0)+1;});
+    });
+    const ids=new Set([...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),...skillBuffsRaw(nm)]);
+    const typeCounts={melee:0,tank:0,range:0,support:0};
+    currentMembers.forEach(n=>{if(MONSTERS[n])typeCounts[MONSTERS[n].type]++;});
+    const frontNeed=frontTarget-((typeCounts.melee||0)+(typeCounts.tank||0));
+    const rangeNeed=rangeTarget-(typeCounts.range||0);
+    const supportNeed=supportTarget-(typeCounts.support||0);
+    let syn=0;
+    ids.forEach(id=>{
+      const b=BUFFS[id];if(!b)return;
+      const v=bVal(id);
+      const cat=OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
+      const w=W[cat]??1;
+      if(!teamBufSet[id])syn+=b.team?v*w*1.4:v*w;
+      else if(b.team)syn+=v*w*0.5;
+      else syn-=v*0.3;
+    });
+    let comp=0;
+    const t=m.type;
+    const isFront=t==='melee'||t==='tank';
+    const isRange=t==='range';
+    const isSupport=t==='support';
+    const compW=W.off+W.def+W.team;
+    if(isFront)comp+=frontNeed>0?(35+frontNeed*12)*(compW/3):(frontNeed<-1?-30:0);
+    if(isRange)comp+=rangeNeed>0?(35+rangeNeed*12)*(compW/3):(rangeNeed<-1?-30:0);
+    if(isSupport)comp+=supportNeed>0?(55+supportNeed*18)*(compW/3):(supportNeed<-1?-40:0);
+    if(isSupport&&strat.typeRatio.support===0)comp-=80;
+    if(t==='tank'&&!typeCounts.tank)comp+=200;
+    return syn+comp+getAwkLevel(nm)*6;
+  }
+
+  function pickRandomTop(scoredList, k){
+    const pool = scoredList.slice(0, k);
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+
+  for(let i=0;i<teamSize;i++){
+    const available = Object.keys(MONSTERS).filter(nm=>!members.includes(nm)&&!usedElsewhere.has(nm)&&!excludedFromReco.includes(nm));
+    if(!available.length) break;
+
+    const scored = members.length===0
+      ? available.map(nm=>({nm,score:scoreAlone(nm)})).sort((a,b)=>b.score-a.score)
+      : available.map(nm=>({nm,score:scoreWithTeam(nm,members)})).sort((a,b)=>b.score-a.score);
+    if(!scored.length) break;
+
+    const k = Math.max(1, Math.round(randomness));
+    const pick = pickRandomTop(scored, k);
+    if(pick) members.push(pick.nm);
+  }
+  return members;
+}
+function localSearchImprove(members, strat, usedElsewhere, maxPasses){
+  let best = [...members];
+  let bestScore = evalTeamScore(best, strat);
+  let improved = true;
+  let pass = 0;
+
+  while(improved && pass<maxPasses){
+    improved = false; pass++;
+    const available = Object.keys(MONSTERS).filter(nm=>!best.includes(nm)&&!usedElsewhere.has(nm)&&!excludedFromReco.includes(nm));
+
+    for(let i=0;i<best.length;i++){
+      let localBestSwap=null, localBestScore=bestScore;
+      for(const cand of available){
+        const trial=[...best]; trial[i]=cand;
+        const sc=evalTeamScore(trial, strat);
+        if(sc>localBestScore){ localBestScore=sc; localBestSwap=cand; }
+      }
+      if(localBestSwap){
+        best[i]=localBestSwap;
+        bestScore=localBestScore;
+        improved=true;
+      }
+    }
+  }
+  return {members:best, score:bestScore};
+}
+requestAnimationFrame(()=>{ requestAnimationFrame(forceGridReflow); });
+window.addEventListener('load', forceGridReflow);
+setTimeout(forceGridReflow, 300);
 </script>
 </body>
 </html>
