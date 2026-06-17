@@ -59,7 +59,7 @@ const STRATEGIES = {
     typeRatio:{ front:.45, range:.40, support:.15 },
   },
 };
-
+const VISIBLE_STRATEGIES = ['balanced', 'offensive', 'defensive'];
 let teamStrategy = 'balanced';
 
 const BUFF_CATS={
@@ -692,6 +692,10 @@ const BUFFS={
 "floraison"            :{label:"Floraison (Crits peuvent déclencher Coups Multiples)",color:"#d06030",power:15},
 "full_bloom"           :{label:"Pleine Floraison (Crits déclenchent Coups Multiples)",color:"#e05555",power:36,cond:true},
 "full_bloom_team"      :{label:"Pleine Floraison ALLIÉS",color:"#e05555",power:64,cond:true,team:true},
+"cd_reset_exclu_2S":{label:"10% Réduction compétence exclusive ( Cooldown : 2 sec )",color:"#66ddaa",power:30,cond:true},
+"atk_stack_debuff_count":{label:"A chaque debuff, gagne 5% ATK par stack ( Max. 30% )",color:"#ff44aa",power:30,cond:true},
+"accuracy_nerf_5"     :{label:"Précision ennemi -20%",color:"#88cccc",power:15,cond:true},
+"curse_chain_stack"   :{label:"Dégâts subis +2%/Debuff (max 30%)",color:"#6622aa",power:24,cond:true},
 };
 
 const BASIC_SKILLS={
@@ -749,6 +753,7 @@ const BASIC_SKILLS={
   "Lapis":{name:"",desc:"Inflige 2 fois 100% de la puissance d'attaque en dégâts dans un cône étroit de 3m devant soi.",cd:0,buffs:[],atk_pct:100,hits:2,aoe:true},
   "Lushen":{name:"",desc:"Inflige 350% de la puissance d'attaque en dégâts à la cible.",cd:0,buffs:[],atk_pct:350},
   "Raki":{name:"",desc:"Inflige 380% de la puissance d'attaque en dégâts dans un cône étroit de 3m devant soi.",cd:0,buffs:[],atk_pct:380,aoe:true},
+  "Tilasha":{name:"",desc:"Inflige 460% de la puissance d'attaque en dégâts à la cible.",cd:0,buffs:[],atk_pct:460},
 };
 
 const CRIT_SKILLS={
@@ -806,6 +811,8 @@ const CRIT_SKILLS={
   "Lapis":{name:"",desc:"Inflige 80% de la puissance d'attaque en dégâts critiques dans un rayon de 3m autour de soi.\nEn cas d'attaque réussie, confère aux alliés de type Mêlée l'effet de renforcement Augmentation du taux critique de 20% pendant 2 sec. (Effet cumulable)",cd:2,buffs:["crit_rate_team_20_melee"],atk_pct:80,aoe:true},
   "Lushen":{name:"",desc:"Inflige 160% de la puissance d'attaque en dégâts critiques dans un rayon de 3m autour de soi.\nEn cas d'attaque réussie, confère aux alliés de type Mêlée l'effet de renforcement Augmentation du taux de Coups affaiblis de 20% pendant 2 sec. (Effet cumulable)",cd:2,buffs:["weak_hit_rate_20_melee"],atk_pct:160,aoe:true},
   "Raki":{name:"",desc:"Inflige 2 fois 290% de la puissance d'attaque en dégâts critiques dans un rayon de 4m autour de soi.\nEn cas d'attaque réussie, confère aux alliés de type Mêlée l'effet de renforcement Augmentation des dégâts infligés de 20% pendant 2 sec. (Effet cumulable)\nInflige des dégâts supplémentaires proportionnels au nombre d'effets d'altération d'état sur la cible. (Max 5)",cd:2,buffs:["dmg_20_melee","dmg_cc_state_scaling"],atk_pct:290,hits:2,aoe:true},
+
+  "Tilasha":{name:"",desc:"Inflige 880 % de la puissance d'attaque en dégâts critiques dans un rayon de 2m autour de la cible.\nEn cas d'attaque réussie, attribue l'effet de renforcement\nAugmentation des dégâts de coup puissants de 20% aux alliés de type à distance pendant 2 sec. (Effet cumulable)\nEn cas d'attaque réussie, attribue l'effet d'affaiblissement\nDiminution de la précision niv.5 pendant 2 sec.",cd:2,buffs:["crush_dmg_20_range","accuracy_nerf_5"],atk_pct:880,aoe:true},
 };
 
 const EXCLUSIVE_SKILLS={
@@ -863,6 +870,7 @@ const EXCLUSIVE_SKILLS={
   "Lapis":{name:"Récupération de magie",desc:"Inflige 3 fois 130% de la puissance d'attaque en dégâts dans un rayon de 3m autour de soi.\nEn cas d'attaque réussie, confère à soi-même l'effet de renforcement Augmentation de la vitesse d'attaque de 20% pendant 10 sec.",cd:10,buffs:["spd_20"],atk_pct:130,hits:3,aoe:true},
   "Lushen":{name:"Magie d'amputation",desc:"Inflige 350% de la puissance d'attaque en dégâts dans un rayon de 4m autour de soi.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation de la vitesse d'attaque de 20% pendant 10 sec. (Effet cumulable)",cd:10,buffs:["spd_team_20"],atk_pct:350,aoe:true},
   "Raki":{name:"Capture",desc:"Inflige 2 fois 390% de la puissance d'attaque en dégâts dans un rayon de 6m autour de soi.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation des dégâts critiques de 20% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, attribue à la cible l'effet d'altération d'état Entrave pendant 5 sec.",cd:10,buffs:["crit_dmg_team_20","entrave"],atk_pct:390,hits:2,aoe:true},
+  "Tilasha":{name:"",desc:"Inflige 1 420 % de la puissance d'attaque en dégâts dans un rayon de 3m autour de la cible.\nEn cas d'attaque réussie, attribue l'effet d'affaiblissement Chaîne de malédictions pendant 10 sec. (Effet cumulable)\nInflige des dégâts supplémentaires proportionnels au nombre d'effets d'affaiblissement sur la cible. (Jusqu'à 15 max)",cd:10,buffs:["curse_chain_stack","dmg_debuff_scaling"],atk_pct:1420,aoe:true},
 };
 //
 const AWK3={level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true};
@@ -922,6 +930,7 @@ const MONSTERS = {
   "Iris":{type:"melee",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Début de combat :\n- ATQ +80%\n- ATQ -5%/ennemi (max -60%)",buffs:["atk_80","atk_down_ennemy_count"],pvp:true,pve:true},{level:7,desc:"- Dégâts +20%\nAttaque réussie :\n- Dégâts +30% (cible immunisée, Allié Aléatoire) / 10s",buffs:["target_weakness_immunity","dmg_20"],pvp:true,pve:true}]},
   "Josephine":{type:"tank",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Début de combat :\n- Dégâts reçus ≤ 10% HP max (7s)\n- Type Mêlée partagé\n- Accél. Compétences +15%",buffs:["limit_shield","class_share_melee","skill_accel_15"],pvp:true,pve:true},{level:7,desc:"Attaque réussie :\n- Dégâts +15% / bouclier ennemi (max +45%)\n- Dégâts +20%",buffs:["target_weakness_shield","dmg_20"],pvp:true,pve:true}]},
   "Raki":{type:"melee",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Au début du combat, confère à soi-même pendant 3 sec l'effet de renforcement Esquive absolue.\nAu début du combat, s'octroie l'effet de renforcement Accélération de la compétence de 15%. (Suppression impossible, cumulable)\nÀ chaque fois qu'un effet d'entrave est appliqué, accorde à un allié l'effet de renforcement Détection de point faible – Entrave de 10 % pendant 10 sec. (Effet cumulable)",buffs:["dodge_3s","skill_accel_15","weak_point_entrave2"],pvp:true,pve:false},{level:7,desc:"En cas d'attaque réussie, applique un effet d'Point faible – Entrave de 15% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, attire à sa position tous les ennemis bénéficiant de l'effet Entrave.\nLes ennemis affectés par le cercle magique Chaînes infernales sont attirés, que l'attaque touche ou non.\nLes dégâts infligés par le monstre augmentent de 20%.\n(Suppression impossible, effet cumulable)",buffs:["weak_point_entrave","pull_target","dmg_20"],pvp:true,pve:true}]},
+  "Tilasha":{type:"range",awakenings:[{level:3,desc:"Réduit de 100% le temps de recharge de ses compétences au début du combat.",buffs:[],pvp:true,pve:true},{level:5,desc:"Augmentation de la portée de 3.\nDiminution temps de recharge cd exclusive, cd : 2 sec.",buffs:["range_3","cd_reset_exclu_2S"],pvp:true,pve:false},{level:7,desc:"Afflux de malice.\nA chaque débuff, gagne 5% atk par stack 10s.\nDégâts + 20%",buffs:["atk_stack_debuff_count","dmg_20"],pvp:true,pve:true}]},
 };
 const CW   = .6;
 const MAX_T = 500;
@@ -1239,6 +1248,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 
 /* ── Carte monstre ── */
 .mrow{background:var(--s2);border-radius:10px;overflow:visible;border:1px solid var(--b1);transition:border-color .15s;flex-shrink:0}
+.mrow{container-type:inline-size}
 .mrow:hover{border-color:var(--b2)}
 
 /* En-tête */
@@ -1671,7 +1681,7 @@ const OFF_IDS=new Set(['atk_10','atk_20','atk_25_delay','atk_80','atk_100','atk_
 const DEF_IDS=new Set(['def_15','hp_max_15_cond','res_lp_30','dmg_resist_10','dmg_resist_15_cond','dmg_resist_20_cond','dmg_resist_20_team','dmg_resist_80_cond','shield_hits_3_team','shield_hits_5','stealth_shield','protection_shield','endurance_cond','dodge_3s','limit_shield','cc_immune_team_30','cc_immune_self_react','fran_blessing_team']);
 const TEAM_IDS=new Set(['spd_team_20','shield_hits_3_team','dmg_resist_20_team','cc_immune_team_30','fran_blessing_team','merry_box_team_cond','crush_rate_10_team','weakness_elem_team','double_triple_dmg_team','teamwork_stack','one_team_one_spirit','perfect_team','limit_shield','class_share_melee','target_weakness_provoke','target_weakness_shield','weak_point_detect']);
 
-let selCmp=[null,null,null],selTb=[],activeTab='cmp',activeType='',activeCat='',teamSize=15;
+let selCmp=[null,null],selTb=[],activeTab='cmp',activeType='',activeCat='',teamSize=15;
 let tlData={S:[],A:[],B:[],C:[],D:[]},tlDragName=null,tlDragFrom=null;
 let tlCat='',meType='',meRecapOpen=false;
 let myAwakenings=JSON.parse(localStorage.getItem('sw_my_awk')||'{}');
@@ -1828,8 +1838,13 @@ function buildGrid(){
     d.addEventListener('click',()=>{
       if(activeTab==='cmp'){
         const i=selCmp.indexOf(nm);
-        if(i!==-1)selCmp[i]=null;
-        else{const fi=selCmp.indexOf(null);if(fi!==-1)selCmp[fi]=nm;}
+        if(i!==-1){
+          selCmp[i]=null;
+        }else{
+          const fi=selCmp.indexOf(null);
+          if(fi!==-1){ selCmp[fi]=nm; }
+          else{ selCmp.shift(); selCmp.push(nm); }
+        }
         renderCmp();
       }else if(activeTab==='tb'){
         if(tdoMode){tdoAddMonster(nm);}
@@ -1843,145 +1858,7 @@ function buildGrid(){
     g.appendChild(d);
   });
 }
-function tdoAutoBuildAllBalanced() {
-  const compo = tdoTeams[tdoActiveCompo];
-  
-  // 1. On vide les 3 équipes de la composition actuelle
-  compo.teams.forEach(team => { team.members = []; });
 
-  // 2. Initialisation des stratégies et cibles pour chaque équipe
-  const teamContexts = compo.teams.map((team, index) => {
-    const strat = STRATEGIES[tdoStrategies[index]] || STRATEGIES.balanced;
-    return {
-      team: team,
-      index: index,
-      strat: strat,
-      W: strat.buffWeight,
-      frontTarget: Math.round(15 * strat.typeRatio.front),
-      rangeTarget: Math.round(15 * strat.typeRatio.range),
-      supportTarget: 15 - Math.round(15 * strat.typeRatio.front) - Math.round(15 * strat.typeRatio.range)
-    };
-  });
-
-  // Fonctions de score locales adaptées au contexte de chaque équipe
-  function scoreAlone(nm, ctx) {
-    const m = MONSTERS[nm]; if (!m) return 0;
-    const ids = new Set([
-      ...(m.awakenings || []).filter(a => a.level !== 3).flatMap(a => a.buffs || []),
-      ...skillBuffsRaw(nm)
-    ]);
-    let s = 0;
-    ids.forEach(id => {
-      const b = BUFFS[id]; if (!b) return;
-      const v = bVal(id);
-      const cat = OFF_IDS.has(id) ? 'off' : DEF_IDS.has(id) ? 'def' : TEAM_IDS.has(id) ? 'team' : 'off';
-      s += v * (ctx.W[cat] ?? 1) * (b.team ? 1.4 : 1);
-    });
-    s += getAwkLevel(nm) * 6;
-    return s;
-  }
-
-  function scoreWithTeam(nm, currentMembers, ctx) {
-    const m = MONSTERS[nm]; if (!m) return 0;
-    const teamBufSet = {};
-    currentMembers.forEach(n => {
-      [...(MONSTERS[n]?.awakenings || []).filter(a => a.level !== 3).flatMap(a => a.buffs || []), ...skillBuffsRaw(n)]
-        .forEach(id => { teamBufSet[id] = (teamBufSet[id] || 0) + 1; });
-    });
-    const ids = new Set([
-      ...(m.awakenings || []).filter(a => a.level !== 3).flatMap(a => a.buffs || []),
-      ...skillBuffsRaw(nm)
-    ]);
-    const typeCounts = { melee: 0, tank: 0, range: 0, support: 0 };
-    currentMembers.forEach(n => { if (MONSTERS[n]) typeCounts[MONSTERS[n].type]++; });
-    const frontNeed = ctx.frontTarget - ((typeCounts.melee || 0) + typeCounts.tank || 0);
-    const rangeNeed = ctx.rangeTarget - (typeCounts.range || 0);
-    const supportNeed = ctx.supportTarget - (typeCounts.support || 0);
-    let syn = 0;
-    ids.forEach(id => {
-      const b = BUFFS[id]; if (!b) return;
-      const v = bVal(id);
-      const cat = OFF_IDS.has(id) ? 'off' : DEF_IDS.has(id) ? 'def' : TEAM_IDS.has(id) ? 'team' : 'off';
-      const w = ctx.W[cat] ?? 1;
-      if (!teamBufSet[id]) syn += b.team ? v * w * 1.4 : v * w;
-      else if (b.team) syn += v * w * 0.5;
-      else syn -= v * 0.3;
-    });
-    let comp = 0;
-    const t = m.type;
-    const isFront = t === 'melee' || t === 'tank';
-    const isRange = t === 'range';
-    const isSupport = t === 'support';
-    const compW = ctx.W.off + ctx.W.def + ctx.W.team;
-    if (isFront) comp += frontNeed > 0 ? (35 + frontNeed * 12) * (compW / 3) : (frontNeed < -1 ? -30 : 0);
-    if (isRange) comp += rangeNeed > 0 ? (35 + rangeNeed * 12) * (compW / 3) : (rangeNeed < -1 ? -30 : 0);
-    if (isSupport) comp += supportNeed > 0 ? (55 + supportNeed * 18) * (compW / 3) : (supportNeed < -1 ? -40 : 0);
-    if (isSupport && ctx.strat.typeRatio.support === 0) comp -= 80;
-    return syn + comp + getAwkLevel(nm) * 6;
-  }
-
-  // 3. Distribution Round-Robin (Tour par tour)
-  // On fait 15 rounds. À chaque round, chaque équipe choisit 1 monstre.
-  for (let round = 0; round < 15; round++) {
-    
-    // Pour équilibrer encore plus (système de "Draft Serpentin") :
-    // Round impair = Équipe 1, 2, 3. Round pair = Équipe 3, 2, 1.
-    const order = [0, 1, 2];
-    if (round % 2 !== 0) order.reverse();
-
-    for (const ti of order) {
-      const ctx = teamContexts[ti];
-      const team = ctx.team;
-
-      // Liste globale des monstres déjà pris dans la compo actuelle
-      const allUsedInCompo = new Set();
-      compo.teams.forEach(t => t.members.forEach(m => allUsedInCompo.add(m)));
-
-      // Monstres disponibles
-      const available = Object.keys(MONSTERS).filter(nm => !allUsedInCompo.has(nm));
-      if (!available.length) break;
-
-      let candidates;
-      if (team.members.length === 0) {
-        candidates = available.map(nm => ({ nm, score: scoreAlone(nm, ctx) })).sort((a, b) => b.score - a.score).slice(0, 10).map(x => x.nm);
-      } else {
-        candidates = available.map(nm => ({ nm, score: scoreWithTeam(nm, team.members, ctx) })).sort((a, b) => b.score - a.score).slice(0, 10).map(x => x.nm);
-      }
-      if (!candidates.length) continue;
-
-      // Logique de validation du rôle (reprise de votre code)
-      const typeCounts = { melee: 0, tank: 0, range: 0, support: 0 };
-      team.members.forEach(nm => { if (MONSTERS[nm]) typeCounts[MONSTERS[nm].type]++; });
-      const frontCurrent = (typeCounts.melee || 0) + (typeCounts.tank || 0);
-      const rangeCurrent = typeCounts.range || 0;
-      const supportCurrent = typeCounts.support || 0;
-      const remaining = 15 - team.members.length;
-
-      let chosen = null;
-      for (const nm of candidates) {
-        const t = MONSTERS[nm]?.type;
-        const isFront = t === 'melee' || t === 'tank';
-        const isRange = t === 'range';
-        const isSupport = t === 'support';
-        const frontLeft = ctx.frontTarget - frontCurrent;
-        const rangeLeft = ctx.rangeTarget - rangeCurrent;
-        const supportLeft = ctx.supportTarget - supportCurrent;
-        const slotsLeft = remaining - 1;
-        let ok = true;
-        if (isFront && frontCurrent >= ctx.frontTarget + 2 && (rangeLeft > 0 || supportLeft > 0) && slotsLeft >= rangeLeft + supportLeft) ok = false;
-        if (isRange && rangeCurrent >= ctx.rangeTarget + 2 && (frontLeft > 0 || supportLeft > 0) && slotsLeft >= frontLeft + supportLeft) ok = false;
-        if (isSupport && supportCurrent >= ctx.supportTarget + 2 && (frontLeft > 0 || rangeLeft > 0) && slotsLeft >= frontLeft + rangeLeft) ok = false;
-        if (isSupport && ctx.strat.typeRatio.support === 0) ok = false;
-        if (ok) { chosen = nm; break; }
-      }
-      if (!chosen) chosen = candidates[0];
-      if (chosen) team.members.push(chosen);
-    }
-  }
-
-  // Sauvegarde et mise à jour visuelle
-  saveTdo(); renderTdo(); buildGrid();
-}
 // ── Accordéon sorts ──────────────────────────────────────────────────────────
 function toggleAccordion(id){
   const body=document.getElementById('acc-body-'+id);
@@ -2111,10 +1988,20 @@ function renderCmp(){
   const list=document.getElementById('cmpList');
   const sb=document.getElementById('cmpShared');
   if(!filled.length){
-    list.innerHTML='<div class="cmp-empty" style="flex-direction:column;gap:6px;text-align:center"><span>Cliquez sur des portraits pour comparer jusqu\'à 3 monstres</span><span style="font-size:.8rem;color:var(--tx2)">Ps : Les valeurs sont pour avoir un visuel, ils ne représente en rien la réalité du terrain étant donner qu\'un monstre dépend surtout de la compo qui l\'entoure.</span></div>';
+    list.style.flexDirection='column';
+    list.innerHTML='<div class="cmp-empty" style="flex-direction:column;gap:6px;text-align:center"><span>Cliquez sur des portraits pour comparer jusqu\'à 2 monstres</span><span style="font-size:.8rem;color:var(--tx2)">Ps : Les valeurs sont pour avoir un visuel, ils ne représente en rien la réalité du terrain étant donner qu\'un monstre dépend surtout de la compo qui l\'entoure.</span></div>';
     if(sb)sb.className='';return;
   }
-  list.innerHTML=selCmp.map((nm,i)=>nm?renderCmpRow(nm,i):'').filter(Boolean).join('');
+  if(filled.length===1){
+    const idx=selCmp.indexOf(filled[0]);
+    list.style.flexDirection='column';
+    list.innerHTML=renderCmpRowSolo(filled[0],idx);
+  } else {
+    list.style.flexDirection='row';
+    list.style.alignItems='flex-start';
+    const html=selCmp.map((nm,i)=>nm?`<div style="flex:1;min-width:0">${renderCmpRowSolo(nm,i)}</div>`:'').filter(Boolean).join('');
+    list.innerHTML=`<div style="display:flex;gap:10px;width:100%">${html}</div>`;
+  }
   if(sb&&filled.length>=2){
     const bsets=filled.map(nm=>{
       const awk=new Set((MONSTERS[nm].awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]));
@@ -2528,14 +2415,13 @@ function renderStrategyPicker(){
   wrap.style.cssText='display:flex;align-items:center;gap:4px;flex-shrink:0;overflow-x:auto;margin-left:4px;';
   wrap.innerHTML=
     `<span style="font-size:.7rem;font-weight:700;color:var(--tx2);white-space:nowrap;flex-shrink:0">Strat :</span>`+
-    Object.entries(STRATEGIES).map(([k,s])=>
-      `<button class="sz${k===teamStrategy?' on':''}" data-strat="${k}"
+    VISIBLE_STRATEGIES.map(k=>{const s=STRATEGIES[k];return `<button class="sz${k===teamStrategy?' on':''}" data-strat="${k}"
         onclick="setStrategy('${k}')"
         title="${s.label}"
         style="white-space:nowrap;font-size:.7rem;padding:3px 8px;flex-shrink:0">
         ${s.icon} ${s.label}
-      </button>`
-    ).join('')+
+      </button>`;
+    }).join('')+
     `<button onclick="autoBuildTeam()"
       style="white-space:nowrap;font-size:.7rem;padding:3px 10px;flex-shrink:0;
              border-radius:3px;border:1px solid rgba(168,212,40,.4);background:rgba(168,212,40,.1);
@@ -2715,9 +2601,8 @@ function renderTdo(){
       ${c.name}
     </button>`).join('');
 
-  const stratSelect=(idx)=>Object.entries(STRATEGIES).map(([k,s])=>
-    `<option value="${k}"${tdoStrategies[idx]===k?' selected':''}>${s.icon} ${s.label}</option>`
-  ).join('');
+  const stratSelect=(idx)=>VISIBLE_STRATEGIES.map(k=>{const s=STRATEGIES[k];return `<option value="${k}"${tdoStrategies[idx]===k?' selected':''}>${s.icon} ${s.label}</option>`;
+  }).join('');
 
   const teamsHtml=compo.teams.map((t,ti)=>{
     const col=TEAM_COLS[ti];
@@ -2967,11 +2852,10 @@ function showSimilarMonsters(nm){
     </div>`;
   wrap.style.display='block';
 }
-
 function addSimilarToCmp(nm){
   const fi=selCmp.indexOf(null);
-  if(fi!==-1){selCmp[fi]=nm;}
-  else{selCmp[2]=nm;}
+  if(fi!==-1){ selCmp[fi]=nm; }
+  else{ selCmp.shift(); selCmp.push(nm); }
   renderCmp();buildGrid();
 }
 
@@ -3251,9 +3135,8 @@ function renderGdg(){
       ${c.name}
     </button>`).join('');
 
-  const stratSelect=(idx)=>Object.entries(STRATEGIES).map(([k,s])=>
-    `<option value="${k}"${gdgStrategies[idx]===k?' selected':''}>${s.icon} ${s.label}</option>`
-  ).join('');
+  const stratSelect=(idx)=>VISIBLE_STRATEGIES.map(k=>{const s=STRATEGIES[k];return `<option value="${k}"${gdgStrategies[idx]===k?' selected':''}>${s.icon} ${s.label}</option>`;
+  }).join('');
 
   const teamsHtml=compo.teams.map((t,ti)=>{
     const col=TEAM_COLS[ti];
@@ -3332,15 +3215,6 @@ renderSwFaq();
 renderFaqStrats();
 buildGrid();renderCmp();renderTeam();
 
-function forceGridReflow(){
-  const g=document.getElementById('grid');
-  if(!g)return;
-  // Force un reflow réel du conteneur (pas juste un repaint)
-  g.style.display='none';
-  void g.offsetHeight;
-  g.style.display='grid';
-  buildGrid();
-}
 function evalTeamScore(members, strat){
   const W = strat.buffWeight;
   const teamBufSeen = {};
@@ -3490,9 +3364,161 @@ function localSearchImprove(members, strat, usedElsewhere, maxPasses){
   }
   return {members:best, score:bestScore};
 }
-requestAnimationFrame(()=>{ requestAnimationFrame(forceGridReflow); });
-window.addEventListener('load', forceGridReflow);
-setTimeout(forceGridReflow, 300);
+function renderSpellCardSolo(s, type, label){
+  if(!s) return `<div style="border:1px solid var(--b1);border-radius:8px;padding:10px 12px;min-width:0">
+    <span class="skill-type ${type}">${label}</span>
+    <div style="color:var(--tx2);font-size:.85rem;font-style:italic;margin-top:6px">Non renseigné</div>
+  </div>`;
+  const sc=spellScore(s);
+  const r=sc/MAX_SPELL_EACH;
+  const col=sCol(r);
+  const meta = `<div class="skill-meta" style="margin-top:8px">
+    ${s.atk_pct  ? `<span class="skill-meta-tag atk">${s.atk_pct}% ATQ</span>` : ''}
+    ${(s.hits||1)>1 ? `<span class="skill-meta-tag hit">×${s.hits} coups</span>` : ''}
+    ${s.aoe ? `<span class="skill-meta-tag aoe">Zone</span>` : '<span class="skill-meta-tag">Cible unique</span>'}
+  </div>`;
+  const buffsHtml = s.buffs&&s.buffs.length
+    ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">${s.buffs.map(id=>{const b=BUFFS[id];if(!b)return'';return`<span style="font-size:.72rem;padding:3px 8px;border-radius:3px;background:var(--s3);color:var(--tx3);word-break:break-word">${b.label}</span>`;}).join('')}</div>`
+    : '';
+  return `<div style="border:1px solid var(--b1);border-radius:8px;padding:10px 12px;min-width:0">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <span class="skill-type ${type}">${label}</span>
+      <span style="font-size:.85rem;font-weight:800;color:${col}">${sc}/100</span>
+    </div>
+    <div style="font-size:.85rem;color:var(--tx3);line-height:1.5;margin-top:6px;word-break:break-word">${s.desc||''}</div>
+    ${meta}
+    ${buffsHtml}
+  </div>`;
+}
+
+function renderCmpRowSolo(nm,idx){
+  const m=MONSTERS[nm],tot=totPts(m,nm),r=tot/MAX_T,c=sCol(r),col=SCOLS[idx];
+  const awks=(m.awakenings||[]).filter(a=>a.level!==3);
+  const a5=awks.find(a=>a.level===5),a7=awks.find(a=>a.level===7);
+  const sk=SKILLS(nm);
+  const skPts=spellScore(sk.basic)+spellScore(sk.crit)+spellScore(sk.exclusive);
+  const awkSum=Math.min((m.awakenings||[]).reduce((s,a)=>s+awkPts(a),0),MAX_AWK);
+
+  return`<div class="mrow" style="border-left:4px solid ${col};width:100%">
+    <div style="display:flex;gap:clamp(8px,3%,16px);padding:clamp(10px,3%,18px) clamp(10px,3%,18px) clamp(8px,2%,14px);align-items:flex-start;position:relative;flex-wrap:wrap">
+      <div class="mrow-port" style="width:clamp(48px,16%,72px);height:clamp(48px,16%,72px);flex-shrink:0"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
+      <div class="mrow-port-rm" onclick="removeCmp(${idx})">×</div>
+      <div style="flex:1;min-width:120px">
+        <div class="mrow-name" style="font-size:clamp(1rem,5cqw,1.25rem);word-break:break-word">${nm}</div>
+        <div class="mrow-type ${TCLS[m.type]||''}">${TLBL[m.type]}</div>
+        <div class="mrow-tagline" style="word-break:break-word">${genTagline(nm)}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="mrow-score" style="color:${c};font-size:clamp(1.6rem,7cqw,2.4rem)">${tot}</div>
+        <div class="mrow-score-sub">/ ${MAX_T}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 clamp(10px,3%,18px) clamp(10px,2%,16px)">
+      <div style="background:var(--s3);border-radius:6px;padding:10px 12px;min-width:0">
+        <div style="font-size:.7rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;font-weight:700">Éveils</div>
+        <div style="font-size:clamp(.9rem,4cqw,1.1rem);font-weight:800;margin-top:2px;color:var(--tx)">${awkSum} <span style="font-size:.75rem;color:var(--tx2);font-weight:400">/ ${MAX_AWK}</span></div>
+      </div>
+      <div style="background:var(--s3);border-radius:6px;padding:10px 12px;min-width:0">
+        <div style="font-size:.7rem;color:var(--tx2);text-transform:uppercase;letter-spacing:.4px;font-weight:700">Sorts</div>
+        <div style="font-size:clamp(.9rem,4cqw,1.1rem);font-weight:800;margin-top:2px;color:var(--tx)">${skPts} <span style="font-size:.75rem;color:var(--tx2);font-weight:400">/ 300</span></div>
+      </div>
+    </div>
+    <div style="padding:0 clamp(10px,3%,18px) clamp(10px,2%,16px)">
+      <button onclick="showSimilarMonsters('${nm}')" style="width:100%;font-size:.82rem;font-weight:700;padding:9px;border-radius:6px;border:1px solid rgba(168,212,40,.45);background:rgba(168,212,40,.12);color:var(--green2);cursor:pointer;font-family:inherit">🔗 Voir les monstres similaires</button>
+    </div>
+    <div style="border-top:1px solid var(--b1);padding:clamp(10px,2%,14px) clamp(10px,3%,18px)">
+      <div style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--tx2);margin-bottom:10px">Compétences</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${renderSpellCardSolo(sk.basic,'basic','Attaque de base')}
+        ${renderSpellCardSolo(sk.crit,'crit','Attaque critique')}
+        ${renderSpellCardSolo(sk.exclusive,'exclusive','Compétence exclusive')}
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--b1);padding:clamp(10px,2%,14px) clamp(10px,3%,18px);display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="min-width:0">
+        <div style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);margin-bottom:8px">Éveil 5★</div>
+        ${a5?buffChips(a5.buffs||[],nm):'<div style="color:var(--tx2);font-size:.82rem;font-style:italic">Aucun éveil 5★</div>'}
+      </div>
+      <div style="min-width:0">
+        <div style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#cc2848;margin-bottom:8px">Éveil 7★</div>
+        ${a7?buffChips(a7.buffs||[],nm):'<div style="color:var(--tx2);font-size:.82rem;font-style:italic">Aucun éveil 7★</div>'}
+      </div>
+    </div>
+	<div id="simWrap_${nm.replace(/[^a-z0-9]/gi,'')}" style="display:none;padding:0 clamp(10px,3%,18px) 14px"></div>
+  </div>`;
+}
+function renderSpellCardCompact(s, type, label){
+  if(!s) return `<div style="border:1px solid var(--b1);border-radius:6px;padding:8px 10px">
+    <span class="skill-type ${type}" style="font-size:.6rem">${label}</span>
+    <div style="color:var(--tx2);font-size:.74rem;font-style:italic;margin-top:4px">Non renseigné</div>
+  </div>`;
+  const sc=spellScore(s);
+  const r=sc/MAX_SPELL_EACH;
+  const col=sCol(r);
+  const buffsHtml = s.buffs&&s.buffs.length
+    ? `<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px">${s.buffs.map(id=>{const b=BUFFS[id];if(!b)return'';return`<span style="font-size:.65rem;padding:2px 6px;border-radius:3px;background:var(--s3);color:var(--tx3)">${b.label}</span>`;}).join('')}</div>`
+    : '';
+  return `<div style="border:1px solid var(--b1);border-radius:6px;padding:8px 10px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="skill-type ${type}" style="font-size:.6rem">${label}</span>
+      <span style="font-size:.72rem;font-weight:800;color:${col}">${sc}/100</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--tx2);margin-top:3px">${s.name||''}</div>
+    ${buffsHtml}
+  </div>`;
+}
+
+function awkBadgesOnly(buffs){
+  if(!buffs||!buffs.length)return'<div style="color:var(--tx2);font-size:.72rem;font-style:italic">Aucun</div>';
+  return `<div style="display:flex;flex-wrap:wrap;gap:3px">${buffs.map(id=>{
+    const b=BUFFS[id];if(!b)return'';
+    return`<span style="font-size:.65rem;padding:2px 7px;border-radius:3px;background:var(--s3);border-left:2px solid ${b.color};color:var(--tx3)">${b.label}</span>`;
+  }).join('')}</div>`;
+}
+
+function renderCmpRowCompact(nm,idx){
+  const m=MONSTERS[nm],tot=totPts(m,nm),r=tot/MAX_T,c=sCol(r),col=SCOLS[idx];
+  const awks=(m.awakenings||[]).filter(a=>a.level!==3);
+  const a5=awks.find(a=>a.level===5),a7=awks.find(a=>a.level===7);
+  const sk=SKILLS(nm);
+
+  return`<div class="mrow" style="border-left:4px solid ${col};flex:1;min-width:0">
+    <div style="display:flex;gap:10px;padding:12px 14px;align-items:flex-start;position:relative">
+      <div class="mrow-port" style="width:52px;height:52px"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
+      <div class="mrow-port-rm" onclick="removeCmp(${idx})" style="top:6px;right:6px">×</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:1rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nm}</div>
+        <div class="mrow-type ${TCLS[m.type]||''}" style="font-size:.65rem;padding:2px 7px">${TLBL[m.type]}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:1.5rem;font-weight:900;color:${c};line-height:1">${tot}</div>
+        <div style="font-size:.65rem;color:var(--tx2)">/ ${MAX_T}</div>
+      </div>
+    </div>
+    <div style="padding:0 14px 12px">
+      <button onclick="showSimilarMonsters('${nm}')" style="width:100%;font-size:.7rem;font-weight:700;padding:6px;border-radius:5px;border:1px solid rgba(168,212,40,.45);background:rgba(168,212,40,.12);color:var(--green2);cursor:pointer;font-family:inherit">🔗 Similaires</button>
+    </div>
+    <div style="border-top:1px solid var(--b1);padding:10px 14px">
+      <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);margin-bottom:7px">Compétences</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${renderSpellCardCompact(sk.basic,'basic','Base')}
+        ${renderSpellCardCompact(sk.crit,'crit','Crit')}
+        ${renderSpellCardCompact(sk.exclusive,'exclusive','Exclu')}
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--b1);padding:10px 14px;display:flex;flex-direction:column;gap:10px">
+      <div>
+        <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gold);margin-bottom:5px">Éveil 5★</div>
+        ${awkBadgesOnly(a5?a5.buffs:null)}
+      </div>
+      <div>
+        <div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#cc2848;margin-bottom:5px">Éveil 7★</div>
+        ${awkBadgesOnly(a7?a7.buffs:null)}
+      </div>
+    </div>
+	<div id="simWrap_${nm.replace(/[^a-z0-9]/gi,'')}" style="display:none;padding:0 14px 12px"></div>
+  </div>`;
+}
 </script>
 </body>
 </html>
