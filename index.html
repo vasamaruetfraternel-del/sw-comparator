@@ -2844,7 +2844,7 @@ function showSimilarMonsters(nm){
       ${results.map(r=>{
         const mm=MONSTERS[r.nm];
         return`<div style="display:flex;align-items:center;gap:6px;background:var(--s3);border:1px solid var(--b1);border-radius:5px;padding:4px 8px 4px 4px;cursor:pointer" onclick="addSimilarToCmp('${r.nm}')" title="Voir ${r.nm}">
-          <img src="${IP}${r.nm}.png" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:3px;object-fit:cover;object-position:top center">
+          <img src="${IP}${r.nm}.png" onerror="this.style.display='none'" style="width:60px;height:60px;border-radius:3px;object-fit:cover;object-position:top center">
           <span style="font-size:.78rem;color:var(--tx3);font-weight:600">${r.nm}</span>
           <span style="font-size:.65rem;color:${TCOL[mm.type]}">${r.exactShared} buff${r.exactShared>1?'s':''} commun${r.exactShared>1?'s':''}</span>
         </div>`;
