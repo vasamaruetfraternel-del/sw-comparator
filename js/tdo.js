@@ -5,7 +5,7 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
         const result = teamsArr.map(() => []);
         const strats = strategies.map(k => STRATEGIES[k] || STRATEGIES.balanced);
 
-        // Pré-assigne un tank différent par équipe
+        // Pr�-assigne un tank diff�rent par �quipe
         const allTanks = Object.keys(MONSTERS).filter(nm => MONSTERS[nm].type === 'tank' && !baseUsed.has(nm) && !excludedFromReco.includes(nm));
         const tankScored = allTanks.map(nm => ({ nm, score: bVal('') + getAwkLevel(nm) * 6 + Math.random() * 5 })).sort((a, b) => b.score - a.score);
         for (let i = 0; i < result.length && i < tankScored.length; i++) result[i].push(tankScored[i].nm);
@@ -82,294 +82,24 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
                 const strat = STRATEGIES[strategies[ti]] || STRATEGIES.balanced;
 
                 for (let i = 0; i < best[ti].length; i++) {
-                    // 1. On recalcule les monstres utilisés dynamiquement pour CHAQUE emplacement (i)
+                    // 1. On recalcule les monstres utilis�s dynamiquement pour CHAQUE emplacement (i)
                     const allUsed = new Set(baseUsed);
                     best.forEach((t, j) => {
                         t.forEach((m, idx) => {
-                            // Bloquer si le monstre est dans une autre équipe (j !== ti)
-                            // OU s'il est déjà dans l'équipe actuelle mais sur un AUTRE emplacement (idx !== i)
+                            // Bloquer si le monstre est dans une autre �quipe (j !== ti)
+                            // OU s'il est d�j� dans l'�quipe actuelle mais sur un AUTRE emplacement (idx !== i)
                             if (j !== ti || idx !== i) {
                                 allUsed.add(m);
                             }
                         });
                     });
 
-                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement précis
+                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement pr�cis
                     const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
 
                     let localBestSwap = null, localBestTotal = bestTotal;
                     for (const cand of available) {
-                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre déjà en place contre lui-même
-
-                        const trial = best.map(t => [...t]);
-                        trial[ti][i] = cand;
-                        const tot = evalAll(trial);
-                        if (tot > localBestTotal) { localBestTotal = tot; localBestSwap = cand; }
-                    }
-
-                    if (localBestSwap) {
-                        best[ti][i] = localBestSwap;
-                        bestTotal = localBestTotal;
-                        improved = true;
-                    }
-                }
-            }
-        }
-        return { teams: best, total: bestTotal };
-    }
-    function localSearchAll(teamsState, maxPasses) {
-        let best = teamsState.map(t => [...t]);
-        let bestTotal = evalAll(best);
-        let improved = true, pass = 0;
-        while (improved && pass < maxPasses) {
-            improved = false; pass++;
-            for (let ti = 0; ti < best.length; ti++) {
-                const strat = STRATEGIES[strategies[ti]] || STRATEGIES.balanced;
-
-                for (let i = 0; i < best[ti].length; i++) {
-                    // 1. On recalcule les monstres utilisés dynamiquement pour CHAQUE emplacement (i)
-                    const allUsed = new Set(baseUsed);
-                    best.forEach((t, j) => {
-                        t.forEach((m, idx) => {
-                            // Bloquer si le monstre est dans une autre équipe (j !== ti)
-                            // OU s'il est déjà dans l'équipe actuelle mais sur un AUTRE emplacement (idx !== i)
-                            if (j !== ti || idx !== i) {
-                                allUsed.add(m);
-                            }
-                        });
-                    });
-
-                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement précis
-                    const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
-
-                    let localBestSwap = null, localBestTotal = bestTotal;
-                    for (const cand of available) {
-                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre déjà en place contre lui-même
-
-                        const trial = best.map(t => [...t]);
-                        trial[ti][i] = cand;
-                        const tot = evalAll(trial);
-                        if (tot > localBestTotal) { localBestTotal = tot; localBestSwap = cand; }
-                    }
-
-                    if (localBestSwap) {
-                        best[ti][i] = localBestSwap;
-                        bestTotal = localBestTotal;
-                        improved = true;
-                    }
-                }
-            }
-        }
-        return { teams: best, total: bestTotal };
-    }
-    function localSearchAll(teamsState, maxPasses) {
-        let best = teamsState.map(t => [...t]);
-        let bestTotal = evalAll(best);
-        let improved = true, pass = 0;
-        while (improved && pass < maxPasses) {
-            improved = false; pass++;
-            for (let ti = 0; ti < best.length; ti++) {
-                const strat = STRATEGIES[strategies[ti]] || STRATEGIES.balanced;
-
-                for (let i = 0; i < best[ti].length; i++) {
-                    // 1. On recalcule les monstres utilisés dynamiquement pour CHAQUE emplacement (i)
-                    const allUsed = new Set(baseUsed);
-                    best.forEach((t, j) => {
-                        t.forEach((m, idx) => {
-                            // Bloquer si le monstre est dans une autre équipe (j !== ti)
-                            // OU s'il est déjà dans l'équipe actuelle mais sur un AUTRE emplacement (idx !== i)
-                            if (j !== ti || idx !== i) {
-                                allUsed.add(m);
-                            }
-                        });
-                    });
-
-                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement précis
-                    const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
-
-                    let localBestSwap = null, localBestTotal = bestTotal;
-                    for (const cand of available) {
-                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre déjà en place contre lui-même
-
-                        const trial = best.map(t => [...t]);
-                        trial[ti][i] = cand;
-                        const tot = evalAll(trial);
-                        if (tot > localBestTotal) { localBestTotal = tot; localBestSwap = cand; }
-                    }
-
-                    if (localBestSwap) {
-                        best[ti][i] = localBestSwap;
-                        bestTotal = localBestTotal;
-                        improved = true;
-                    }
-                }
-            }
-        }
-        return { teams: best, total: bestTotal };
-    }
-    function localSearchAll(teamsState, maxPasses) {
-        let best = teamsState.map(t => [...t]);
-        let bestTotal = evalAll(best);
-        let improved = true, pass = 0;
-        while (improved && pass < maxPasses) {
-            improved = false; pass++;
-            for (let ti = 0; ti < best.length; ti++) {
-                const strat = STRATEGIES[strategies[ti]] || STRATEGIES.balanced;
-
-                for (let i = 0; i < best[ti].length; i++) {
-                    // 1. On recalcule les monstres utilisés dynamiquement pour CHAQUE emplacement (i)
-                    const allUsed = new Set(baseUsed);
-                    best.forEach((t, j) => {
-                        t.forEach((m, idx) => {
-                            // Bloquer si le monstre est dans une autre équipe (j !== ti)
-                            // OU s'il est déjà dans l'équipe actuelle mais sur un AUTRE emplacement (idx !== i)
-                            if (j !== ti || idx !== i) {
-                                allUsed.add(m);
-                            }
-                        });
-                    });
-
-                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement précis
-                    const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
-
-                    let localBestSwap = null, localBestTotal = bestTotal;
-                    for (const cand of available) {
-                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre déjà en place contre lui-même
-
-                        const trial = best.map(t => [...t]);
-                        trial[ti][i] = cand;
-                        const tot = evalAll(trial);
-                        if (tot > localBestTotal) { localBestTotal = tot; localBestSwap = cand; }
-                    }
-
-                    if (localBestSwap) {
-                        best[ti][i] = localBestSwap;
-                        bestTotal = localBestTotal;
-                        improved = true;
-                    }
-                }
-            }
-        }
-        return { teams: best, total: bestTotal };
-    }
-    function localSearchAll(teamsState, maxPasses) {
-        let best = teamsState.map(t => [...t]);
-        let bestTotal = evalAll(best);
-        let improved = true, pass = 0;
-        while (improved && pass < maxPasses) {
-            improved = false; pass++;
-            for (let ti = 0; ti < best.length; ti++) {
-                const strat = STRATEGIES[strategies[ti]] || STRATEGIES.balanced;
-
-                for (let i = 0; i < best[ti].length; i++) {
-                    // 1. On recalcule les monstres utilisés dynamiquement pour CHAQUE emplacement (i)
-                    const allUsed = new Set(baseUsed);
-                    best.forEach((t, j) => {
-                        t.forEach((m, idx) => {
-                            // Bloquer si le monstre est dans une autre équipe (j !== ti)
-                            // OU s'il est déjà dans l'équipe actuelle mais sur un AUTRE emplacement (idx !== i)
-                            if (j !== ti || idx !== i) {
-                                allUsed.add(m);
-                            }
-                        });
-                    });
-
-                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement précis
-                    const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
-
-                    let localBestSwap = null, localBestTotal = bestTotal;
-                    for (const cand of available) {
-                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre déjà en place contre lui-même
-
-                        const trial = best.map(t => [...t]);
-                        trial[ti][i] = cand;
-                        const tot = evalAll(trial);
-                        if (tot > localBestTotal) { localBestTotal = tot; localBestSwap = cand; }
-                    }
-
-                    if (localBestSwap) {
-                        best[ti][i] = localBestSwap;
-                        bestTotal = localBestTotal;
-                        improved = true;
-                    }
-                }
-            }
-        }
-        return { teams: best, total: bestTotal };
-    }
-    function localSearchAll(teamsState, maxPasses) {
-        let best = teamsState.map(t => [...t]);
-        let bestTotal = evalAll(best);
-        let improved = true, pass = 0;
-        while (improved && pass < maxPasses) {
-            improved = false; pass++;
-            for (let ti = 0; ti < best.length; ti++) {
-                const strat = STRATEGIES[strategies[ti]] || STRATEGIES.balanced;
-
-                for (let i = 0; i < best[ti].length; i++) {
-                    // 1. On recalcule les monstres utilisés dynamiquement pour CHAQUE emplacement (i)
-                    const allUsed = new Set(baseUsed);
-                    best.forEach((t, j) => {
-                        t.forEach((m, idx) => {
-                            // Bloquer si le monstre est dans une autre équipe (j !== ti)
-                            // OU s'il est déjà dans l'équipe actuelle mais sur un AUTRE emplacement (idx !== i)
-                            if (j !== ti || idx !== i) {
-                                allUsed.add(m);
-                            }
-                        });
-                    });
-
-                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement précis
-                    const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
-
-                    let localBestSwap = null, localBestTotal = bestTotal;
-                    for (const cand of available) {
-                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre déjà en place contre lui-même
-
-                        const trial = best.map(t => [...t]);
-                        trial[ti][i] = cand;
-                        const tot = evalAll(trial);
-                        if (tot > localBestTotal) { localBestTotal = tot; localBestSwap = cand; }
-                    }
-
-                    if (localBestSwap) {
-                        best[ti][i] = localBestSwap;
-                        bestTotal = localBestTotal;
-                        improved = true;
-                    }
-                }
-            }
-        }
-        return { teams: best, total: bestTotal };
-    }
-    function localSearchAll(teamsState, maxPasses) {
-        let best = teamsState.map(t => [...t]);
-        let bestTotal = evalAll(best);
-        let improved = true, pass = 0;
-        while (improved && pass < maxPasses) {
-            improved = false; pass++;
-            for (let ti = 0; ti < best.length; ti++) {
-                const strat = STRATEGIES[strategies[ti]] || STRATEGIES.balanced;
-
-                for (let i = 0; i < best[ti].length; i++) {
-                    // 1. On recalcule les monstres utilisés dynamiquement pour CHAQUE emplacement (i)
-                    const allUsed = new Set(baseUsed);
-                    best.forEach((t, j) => {
-                        t.forEach((m, idx) => {
-                            // Bloquer si le monstre est dans une autre équipe (j !== ti)
-                            // OU s'il est déjà dans l'équipe actuelle mais sur un AUTRE emplacement (idx !== i)
-                            if (j !== ti || idx !== i) {
-                                allUsed.add(m);
-                            }
-                        });
-                    });
-
-                    // 2. On filtre les monstres vraiment disponibles pour cet emplacement précis
-                    const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
-
-                    let localBestSwap = null, localBestTotal = bestTotal;
-                    for (const cand of available) {
-                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre déjà en place contre lui-même
+                        if (cand === best[ti][i]) continue; // Inutile de tester le monstre d�j� en place contre lui-m�me
 
                         const trial = best.map(t => [...t]);
                         trial[ti][i] = cand;
