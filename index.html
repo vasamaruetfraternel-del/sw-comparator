@@ -2916,7 +2916,7 @@ function layoutStrategicGrid(members,w,h){
 
 function renderStrategicGrid(members,w,h,teamColor,onRemove){
   const cells=layoutStrategicGrid(members,w,h);
-  let html=`<div style="display:grid;grid-template-columns:repeat(${w},1fr);gap:4px;width:100%;aspect-ratio:${w}/${h}">`;
+  let html=`<div style="display:grid;grid-template-columns:repeat(${w},100px);grid-auto-rows:100px;gap:4px;justify-content:center">`;
   for(let r=0;r<h;r++){
     for(let c=0;c<w;c++){
       const nm=cells[r][c];
