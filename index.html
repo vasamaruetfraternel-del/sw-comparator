@@ -4275,21 +4275,27 @@ function renderStrategyPicker(){
 function autoBuildTeam(){
   selTb = [];
 
-  // 1. COLLECTER LES MONSTRES DES AUTRES ÉQUIPES (Pour éviter les doublons en Tour/GDR)
   const usedInOtherTeams = new Set();
-  
-  // /!\ ADAPTATION REQUISE ICI /!\
-  // Exemple si tu as un tableau global de tes 3 équipes (ex: allTeams = [team1, team2, team3])
-  // Il faut ajouter les monstres des AUTRES équipes que celle en cours de modification.
-  if (typeof allTeams !== 'undefined') {
-    allTeams.forEach(team => {
-      // Si ce n'est pas l'équipe actuelle (on se base sur une ref ou un index)
-      // team.members.forEach(m => usedInOtherTeams.add(m));
-    });
-  }
 
-  const strat = STRATEGIES[teamStrategy] || STRATEGIES.balanced;
-  const W = strat.buffWeight;
+if (tdoMode) {
+    const currentTdoCompo = tdoTeams[tdoActiveCompo].teams;
+    currentTdoCompo.forEach((team, index) => {
+        if (index !== tdoActiveTeam) {
+            team.members.forEach(m => usedInOtherTeams.add(m));
+        }
+    });
+}
+else if (gdgMode) {
+    const currentGdgCompo = gdgTeams[gdgActiveCompo].teams;
+    currentGdgCompo.forEach((team, index) => {
+        if (index !== gdgActiveTeam) {
+            team.members.forEach(m => usedInOtherTeams.add(m));
+        }
+    });
+}
+
+const strat = STRATEGIES[teamStrategy] || STRATEGIES.balanced;
+const W = strat.buffWeight;
 
   const frontTarget   = Math.round(teamSize * strat.typeRatio.front);
   const rangeTarget   = Math.round(teamSize * strat.typeRatio.range);
