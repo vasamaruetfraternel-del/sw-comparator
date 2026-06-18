@@ -3052,7 +3052,7 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn){
         const strat=STRATEGIES[strategies[ti]]||STRATEGIES.balanced;
         const allUsed=new Set(baseUsed);
         best.forEach((t,j)=>{ if(j!==ti) t.forEach(m=>allUsed.add(m)); });
-        const available=Object.keys(MONSTERS).filter(nm=>!allUsed.has(nm)&&!best[ti].includes(nm)&&!excludedFromReco.includes(nm));
+        let available=Object.keys(MONSTERS).filter(nm=>!allUsed.has(nm)&&!best[ti].includes(nm)&&!excludedFromReco.includes(nm));
         for(let i=0;i<best[ti].length;i++){
           let localBestSwap=null, localBestTotal=bestTotal;
           for(const cand of available){
@@ -3061,12 +3061,16 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn){
             const tot=evalAll(trial);
             if(tot>localBestTotal){ localBestTotal=tot; localBestSwap=cand; }
           }
-          if(localBestSwap){ best[ti][i]=localBestSwap; bestTotal=localBestTotal; improved=true; }
+          if(localBestSwap){
+            const old=best[ti][i];
+            best[ti][i]=localBestSwap; bestTotal=localBestTotal; improved=true;
+            // Le candidat choisi n'est plus disponible ; l'ancien membre le redevient.
+            available=available.filter(nm=>nm!==localBestSwap);
+            if(old && !best[ti].includes(old)) available.push(old);
+          }
         }
       }
     }
-    return {teams:best, total:bestTotal};
-  }
 
   const ATTEMPTS=15;
   let bestOverall=null, bestOverallScore=-Infinity;
@@ -3346,7 +3350,7 @@ function localSearchImprove(members, strat, usedElsewhere, maxPasses){
 
   while(improved && pass<maxPasses){
     improved = false; pass++;
-    const available = Object.keys(MONSTERS).filter(nm=>!best.includes(nm)&&!usedElsewhere.has(nm)&&!excludedFromReco.includes(nm));
+    let available = Object.keys(MONSTERS).filter(nm=>!best.includes(nm)&&!usedElsewhere.has(nm)&&!excludedFromReco.includes(nm));
 
     for(let i=0;i<best.length;i++){
       let localBestSwap=null, localBestScore=bestScore;
@@ -3356,9 +3360,13 @@ function localSearchImprove(members, strat, usedElsewhere, maxPasses){
         if(sc>localBestScore){ localBestScore=sc; localBestSwap=cand; }
       }
       if(localBestSwap){
+        const old=best[i];
         best[i]=localBestSwap;
         bestScore=localBestScore;
         improved=true;
+        // Le candidat choisi n'est plus disponible ; l'ancien membre le redevient.
+        available=available.filter(nm=>nm!==localBestSwap);
+        if(old && !best.includes(old)) available.push(old);
       }
     }
   }
