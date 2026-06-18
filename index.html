@@ -3401,7 +3401,7 @@ function renderCmpRowSolo(nm,idx){
 
   return`<div class="mrow" style="border-left:4px solid ${col};width:100%">
     <div style="display:flex;gap:clamp(8px,3%,16px);padding:clamp(10px,3%,18px) clamp(10px,3%,18px) clamp(8px,2%,14px);align-items:flex-start;position:relative;flex-wrap:wrap">
-      <div class="mrow-port" style="width:clamp(48px,16%,72px);height:clamp(48px,16%,72px);flex-shrink:0"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
+      <div class="mrow-port" style="width:clamp(96px,32%,144px);height:clamp(96px,32%,144px);flex-shrink:0"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
       <div class="mrow-port-rm" onclick="removeCmp(${idx})">×</div>
       <div style="flex:1;min-width:120px">
         <div class="mrow-name" style="font-size:clamp(1rem,5cqw,1.25rem);word-break:break-word">${nm}</div>
