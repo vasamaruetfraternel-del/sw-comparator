@@ -4275,6 +4275,19 @@ function renderStrategyPicker(){
 function autoBuildTeam(){
   selTb = [];
 
+  // 1. COLLECTER LES MONSTRES DES AUTRES ÉQUIPES (Pour éviter les doublons en Tour/GDR)
+  const usedInOtherTeams = new Set();
+  
+  // /!\ ADAPTATION REQUISE ICI /!\
+  // Exemple si tu as un tableau global de tes 3 équipes (ex: allTeams = [team1, team2, team3])
+  // Il faut ajouter les monstres des AUTRES équipes que celle en cours de modification.
+  if (typeof allTeams !== 'undefined') {
+    allTeams.forEach(team => {
+      // Si ce n'est pas l'équipe actuelle (on se base sur une ref ou un index)
+      // team.members.forEach(m => usedInOtherTeams.add(m));
+    });
+  }
+
   const strat = STRATEGIES[teamStrategy] || STRATEGIES.balanced;
   const W = strat.buffWeight;
 
@@ -4283,10 +4296,10 @@ function autoBuildTeam(){
   const supportTarget = teamSize - frontTarget - rangeTarget;
 
   function buffCategory(id){
-    if(OFF_IDS.has(id))return'off';
-    if(DEF_IDS.has(id))return'def';
-    if(TEAM_IDS.has(id))return'team';
-    return'off';
+    if(OFF_IDS.has(id)) return 'off';
+    if(DEF_IDS.has(id)) return 'def';
+    if(TEAM_IDS.has(id)) return 'team';
+    return 'off';
   }
 
   function scoreAlone(nm){
@@ -4306,11 +4319,12 @@ function autoBuildTeam(){
     return s;
   }
 
-  // On place d'abord le meilleur monstre solo
+  // On place d'abord le meilleur monstre solo (en excluant les autres équipes)
   const first = Object.keys(MONSTERS)
-    .filter(nm=>!excludedFromReco.includes(nm))
-    .map(nm=>({nm, score:scoreAlone(nm)}))
+    .filter(nm => !excludedFromReco.includes(nm) && !usedInOtherTeams.has(nm))
+    .map(nm => ({nm, score:scoreAlone(nm)}))
     .sort((a,b)=>b.score-a.score)[0];
+    
   if(first) selTb.push(first.nm);
 
   // Ensuite calcReco gère tout le reste avec les synergies
@@ -4327,6 +4341,9 @@ function autoBuildTeam(){
 
     let chosen = null;
     for(const nm of candidates){
+      // SÉCURITÉ ANTI-DOUBLON : Ignorer si déjà dans l'équipe actuelle OU dans les autres équipes
+      if (selTb.includes(nm) || usedInOtherTeams.has(nm)) continue;
+
       const t = MONSTERS[nm]?.type;
       const isFront   = t==='melee'||t==='tank';
       const isRange   = t==='range';
@@ -4341,14 +4358,18 @@ function autoBuildTeam(){
       let ok = true;
       if(isFront   && frontCurrent   >= frontTarget+2   && (rangeLeft>0||supportLeft>0) && slotsLeft>=rangeLeft+supportLeft) ok=false;
       if(isRange   && rangeCurrent   >= rangeTarget+2   && (frontLeft>0||supportLeft>0) && slotsLeft>=frontLeft+supportLeft) ok=false;
-      if(isSupport && supportCurrent >= supportTarget+2 && (frontLeft>0||rangeLeft>0)   && slotsLeft>=frontLeft+rangeLeft)   ok=false;
+      if(isSupport && supportCurrent >= supportTarget+2 && (frontLeft>0||rangeLeft>0)   && slotsLeft>=frontLeft+rangeLeft)  ok=false;
       if(isSupport && strat.typeRatio.support===0) ok=false;
 
       if(ok){ chosen=nm; break; }
     }
 
-    if(!chosen) chosen = candidates[0];
-    if(!chosen) break;
+    // Sécurité de repli : Si aucun ne valide les ratios, on prend le premier disponible et STRICTEMENT UNIQUE
+    if(!chosen){
+      chosen = candidates.find(nm => !selTb.includes(nm) && !usedInOtherTeams.has(nm));
+    }
+    
+    if(!chosen) break; // Plus aucun monstre valide et unique disponible
     selTb.push(chosen);
   }
 
