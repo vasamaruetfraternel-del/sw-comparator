@@ -14,7 +14,7 @@ function spellScore(sk) {
     const aoe = sk.aoe ? 10 : 0;
     return Math.round(atk + buf + hit + aoe);
 }
-
+const AWK3 = { level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true };
 function SKILLS(nm) {
     return {
         basic: BASIC_SKILLS[nm] || null,
@@ -50,7 +50,6 @@ const BUFF_CATS = {
     precision: { label: "🎯 Précision/Esquive", ids: ["accuracy_20", "accuracy_20_range", "accuracy_20_team", "dodge_rate_20", "dodge_nerf_20", "weak_hit_rate_20", "weak_hit_rate_20_melee"] },
 };
 
-const AWK3 = { level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true };
 const BUFFS = {
     "atk_10": { label: "ATQ +10%", color: "#e05555", power: 10 },
     "atk_10_cond": { label: "ATQ +10% (conditionnel)", color: "#e05555", power: 7, cond: true },
@@ -906,9 +905,6 @@ const MONSTERS = {
     "Raki": { type: "melee", awakenings: [{ level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true }, { level: 5, desc: "Au début du combat, confère à soi-même pendant 3 sec l'effet de renforcement Esquive absolue.\nAu début du combat, s'octroie l'effet de renforcement Accélération de la compétence de 15%. (Suppression impossible, cumulable)\nÀ chaque fois qu'un effet d'entrave est appliqué, accorde à un allié l'effet de renforcement Détection de point faible – Entrave de 10 % pendant 10 sec. (Effet cumulable)", buffs: ["dodge_3s", "skill_accel_15", "weak_point_entrave2"], pvp: true, pve: false }, { level: 7, desc: "En cas d'attaque réussie, applique un effet d'Point faible – Entrave de 15% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, attire à sa position tous les ennemis bénéficiant de l'effet Entrave.\nLes ennemis affectés par le cercle magique Chaînes infernales sont attirés, que l'attaque touche ou non.\nLes dégâts infligés par le monstre augmentent de 20%.\n(Suppression impossible, effet cumulable)", buffs: ["weak_point_entrave", "pull_target", "dmg_20"], pvp: true, pve: true }] },
     "Tilasha": { type: "range", awakenings: [{ level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true }, { level: 5, desc: "Augmentation de la portée de 3.\nDiminution temps de recharge cd exclusive, cd : 2 sec.", buffs: ["range_3", "cd_reset_exclu_2S"], pvp: true, pve: false }, { level: 7, desc: "Afflux de malice.\nA chaque débuff, gagne 5% atk par stack 10s.\nDégâts + 20%", buffs: ["atk_stack_debuff_count", "dmg_20"], pvp: true, pve: true }] },
 };
-const OFF_IDS = new Set(['atk_10', 'atk_20', 'atk_25_delay', 'atk_80', 'atk_100', 'atk_up_stack', 'dmg_15', 'dmg_20', 'dmg_150', 'dmg_aoe_scaling', 'dmg_buff_scaling', 'dmg_debuff_scaling', 'dmg_unique_target', 'dmg_frozen_50', 'dmg_stunned_50', 'dmg_def_down_50', 'dmg_cc_50', 'dmg_poisoned_20', 'dmg_bleed_20', 'dmg_burned_20', 'dmg_sleeping_20', 'dmg_dot_50', 'dmg_petrified_20', 'crit_rate_10', 'crit_rate_10_cond', 'crit_rate_50', 'crit_dmg_10_cond', 'crit_dmg_20', 'no_crit_cd', 'crush_rate_10', 'crush_rate_10_cond', 'crush_dmg_20', 'crush_dmg_20_ally', 'crush_rate_20_ally', 'double_hit_10', 'double_hit_15', 'double_hit_10_cond', 'triple_hit_10', 'spd_10', 'spd_15', 'spd_15_cond', 'spd_30', 'spd_40_cond', 'move_spd_200', 'skill_accel_15', 'skill_accel_20_cond', 'cd_reset_proc', 'cd_skill_cond', 'exclusive_cd_down', 'range_3', 'range_5', 'aoe_range_30', 'aoe_range_30_cond', 'cc_eff_20', 'stealth', 'strip_shield', 'bleed', 'dot_poison', 'weakness_poison_enemy', 'weakness_element', 'debuff_aoe_taken_10', 'debuff_crit_taken_10', 'block_shield', 'target_weakness_provoke', 'target_weakness_immunity', 'target_weakness_shield', 'atk_down_ennemy_count', 'bloom_stack', 'full_bloom', 'fox_fire_cond', 'fox_fire_burst', 'rockstar_i', 'rockstar_iii_cond', 'happy_box_cond', 'lifesteal_15_cond', 'provoke_status', 'dmg_down_provoked', 'weak_point_detect', 'weakness_elem_team']);
-const DEF_IDS = new Set(['def_15', 'hp_max_15_cond', 'res_lp_30', 'dmg_resist_10', 'dmg_resist_15_cond', 'dmg_resist_20_cond', 'dmg_resist_20_team', 'dmg_resist_80_cond', 'shield_hits_3_team', 'shield_hits_5', 'stealth_shield', 'protection_shield', 'endurance_cond', 'dodge_3s', 'limit_shield', 'cc_immune_team_30', 'cc_immune_self_react', 'fran_blessing_team']);
-const TEAM_IDS = new Set(['spd_team_20', 'shield_hits_3_team', 'dmg_resist_20_team', 'cc_immune_team_30', 'fran_blessing_team', 'merry_box_team_cond', 'crush_rate_10_team', 'weakness_elem_team', 'double_triple_dmg_team', 'teamwork_stack', 'one_team_one_spirit', 'perfect_team', 'limit_shield', 'class_share_melee', 'target_weakness_provoke', 'target_weakness_shield', 'weak_point_detect']);
 
 const SW_FAQ_CATS = [
     { id: 'all', label: 'Tout', icon: '📋' },
