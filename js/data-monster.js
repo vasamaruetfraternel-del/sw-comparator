@@ -1,6 +1,3 @@
-const BUFF_CATS = {
-
-}
 const CW = .6;
 const MAX_T = 500;
 const MAX_AWK = 200;
