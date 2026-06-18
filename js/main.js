@@ -1465,11 +1465,16 @@ function localSearchImprove(members, strat, usedElsewhere, maxPasses){
 
   while(improved && pass<maxPasses){
     improved = false; pass++;
-    const available = Object.keys(MONSTERS).filter(nm=>!best.includes(nm)&&!usedElsewhere.has(nm)&&!excludedFromReco.includes(nm));
 
     for(let i=0;i<best.length;i++){
+      const available = Object.keys(MONSTERS).filter(nm=>{
+        if(usedElsewhere.has(nm)||excludedFromReco.includes(nm)) return false;
+        for(let j=0;j<best.length;j++){ if(j!==i&&best[j]===nm) return false; }
+        return true;
+      });
       let localBestSwap=null, localBestScore=bestScore;
       for(const cand of available){
+        if(cand===best[i]) continue;
         const trial=[...best]; trial[i]=cand;
         const sc=evalTeamScore(trial, strat);
         if(sc>localBestScore){ localBestScore=sc; localBestSwap=cand; }
