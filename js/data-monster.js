@@ -50,6 +50,7 @@ const BUFF_CATS = {
     precision: { label: "🎯 Précision/Esquive", ids: ["accuracy_20", "accuracy_20_range", "accuracy_20_team", "dodge_rate_20", "dodge_nerf_20", "weak_hit_rate_20", "weak_hit_rate_20_melee"] },
 };
 
+const AWK3 = { level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true };
 const BUFFS = {
     "atk_10": { label: "ATQ +10%", color: "#e05555", power: 10 },
     "atk_10_cond": { label: "ATQ +10% (conditionnel)", color: "#e05555", power: 7, cond: true },
