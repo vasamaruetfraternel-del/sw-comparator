@@ -1345,21 +1345,45 @@ function evalTeamScore(members, strat){
       ...(m.awakenings||[]).filter(a=>a.level!==3).flatMap(a=>a.buffs||[]),
       ...skillBuffsRaw(nm)
     ]);
+    
     ids.forEach(id=>{
       const b = BUFFS[id]; if(!b) return;
       const v = bVal(id);
       const cat = OFF_IDS.has(id)?'off':DEF_IDS.has(id)?'def':TEAM_IDS.has(id)?'team':'off';
-      const w = W[cat] ?? 1;
+      let w = W[cat] ?? 1;
+
+      // 1. Même détection offensive que dans autoBuildBalancedTeams
+      const isOffensive = cat === 'off' || id.includes('atk') || id.includes('dmg') || id.includes('crit') || id.includes('crush') || id.includes('double') || id.includes('triple') || id.includes('spd');
+      
+      if (isOffensive) {
+        w *= 1.6; // Boost de valeur pour prioriser les statistiques de dégâts
+      }
+
+      // 2. Logique d'empilement alignée (Pas de pénalité abrasive)
       if(b.team){
-        if(!teamBufSeen[id]){ total += v*w*1.4; teamBufSeen[id]=1; }
-        else total += v*w*0.5;
+        if(!teamBufSeen[id]){ 
+          total += v * w * 1.5; 
+          teamBufSeen[id] = 1; 
+        } else { 
+          total += v * w * 1.2; // Récompense l'accumulation des buffs d'équipe (ex: Double buff ATQ global)
+          teamBufSeen[id]++;
+        }
       } else {
-        total += v*w;
+        if(!teamBufSeen[id]){
+          total += v * w;
+          teamBufSeen[id] = 1;
+        } else {
+          // Si le buff individuel est vu plusieurs fois dans l'équipe (compétences miroirs/similaires)
+          if (isOffensive) total += v * w * 0.9; 
+          else total += v * w * 0.2;
+          teamBufSeen[id]++;
+        }
       }
     });
     total += getAwkLevel(nm)*6;
   });
 
+  // --- Gestion de la composition d'équipe ---
   const typeCounts = {melee:0,tank:0,range:0,support:0};
   members.forEach(nm=>{ if(MONSTERS[nm]) typeCounts[MONSTERS[nm].type]++; });
   const teamSize = members.length;
