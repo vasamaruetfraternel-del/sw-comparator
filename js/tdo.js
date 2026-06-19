@@ -98,7 +98,22 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
     }
 
     function evalAll(teamsState) {
-        return teamsState.reduce((sum, members, i) => sum + evalTeamScore(members, STRATEGIES[strategies[i]] || STRATEGIES.balanced), 0);
+        // 1. On récupère les scores de chaque équipe
+        const scores = teamsState.map((members, i) => evalTeamScore(members, STRATEGIES[strategies[i]] || STRATEGIES.balanced));
+        
+        // 2. On calcule le total et la moyenne de puissance
+        const sum = scores.reduce((a, b) => a + b, 0);
+        const avg = sum / scores.length;
+
+        // 3. On calcule la pénalité de déséquilibre (l'écart de chaque équipe par rapport à la moyenne)
+        let imbalancePenalty = 0;
+        scores.forEach(score => {
+            imbalancePenalty += Math.abs(score - avg);
+        });
+
+        // 4. On soustrait cette pénalité au score total.
+        // Le multiplicateur (ici 1.8) force l'algorithme à privilégier la répartition.
+        return sum - (imbalancePenalty * 1.8);
     }
 
     function localSearchAll(teamsState, maxPasses) {
