@@ -13,10 +13,10 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
         for (let round = 0; round < teamSize; round++) {
             const order = [...result.keys()];
             if (round % 2 !== 0) order.reverse();
-            
+
             for (const ti of order) {
                 if (result[ti].length >= teamSize) continue;
-                
+
                 const allUsed = new Set(baseUsed);
                 result.forEach(t => t.forEach(m => allUsed.add(m)));
                 const available = Object.keys(MONSTERS).filter(nm => !allUsed.has(nm) && !excludedFromReco.includes(nm));
@@ -24,12 +24,12 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
 
                 const strat = strats[ti], W = strat.buffWeight;
                 const teamBufSet = {};
-                
+
                 result[ti].forEach(n => {
                     [...(MONSTERS[n]?.awakenings || []).filter(a => a.level !== 3).flatMap(a => a.buffs || []), ...skillBuffsRaw(n)]
                         .forEach(id => { teamBufSet[id] = (teamBufSet[id] || 0) + 1; });
                 });
-                
+
                 const typeCounts = { melee: 0, tank: 0, range: 0, support: 0 };
                 result[ti].forEach(n => { if (MONSTERS[n]) typeCounts[MONSTERS[n].type]++; });
                 const frontTarget = Math.round(teamSize * strat.typeRatio.front);
@@ -43,34 +43,28 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
                     const m = MONSTERS[nm];
                     const ids = new Set([...(m.awakenings || []).filter(a => a.level !== 3).flatMap(a => a.buffs || []), ...skillBuffsRaw(nm)]);
                     let syn = 0;
-                    
+
                     ids.forEach(id => {
                         const b = BUFFS[id]; if (!b) return;
                         const v = bVal(id);
                         const cat = OFF_IDS.has(id) ? 'off' : DEF_IDS.has(id) ? 'def' : TEAM_IDS.has(id) ? 'team' : 'off';
                         let w = W[cat] ?? 1;
 
-                        // 1. DÉTECTION OFFENSIVE : On identifie si le buff génère du DPS
                         const isOffensive = cat === 'off' || id.includes('atk') || id.includes('dmg') || id.includes('crit') || id.includes('crush') || id.includes('double') || id.includes('triple') || id.includes('spd');
-                        
-                        // Boost artificiel du poids des stats de dégâts pour prioriser le DPS
+
                         if (isOffensive) {
-                            w *= 1.6; 
+                            w *= 1.6;
                         }
 
-                        // 2. LOGIQUE DE STACKING : On récompense le cumul au lieu de le punir
                         if (!teamBufSet[id]) {
                             syn += b.team ? v * w * 1.5 : v * w;
                         } else {
                             if (b.team) {
-                                // Excellent score pour l'empilement de buffs d'équipe
-                                syn += v * w * 1.2; 
+                                syn += v * w * 1.2;
                             } else if (isOffensive) {
-                                // Bon score pour le cumul de buffs offensifs individuels
-                                syn += v * w * 0.9; 
+                                syn += v * w * 0.9;
                             } else {
-                                // Petit bonus pour le reste (plus de pénalité négative)
-                                syn += v * w * 0.2; 
+                                syn += v * w * 0.2;
                             }
                         }
                     });
@@ -79,12 +73,12 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
                     const t = m.type;
                     const isFront = t === 'melee' || t === 'tank', isRange = t === 'range', isSupport = t === 'support';
                     const compW = W.off + W.def + W.team;
-                    
+
                     if (isFront) comp += frontNeed > 0 ? (35 + frontNeed * 12) * (compW / 3) : (frontNeed < -1 ? -30 : 0);
                     if (isRange) comp += rangeNeed > 0 ? (35 + rangeNeed * 12) * (compW / 3) : (rangeNeed < -1 ? -30 : 0);
                     if (isSupport) comp += supportNeed > 0 ? (55 + supportNeed * 18) * (compW / 3) : (supportNeed < -1 ? -40 : 0);
                     if (isSupport && strat.typeRatio.support === 0) comp -= 80;
-                    
+
                     return { nm, score: syn + comp + getAwkLevel(nm) * 6 };
                 }).sort((a, b) => b.score - a.score);
 
@@ -98,21 +92,15 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
     }
 
     function evalAll(teamsState) {
-        // 1. On récupère les scores de chaque équipe
         const scores = teamsState.map((members, i) => evalTeamScore(members, STRATEGIES[strategies[i]] || STRATEGIES.balanced));
-        
-        // 2. On calcule le total et la moyenne de puissance
         const sum = scores.reduce((a, b) => a + b, 0);
         const avg = sum / scores.length;
 
-        // 3. On calcule la pénalité de déséquilibre (l'écart de chaque équipe par rapport à la moyenne)
         let imbalancePenalty = 0;
         scores.forEach(score => {
             imbalancePenalty += Math.abs(score - avg);
         });
 
-        // 4. On soustrait cette pénalité au score total.
-        // Le multiplicateur (ici 1.8) force l'algorithme à privilégier la répartition.
         return sum - (imbalancePenalty * 1.8);
     }
 
@@ -120,7 +108,7 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
         let best = teamsState.map(t => [...t]);
         let bestTotal = evalAll(best);
         let improved = true, pass = 0;
-        
+
         while (improved && pass < maxPasses) {
             improved = false; pass++;
             for (let ti = 0; ti < best.length; ti++) {
@@ -161,7 +149,7 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
 
     const ATTEMPTS = 15;
     let bestOverall = null, bestOverallScore = -Infinity;
-    
+
     for (let a = 0; a < ATTEMPTS; a++) {
         const randomness = a < 3 ? 1 : 3;
         const attempt = buildOneAttempt(randomness);
