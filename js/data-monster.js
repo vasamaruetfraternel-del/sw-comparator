@@ -50,6 +50,28 @@ const BUFF_CATS = {
     precision: { label: "🎯 Précision/Esquive", ids: ["accuracy_20", "accuracy_20_range", "accuracy_20_team", "dodge_rate_20", "dodge_nerf_20", "weak_hit_rate_20", "weak_hit_rate_20_melee"] },
 };
 
+const SYN_PAIRS = {
+    'crush_dmg_20_team': ['crush_rate_10', 'crush_rate_10_team', 'crush_rate_20'],
+    'crush_rate_10_team': ['crush_dmg_20', 'crush_dmg_20_team'],
+    'crit_dmg_team_20': ['crit_rate_10', 'crit_rate_team_20', 'crit_rate_50'],
+    'crit_rate_team_20': ['crit_dmg_20', 'crit_dmg_team_20'],
+    'double_hit_team_20': ['double_triple_dmg_team', 'full_bloom'],
+    'triple_hit_team_10': ['double_triple_dmg_team', 'full_bloom'],
+    'full_bloom': ['double_triple_dmg_team', 'crit_rate_team_20'],
+    'spd_team_20': ['skill_accel_20_team', 'skill_accel_15_team'],
+    'dmg_resist_20_team': ['shield_hits_3_team', 'limit_shield'],
+};
+
+function pairSynergyBonus(id, teamBufSet, w) {
+    const b = BUFFS[id]; if (!b) return 0;
+    const v = bVal(id);
+    let bonus = 0;
+    if (SYN_PAIRS[id]) SYN_PAIRS[id].forEach(pid => { if (teamBufSet[pid]) bonus += v * w * 0.5; });
+    const baseId = id.replace(/_team$/, '').replace(/_20_team$/, '_20').replace(/_10_team$/, '_10');
+    if (b.team && teamBufSet[baseId]) bonus += v * w * 0.7;
+    return bonus;
+}
+
 const BUFFS = {
     "atk_10": { label: "ATQ +10%", color: "#e05555", power: 10 },
     "atk_10_cond": { label: "ATQ +10% (conditionnel)", color: "#e05555", power: 7, cond: true },
