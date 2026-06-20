@@ -1,4 +1,4 @@
-const TCOL = { melee: 'var(--mel)', tank: 'var(--tnk)', range: 'var(--rng)', support: 'var(--sup)' };
+﻿const TCOL = { melee: 'var(--mel)', tank: 'var(--tnk)', range: 'var(--rng)', support: 'var(--sup)' };
 const TLBL = { melee: 'Mêlée', tank: 'Tank', range: 'Range', support: 'Support' };
 const TCLS = { melee: 'tc-m', tank: 'tc-t', range: 'tc-r', support: 'tc-s' };
 const SCOLS = ['#4888d8', '#c89020', '#d84040'];
@@ -208,17 +208,16 @@ function toggleAwk(nm, level) {
 
 function switchTab(t) {
     activeTab = t;
-    ['cmp', 'tb', 'tl', 'me', 'faq'].forEach(id => {
+    ['cmp', 'tb', 'tl', 'me'].forEach(id => {
         document.getElementById('tab-' + id).classList.toggle('on', id === t);
         document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1)).className = 'panel ' + (id === t ? 'on' : 'off');
     });
     const sb = document.getElementById('sb');
-    if (t === 'me' || t === 'faq') sb.classList.add('me-mode');
+    if (t === 'me') sb.classList.add('me-mode');
     else { sb.classList.remove('me-mode'); buildGrid(); }
     if (t === 'tl') renderTierList();
     if (t === 'me') renderMesEveils();
     if (t === 'tb') renderStrategyPicker();
-    if (t === 'faq') { buildSwFaqCats(); renderSwFaq(); }
 }
 
 function onSearch() {
@@ -492,6 +491,65 @@ function setSize(s) {
     renderTeam(); buildGrid();
 }
 function clearTeam() { selTb = []; renderTeam(); buildGrid(); }
+
+function openTbInfo() {
+    document.getElementById('tbInfoContent').innerHTML = `
+    <div class="tbinfo-title">ℹ️ Comment fonctionne la sélection automatique ?</div>
+
+    <div class="tbinfo-sec">
+      <h4>💡 Suggestions (sous l'équipe, en construction manuelle)</h4>
+      <p>Dès qu'il reste de la place dans l'équipe, les 10 meilleurs monstres restants sont proposés en chips cliquables. Pour chaque monstre pas encore dans l'équipe (et pas exclu), le score additionne :</p>
+      <ul>
+        <li>la valeur des buffs qu'il apporte (éveils + compétences), pondérée selon la <strong>stratégie</strong> active (Équilibré / Offensif / Défensif...) ;</li>
+        <li>un bonus si son rôle (Mêlée/Tank, Range, Support) manque encore par rapport au ratio cible de la stratégie, un malus s'il est déjà en sureffectif ;</li>
+        <li>le bonus d'éveil et d'investissement (voir plus bas).</li>
+      </ul>
+    </div>
+
+    <div class="tbinfo-sec">
+      <h4>⚡ Auto-Build — Team Builder classique (10/15/25)</h4>
+      <p>Reconstruit toute l'équipe depuis zéro :</p>
+      <ul>
+        <li>choisit en premier le monstre avec le meilleur score "seul" (buffs + bonus éveil/investissement, sans synergie puisqu'il n'y a encore personne) ;</li>
+        <li>ajoute ensuite les monstres un par un avec le même calcul que les Suggestions, avec un garde-fou qui évite de sur-remplir un rôle déjà à ratio si un autre rôle est encore en manque.</li>
+      </ul>
+    </div>
+
+    <div class="tbinfo-sec">
+      <h4>⚡ Auto-Build — une équipe en Train de l'Ombre / Guerre des Guildes</h4>
+      <p>Plus poussé qu'en classique : <strong>25 tentatives</strong> sont générées (mélange de choix "greedy" et de choix légèrement aléatoires parmi les meilleurs candidats), chacune ensuite affinée par une <strong>recherche locale</strong> : chaque membre est testé en échange avec tout autre monstre disponible, l'échange est gardé s'il améliore le score total de l'équipe. La meilleure des 25 tentatives affinées est conservée.</p>
+      <p>Les monstres déjà placés dans les <strong>autres équipes de la même compo</strong> sont automatiquement exclus, pour ne jamais dupliquer un monstre entre équipes.</p>
+    </div>
+
+    <div class="tbinfo-sec">
+      <h4>⚖️ Équilibrer 3 Équipes (Train de l'Ombre / Guerre des Guildes)</h4>
+      <p>Construit les 3 équipes de la compo en même temps plutôt qu'une par une :</p>
+      <ul>
+        <li>un <strong>tank différent</strong> est pré-assigné à chaque équipe en priorité ;</li>
+        <li>les emplacements restants sont remplis équipe par équipe, à tour de rôle (sens alterné à chaque tour), pour répartir les bons monstres équitablement ;</li>
+        <li><strong>15 tentatives</strong> sont générées puis affinées par une recherche locale conjointe (échange possible entre n'importe quelle équipe) ;</li>
+        <li>le score retenu n'est pas juste la somme des 3 équipes : un <strong>malus de déséquilibre</strong> est appliqué si une équipe est nettement plus forte que les autres, pour viser 3 équipes de niveau comparable plutôt qu'une équipe énorme et deux faibles.</li>
+      </ul>
+    </div>
+
+    <hr class="tbinfo-divider">
+
+    <div class="tbinfo-sec">
+      <h4>🧮 Ce qui compte dans le score (commun à tous les cas ci-dessus)</h4>
+      <ul>
+        <li><strong>Valeur des buffs</strong> apportés (éveils + compétences), pondérée selon la stratégie choisie ;</li>
+        <li><strong>Buffs d'Équipe</strong> pas encore présents valorisés davantage ; un buff déjà présent dans l'équipe est moins valorisé (évite les doublons inutiles) ;</li>
+        <li><strong>Synergies</strong> entre certains buffs complémentaires ;</li>
+        <li><strong>Besoin de composition</strong> : bonus si un rôle manque par rapport à la stratégie, malus en cas de sureffectif ;</li>
+        <li><strong>Éveil maximum</strong> coché dans Mes Éveils (jusqu'à +42 pour un Éveil 7★) ;</li>
+        <li><strong>Niveau et Bonus de stats</strong> déclarés dans Mes Éveils, sur une échelle en racine carrée (pour départager les candidats sans écraser le reste du score).</li>
+      </ul>
+      <div class="faq-tip">💡 Un monstre marqué <strong>🚫 Exclure</strong> dans Mes Éveils n'apparaît jamais dans les Suggestions ni dans aucun Auto-Build.</div>
+    </div>
+  `;
+    document.getElementById('tbInfoModal').style.display = 'flex';
+}
+function closeTbInfo() { document.getElementById('tbInfoModal').style.display = 'none'; }
 
 function calcReco() {
     if (!selTb.length) return [];
@@ -1159,140 +1217,6 @@ function tdoAutoBuild(ti) {
     team.members = best || [];
     saveTdo(); renderTdo(); buildGrid();
 }
-const SW_FAQ = [
-    {
-        cat: 'score', q: "Comment est calculé le score d'un monstre ?",
-        a: `<p>Chaque monstre est noté sur <strong>500 points</strong>, composés de deux parties :</p>
-   <ul><li><strong>Éveils (max 200 pts)</strong> — Éveil 3★ vaut 25 pts fixes. Les éveils 5★ et 7★ sont normalisés sur 100 pts chacun selon la valeur de leurs buffs.</li><li><strong>Sorts (max 300 pts)</strong> — 3 sorts × 100 pts chacun.</li></ul>
-   <div class="faq-hi">⭐ Ces scores sont indicatifs. La puissance réelle en combat dépend surtout de la composition qui entoure le monstre.</div>`},
-    {
-        cat: 'score', q: "Comment est noté chaque sort ?",
-        a: `<p>Chaque sort (Attaque de base, Critique, Exclusive) est noté sur <strong>100 pts</strong> selon 4 critères :</p>
-   <ul><li><strong>Puissance d'attaque</strong> — plafonné à 30 pts</li><li><strong>Buffs apportés</strong> — plafonné à 40 pts</li><li><strong>Coups multiples</strong> — +8 pts/coup supplémentaire, max 20 pts</li><li><strong>Zone (AoE)</strong> — +10 pts</li></ul>`},
-    {
-        cat: 'score', q: "Les buffs conditionnels valent-ils moins ?",
-        a: `<p>Oui. Un buff conditionnel voit sa valeur réduite de <strong>40%</strong> par rapport à un buff permanent du même type.</p>
-   <div class="faq-tip">💡 Les buffs d'équipe (alliés) ont toujours un bonus de valeur car ils profitent à toute la composition.</div>`},
-    {
-        cat: 'score', q: "Que mesure le score dans 'Mes Éveils' ?",
-        a: `<p>Dans l'onglet <strong>Mes Éveils</strong>, seuls les éveils activés comptent — les sorts ne sont pas inclus. Le maximum par monstre est de <strong>225 pts</strong> (25 + 100 + 100).</p>`
-    },
-    {
-        cat: 'tb', q: "Comment fonctionne l'Auto-Build ?",
-        a: `<p>L'Auto-Build construit une équipe complète depuis zéro selon la stratégie choisie :</p>
-   <ul><li>Le <strong>premier monstre</strong> est choisi sur son score individuel pondéré par la stratégie.</li><li>Les <strong>suivants</strong> sont évalués en contexte — synergies, doublons, et quotas de rôle.</li><li>Les <strong>monstres exclus</strong> (🚫 dans Mes Éveils) sont ignorés.</li></ul>
-   <div class="faq-tip">💡 Changez la stratégie avant de lancer l'Auto-Build pour obtenir des compositions radicalement différentes.</div>`},
-    {
-        cat: 'tb', q: "Comment sauvegarder et charger une équipe ?",
-        a: `<p>La barre sous le Team Builder propose <strong>5 emplacements de sauvegarde</strong>. Pour chaque slot :</p>
-   <ul><li>Cliquez sur 💾 pour <strong>sauvegarder</strong> l'équipe et la taille actuelles.</li><li>Cliquez sur ▶ pour <strong>charger</strong> un slot.</li><li>Le champ texte permet de <strong>renommer</strong> le slot.</li></ul>`},
-    {
-        cat: 'tb', q: "Comment fonctionne le Mode Tour des Origines ?",
-        a: `<p>Le bouton <strong>🏆 Mode Tour des Origines</strong> active un mode spécial qui gère <strong>3 compos × 3 équipes</strong>.</p>
-   <ul><li>Un monstre assigné à une équipe est <strong>verrouillé</strong> pour les autres (portrait grisé).</li><li>Chaque équipe a sa propre stratégie et son propre Auto-Build.</li><li>Les compos sont sauvegardées automatiquement.</li></ul>
-   <div class="faq-warn">⚠ Un même monstre ne peut pas apparaître dans deux équipes d'une même compo.</div>`},
-    {
-        cat: 'reco', q: "Comment sont calculées les suggestions manuelles ?",
-        a: `<p>Quand vous ajoutez des monstres manuellement, les <strong>10 meilleures suggestions</strong> sont calculées selon 4 critères :</p>
-   <ul><li><strong>Synergie de buffs</strong> — buff nouveau = bonus, team buff = ×1.4, doublon solo = malus.</li><li><strong>Synergies de paires</strong> — Taux CP + Dégâts CP, Taux Crit + Dégâts Crit, Floraison + Coups Multiples…</li><li><strong>Quota de rôles</strong> — rôle manquant = bonus, rôle saturé = malus.</li><li><strong>Niveau d'éveil</strong> — un monstre éveillé dans Mes Éveils reçoit un léger bonus.</li></ul>`},
-    {
-        cat: 'reco', q: "Pourquoi un monstre n'apparaît-il pas dans les suggestions ?",
-        a: `<p>Deux raisons possibles :</p>
-   <ul><li>Le monstre est <strong>déjà dans l'équipe</strong>.</li><li>Il a été marqué <strong>🚫 Exclure</strong> dans l'onglet Mes Éveils — cliquez sur le bouton pour le réintégrer.</li></ul>`},
-    {
-        cat: 'strat', q: "Quelle stratégie choisir ?",
-        a: `<p>Tout dépend de votre objectif :</p>
-   <ul><li><strong>Équilibré</strong> — bon point de départ, sans parti pris.</li><li><strong>Offensif / Full Rush</strong> — maximise les dégâts, ignore les supports.</li><li><strong>Défensif</strong> — privilégie résistances et boucliers.</li><li><strong>Team Buff</strong> — favorise les buffs qui profitent à toute l'équipe.</li><li><strong>Offensif + Team / Défensif + Team</strong> — compromis entre buff personnel et soutien d'équipe.</li></ul>
-   <div class="faq-tip">💡 Consultez la section Stratégies disponibles pour voir les ratios exacts de chaque mode.</div>`},
-    {
-        cat: 'strat', q: "Qu'est-ce que le ratio de rôles dans une stratégie ?",
-        a: `<p>Chaque stratégie définit une cible de <strong>répartition Mêlée/Tank — Range — Support</strong> pour l'équipe. L'Auto-Build et les suggestions utilisent ce ratio pour équilibrer les types de personnages.</p>
-   <div class="faq-hi">⭐ Exemple : Full Rush impose 50% front + 50% range et 0% support — aucun support ne sera jamais suggéré.</div>`},
-    {
-        cat: 'me', q: "À quoi sert l'onglet Mes Éveils ?",
-        a: `<p>Il vous permet de <strong>déclarer vos éveils actifs</strong> (3★, 5★, 7★) pour chaque monstre. Ces données servent à :</p>
-   <ul><li>Calculer votre <strong>score personnel</strong> d'éveil.</li><li>Donner un <strong>bonus de priorité</strong> dans les suggestions du Team Builder.</li><li>Alimenter le résumé des buffs conditionnels actifs.</li></ul>`},
-    {
-        cat: 'me', q: "Comment exclure un monstre des suggestions ?",
-        a: `<p>Dans l'onglet Mes Éveils, cliquez sur le bouton <strong>🚫 Exclure</strong> sur la carte du monstre. Il disparaîtra des suggestions et de l'Auto-Build. Cliquez à nouveau (<strong>✅ Inclus</strong>) pour le réintégrer.</p>`
-    },
-    {
-        cat: 'me', q: "Les données d'éveil sont-elles sauvegardées ?",
-        a: `<p>Oui, elles sont sauvegardées dans le <strong>localStorage</strong> de votre navigateur. Vous pouvez également les exporter/importer via les boutons ⬆ Importer et ⬇ Exporter pour les transférer entre appareils.</p>
-   <div class="faq-warn">⚠ Vider le cache du navigateur efface les données. Pensez à exporter régulièrement.</div>`},
-];
-
-let swFaqCat = 'all', swFaqQ = '';
-const TL_FAQ = { score: 'Scores', tb: 'Team Builder', reco: 'Suggestions', strat: 'Stratégies', me: 'Mes Éveils' };
-const TI_FAQ = { score: '🏆', tb: '⚔', reco: '💡', strat: '⚡', me: '⭐' };
-const TCLS_FAQ = { score: 'ftag-score', tb: 'ftag-tb', reco: 'ftag-reco', strat: 'ftag-strat', me: 'ftag-me' };
-
-function buildSwFaqCats() {
-    document.getElementById('faqCats').innerHTML = SW_FAQ_CATS.map(c =>
-        `<button class="faq-cat-btn${c.id === 'all' ? ' on' : ''}" onclick="setSwFaqCat('${c.id}',this)">
-      <span>${c.icon}</span>${c.label}
-    </button>`
-    ).join('');
-}
-
-function setSwFaqCat(id, btn) {
-    swFaqCat = id;
-    document.querySelectorAll('.faq-cat-btn').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-    renderSwFaq();
-}
-
-function filterFaq() {
-    swFaqQ = document.getElementById('faqSearch').value.toLowerCase().trim();
-    renderSwFaq();
-}
-
-function renderSwFaq() {
-    const c = document.getElementById('faqContainer');
-    const f = SW_FAQ.filter(x =>
-        (swFaqCat === 'all' || x.cat === swFaqCat) &&
-        (!swFaqQ || x.q.toLowerCase().includes(swFaqQ) || x.a.toLowerCase().includes(swFaqQ))
-    );
-    if (!f.length) {
-        c.innerHTML = `<div class="faq-empty"><div style="font-size:2rem;opacity:.3;margin-bottom:8px">🔍</div>Aucune question trouvée.</div>`;
-        return;
-    }
-    if (swFaqCat === 'all' && !swFaqQ) {
-        const g = {};
-        f.forEach(x => { if (!g[x.cat]) g[x.cat] = []; g[x.cat].push(x); });
-        c.innerHTML = Object.entries(g).map(([cat, items]) =>
-            `<div style="margin-bottom:22px">
-        <div class="faq-section-hd"><span>${TI_FAQ[cat]}</span>${TL_FAQ[cat]}</div>
-        ${items.map((x, i) => swFaqHtml(x, cat + i)).join('')}
-      </div>`
-        ).join('');
-    } else {
-        c.innerHTML = f.map((x, i) => swFaqHtml(x, 'fq' + i)).join('');
-    }
-    c.querySelectorAll('.faq-q').forEach(q => {
-        q.addEventListener('click', () => {
-            const it = q.closest('.faq-item');
-            const an = it.querySelector('.faq-ans');
-            const op = it.classList.contains('open');
-            it.classList.toggle('open', !op);
-            an.classList.toggle('show', !op);
-        });
-    });
-}
-
-function swFaqHtml(f, uid) {
-    return `<div class="faq-item" id="sfaq-${uid}">
-    <div class="faq-q">
-      <div class="faq-q-left">
-        <span class="faq-qtag ${TCLS_FAQ[f.cat]}">${TL_FAQ[f.cat]}</span>
-        <span class="faq-qtext">${f.q}</span>
-      </div>
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-ans">${f.a}</div>
-  </div>`;
-}
-
 function findSimilarMonsters(nm, limit = 6) {
     const m = MONSTERS[nm]; if (!m) return [];
     const myBuffs = new Set(allMonsterBuffIds(nm));
@@ -1341,20 +1265,6 @@ function addSimilarToCmp(nm) {
     renderCmp(); buildGrid();
 }
 
-function renderFaqStrats() {
-    const el = document.getElementById('faqStratGrid');
-    if (!el) return;
-    el.innerHTML = Object.entries(STRATEGIES).map(([k, s]) => `
-    <div style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:12px 14px">
-      <div style="font-size:.9rem;font-weight:800;color:var(--tx);margin-bottom:6px">${s.icon} ${s.label}</div>
-      <div style="font-size:.75rem;color:var(--tx2);line-height:1.9">
-        Offensif ×${s.buffWeight.off}<br>
-        Défensif ×${s.buffWeight.def}<br>
-        Team ×${s.buffWeight.team}<br>
-        Front ${Math.round(s.typeRatio.front * 100)}% · Range ${Math.round(s.typeRatio.range * 100)}% · Support ${Math.round(s.typeRatio.support * 100)}%
-      </div>
-    </div>`).join('');
-}
 const GRID_TDO_W = 5, GRID_TDO_H = 5;
 const GRID_GDG_W = 5, GRID_GDG_H = 4;
 
@@ -1514,9 +1424,6 @@ function gdgAutoBuildAllBalanced() {
 }
 renderSavesBar();
 renderStrategyPicker();
-buildSwFaqCats();
-renderSwFaq();
-renderFaqStrats();
 buildGrid(); renderCmp(); renderTeam();
 
 let tbResizeTimer = null;

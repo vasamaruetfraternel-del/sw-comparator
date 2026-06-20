@@ -1,4 +1,4 @@
-function toggleGdgMode() {
+﻿function toggleGdgMode() {
     gdgMode = !gdgMode;
     if (tdoMode) { tdoMode = false; const tb = document.getElementById('tdoBtn'); if (tb) { tb.style.background = 'rgba(72,136,216,.1)'; tb.style.color = 'var(--tnk)'; } const tdoEl = document.getElementById('tdoContainer'); if (tdoEl) tdoEl.remove(); }
     const btn = document.getElementById('gdgBtn');

@@ -1,4 +1,4 @@
-function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
+﻿function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
     const baseUsed = getUsedFn ? getUsedFn() : new Set();
 
     function buildOneAttempt(randomness) {
