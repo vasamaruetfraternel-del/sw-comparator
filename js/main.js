@@ -516,13 +516,13 @@ function openTbInfo() {
     </div>
 
     <div class="tbinfo-sec">
-      <h4>⚡ Auto-Build — une équipe en Train de l'Ombre / Guerre des Guildes</h4>
+      <h4>⚡ Auto-Build — une équipe en Tour des Origines / Guerre des Guildes</h4>
       <p>Plus poussé qu'en classique : <strong>25 tentatives</strong> sont générées (mélange de choix "greedy" et de choix légèrement aléatoires parmi les meilleurs candidats), chacune ensuite affinée par une <strong>recherche locale</strong> : chaque membre est testé en échange avec tout autre monstre disponible, l'échange est gardé s'il améliore le score total de l'équipe. La meilleure des 25 tentatives affinées est conservée.</p>
       <p>Les monstres déjà placés dans les <strong>autres équipes de la même compo</strong> sont automatiquement exclus, pour ne jamais dupliquer un monstre entre équipes.</p>
     </div>
 
     <div class="tbinfo-sec">
-      <h4>⚖️ Équilibrer 3 Équipes (Train de l'Ombre / Guerre des Guildes)</h4>
+      <h4>⚖️ Équilibrer 3 Équipes (Tour des Origines / Guerre des Guildes)</h4>
       <p>Construit les 3 équipes de la compo en même temps plutôt qu'une par une :</p>
       <ul>
         <li>un <strong>tank différent</strong> est pré-assigné à chaque équipe en priorité ;</li>
