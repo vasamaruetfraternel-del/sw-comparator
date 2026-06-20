@@ -1,4 +1,4 @@
-﻿function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
+function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
     const baseUsed = getUsedFn ? getUsedFn() : new Set();
 
     function buildOneAttempt(randomness) {
@@ -7,7 +7,7 @@
 
         // Pré-assigne un tank différent par équipe
         const allTanks = Object.keys(MONSTERS).filter(nm => MONSTERS[nm].type === 'tank' && !baseUsed.has(nm) && !excludedFromReco.includes(nm));
-        const tankScored = allTanks.map(nm => ({ nm, score: bVal('') + getAwkLevel(nm) * 6 + Math.random() * 5 })).sort((a, b) => b.score - a.score);
+        const tankScored = allTanks.map(nm => ({ nm, score: bVal('') + getAwkLevel(nm) * 6 + investBonus(nm) + Math.random() * 5 })).sort((a, b) => b.score - a.score);
         for (let i = 0; i < result.length && i < tankScored.length; i++) result[i].push(tankScored[i].nm);
 
         for (let round = 0; round < teamSize; round++) {
@@ -80,7 +80,7 @@
                     if (isSupport) comp += supportNeed > 0 ? (55 + supportNeed * 18) * (compW / 3) : (supportNeed < -1 ? -40 : 0);
                     if (isSupport && strat.typeRatio.support === 0) comp -= 80;
 
-                    return { nm, score: syn + comp + getAwkLevel(nm) * 6 };
+                    return { nm, score: syn + comp + getAwkLevel(nm) * 6 + investBonus(nm) };
                 }).sort((a, b) => b.score - a.score);
 
                 const k = Math.max(1, Math.round(randomness));
