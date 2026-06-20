@@ -10,7 +10,8 @@
     <script src="js/gdg.js" defer></script>
     <script src="js/main.js" defer></script>
 </head>
-<body>    <div id="nav">
+<body>
+    <div id="nav">
         <div class="logo">★ SW Rush Tool</div>
         <button class="ntab on" id="tab-cmp" onclick="switchTab('cmp')">Fiche des monstre</button>
         <button class="ntab" id="tab-tb" onclick="switchTab('tb')">Team Builder</button>
@@ -70,21 +71,8 @@
                     <div id="tbReco"><span class="reco-lbl">Suggestions :</span><div id="recoChips"></div></div>
                     <div id="tbContent">
                         <div id="tbSlots"></div>
-                        <div id="tbScores">
-                            <div class="tb-score-gauge">
-                                <div class="tb-score-label">Offensif<span id="scoreOff">0</span></div>
-                                <div class="tb-score-bar"><div class="tb-score-fill" id="fillOff" style="width:0%;background:var(--mel)"></div></div>
-                            </div>
-                            <div class="tb-score-gauge">
-                                <div class="tb-score-label">Défensif<span id="scoreDef">0</span></div>
-                                <div class="tb-score-bar"><div class="tb-score-fill" id="fillDef" style="width:0%;background:var(--tnk)"></div></div>
-                            </div>
-                            <div class="tb-score-gauge">
-                                <div class="tb-score-label">Team<span id="scoreTeam">0</span></div>
-                                <div class="tb-score-bar"><div class="tb-score-fill" id="fillTeam" style="width:0%;background:var(--gold)"></div></div>
-                            </div>
-                        </div>
-                        <div id="tbSyn"><div class="syn-empty">Ajoutez des monstres pour voir les synergies</div></div>
+                        <div id="tbScores"></div>
+                        <div id="tbBuffBtnWrap"></div>
                     </div>
                 </div>
             </div>
