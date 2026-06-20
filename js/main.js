@@ -1,4 +1,4 @@
-﻿const TCOL = { melee: 'var(--mel)', tank: 'var(--tnk)', range: 'var(--rng)', support: 'var(--sup)' };
+const TCOL = { melee: 'var(--mel)', tank: 'var(--tnk)', range: 'var(--rng)', support: 'var(--sup)' };
 const TLBL = { melee: 'Mêlée', tank: 'Tank', range: 'Range', support: 'Support' };
 const TCLS = { melee: 'tc-m', tank: 'tc-t', range: 'tc-r', support: 'tc-s' };
 const SCOLS = ['#4888d8', '#c89020', '#d84040'];
@@ -16,6 +16,38 @@ let sgDragPayload = null, poolDragNm = null;
 let tlData = { S: [], A: [], B: [], C: [], D: [] }, tlDragName = null, tlDragFrom = null;
 let tlCat = '', meType = '', meRecapOpen = false;
 let myAwakenings = JSON.parse(localStorage.getItem('sw_my_awk') || '{}');
+let myLevel = JSON.parse(localStorage.getItem('sw_my_level') || '{}');
+let myStatBonus = JSON.parse(localStorage.getItem('sw_my_statbonus') || '{}');
+function saveMyLevel() { localStorage.setItem('sw_my_level', JSON.stringify(myLevel)); }
+function saveMyStatBonus() { localStorage.setItem('sw_my_statbonus', JSON.stringify(myStatBonus)); }
+function getMyLevel(nm) { const v = myLevel[nm]; return (typeof v === 'number' && v > 0) ? v : 1; }
+function getMyStatBonus(nm) { const v = myStatBonus[nm]; return (typeof v === 'number' && isFinite(v)) ? v : 0; }
+function setMyLevel(nm, val) {
+    let v = Math.round(+val); if (!isFinite(v)) v = 1; v = Math.max(1, v);
+    myLevel[nm] = v; saveMyLevel();
+    updateMeCard(nm);
+    refreshAllMonsterBadges();
+    refreshTeamViews();
+}
+function setMyStatBonus(nm, val) {
+    let v = Math.round(+val); if (!isFinite(v)) v = 0;
+    myStatBonus[nm] = v; saveMyStatBonus();
+    updateMeCard(nm);
+    refreshAllMonsterBadges();
+    refreshTeamViews();
+}
+function monsterBadgesHtml(nm) {
+    return `<div class="mb-wrap" data-mb-nm="${nm}">
+    <div class="mb-lv">Lv.${getMyLevel(nm)}</div>
+    <div class="mb-sb">+${getMyStatBonus(nm)}</div>
+  </div>`;
+}
+function refreshAllMonsterBadges() {
+    document.querySelectorAll('.mb-wrap[data-mb-nm]').forEach(el => {
+        const nm = el.dataset.mbNm;
+        el.innerHTML = `<div class="mb-lv">Lv.${getMyLevel(nm)}</div><div class="mb-sb">+${getMyStatBonus(nm)}</div>`;
+    });
+}
 let teamSaves = JSON.parse(localStorage.getItem('sw_team_saves') || JSON.stringify([
     { name: 'Équipe 1', members: [], size: 15 },
     { name: 'Équipe 2', members: [], size: 15 },
@@ -48,18 +80,23 @@ function saveTeamSaves() { localStorage.setItem('sw_team_saves', JSON.stringify(
 function saveAwk() { localStorage.setItem('sw_my_awk', JSON.stringify(myAwakenings)); }
 function getAwkSet(nm) { const v = myAwakenings[nm]; return new Set(Array.isArray(v) ? v : (v ? [v] : [])); }
 function getAwkLevel(nm) { const s = getAwkSet(nm); return s.has(7) ? 7 : s.has(5) ? 5 : s.has(3) ? 3 : 0; }
-
-function monsterRawAwkSum(nm, levels) {
-    const m = MONSTERS[nm]; if (!m) return 0;
-    return (m.awakenings || []).filter(a => levels.has(a.level)).reduce((s, a) => s + (a.buffs || []).reduce((ss, id) => ss + bVal(id), 0), 0);
+// Bonus d'investissement (niveau + bonus de stats déclarés dans Mes Éveils) pris en compte
+// par le constructeur d'équipe automatique, pour privilégier les monstres les plus développés.
+// Échelle en racine carrée : niveau et bonus de stats sont saisis sans limite par l'utilisateur,
+// la racine évite qu'une valeur brute très élevée n'écrase le reste du score.
+function investBonus(nm) {
+    return Math.sqrt(Math.max(0, getMyLevel(nm))) * 1.2 + Math.sqrt(Math.max(0, getMyStatBonus(nm))) * 1.5;
 }
+
+// Même barème que "Mes Éveils" (awkPts/myPts, normalisé 0-100 par palier, plafonné à 225/monstre)
+// pour que la Puissance Globale d'une équipe corresponde exactement à la somme des scores
+// affichés dans Mes Éveils, et pas à une autre échelle de points.
 function teamGlobalPower(members) {
     let mine = 0, max = 0;
     members.forEach(nm => {
         const m = MONSTERS[nm]; if (!m) return;
-        const allLevels = new Set((m.awakenings || []).map(a => a.level));
-        max += monsterRawAwkSum(nm, allLevels);
-        mine += monsterRawAwkSum(nm, getAwkSet(nm));
+        max += Math.min((m.awakenings || []).reduce((s, a) => s + awkPts(a), 0), 225);
+        mine += myPts(nm);
     });
     return { mine, max };
 }
@@ -259,6 +296,7 @@ function buildGrid() {
             badge = `<div class="pc-badge" style="background:rgba(168,212,40,.2);color:var(--green2)">✓</div>`;
         }
         d.innerHTML = `<img src="${IP}${nm}.png" loading="lazy" onerror="this.src=''" style="${(tdoBlocked || gdgBlocked) ? 'opacity:.35' : ''}">
+      ${monsterBadgesHtml(nm)}
       <div class="pc-type" style="color:${TCOL[m.type]}">${{ melee: '⚔', tank: '🛡', range: '🏹', support: '💚' }[m.type]}</div>
       ${badge}
       <div class="pc-bot"><div class="pc-name">${nm}</div><div class="pc-score" style="color:${sc}">${tot}</div></div>`;
@@ -382,7 +420,7 @@ function renderCmpRow(nm, idx) {
 
     return `<div class="mrow" style="border-left:4px solid ${col}">
     <div class="mrow-head">
-      <div class="mrow-port"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
+      <div class="mrow-port"><img src="${IP}${nm}.png" onerror="this.style.display='none'">${monsterBadgesHtml(nm)}</div>
       <div class="mrow-port-rm" onclick="removeCmp(${idx})">×</div>
       <div class="mrow-info">
         <div class="mrow-name">${nm}</div>
@@ -523,7 +561,7 @@ function calcReco() {
             if (isSupport) compScore += supportNeed > 0 ? (55 + supportNeed * 18) * (compW / 3) : (supportNeed < -1 ? -40 : 0);
             if (isSupport && strat.typeRatio.support === 0) compScore -= 80;
 
-            const awkBonus = getAwkLevel(nm) * 6;
+            const awkBonus = getAwkLevel(nm) * 6 + investBonus(nm);
 
             let urgencyPenalty = 0;
             if (remaining === 1) {
@@ -609,6 +647,7 @@ function renderTierList() {
 function tlPcHTML(nm, tid) {
     return `<div class="tl-pc" draggable="true" ondragstart="tlTierDragStart(event,'${nm}','${tid}')" ondragend="tlDragEnd()">
     <img src="${IP}${nm}.png" onerror="this.src=''">
+    ${monsterBadgesHtml(nm)}
     <div class="tl-pc-name">${nm}</div>
     <div class="tl-pc-rm" onclick="tlRemove('${nm}','${tid}')">×</div>
   </div>`;
@@ -670,6 +709,7 @@ function buildMeCard(nm) {
     div.innerHTML = `
     <div class="me-card-top">
       <img class="me-card-img" src="${IP}${nm}.png" onerror="this.style.display='none'">
+      ${monsterBadgesHtml(nm)}
       <div class="me-card-mid">
         <div class="me-card-name">${nm}</div>
         <div class="me-card-tagline">${genTagline(nm)}</div>
@@ -679,6 +719,14 @@ function buildMeCard(nm) {
         <span class="sc-earned" style="color:var(--tx2)">0</span>
         <span class="sc-sep">/ ${mxPts} pts</span>
       </div>
+    </div>
+    <div class="me-card-stats">
+      <label class="me-stat-field">Niveau
+        <input type="number" class="me-stat-input" min="1" value="${getMyLevel(nm)}" onchange="setMyLevel('${nm}',this.value)">
+      </label>
+      <label class="me-stat-field">Bonus de stats
+        <input type="number" class="me-stat-input" value="${getMyStatBonus(nm)}" onchange="setMyStatBonus('${nm}',this.value)">
+      </label>
     </div>
     <div class="me-card-bot">
       <button class="me-awk-btn" data-lv="3" onclick="toggleAwk('${nm}',3)">Éveil 3</button>
@@ -733,9 +781,9 @@ function renderMeRecap() {
     const s3 = document.getElementById('meStat3'); const s5 = document.getElementById('meStat5'); const s7 = document.getElementById('meStat7');
     if (s3) s3.textContent = cnt3; if (s5) s5.textContent = cnt5; if (s7) s7.textContent = cnt7;
     const buffAgg = {};
-    Object.entries(myAwakenings).forEach(([nm, lvArr]) => {
+    Object.keys(myAwakenings).forEach(nm => {
         const m = MONSTERS[nm]; if (!m) return;
-        const sv = new Set(Array.isArray(lvArr) ? lvArr : [lvArr]);
+        const sv = getAwkSet(nm);
         (m.awakenings || []).forEach(a => {
             if (!sv.has(a.level)) return;
             (a.buffs || []).forEach(id => { const b = BUFFS[id]; if (!b || !b.cond) return; if (!buffAgg[id]) buffAgg[id] = 0; buffAgg[id]++; });
@@ -756,7 +804,8 @@ function toggleMeRecap() {
 }
 
 function exportAwk() {
-    const blob = new Blob([JSON.stringify(myAwakenings, null, 2)], { type: 'application/json' });
+    const data = { awakenings: myAwakenings, level: myLevel, statBonus: myStatBonus };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'sw_eveils.json'; a.click();
 }
 function importAwk() {
@@ -765,7 +814,23 @@ function importAwk() {
         const file = e.target.files[0]; if (!file) return;
         const reader = new FileReader();
         reader.onload = ev => {
-            try { Object.assign(myAwakenings, JSON.parse(ev.target.result)); saveAwk(); document.getElementById('meGridInner').innerHTML = ''; renderMesEveils(); } catch { }
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (data && (data.awakenings || data.level || data.statBonus)) {
+                    // Nouveau format structuré (éveils + niveau + bonus de stats)
+                    if (data.awakenings) Object.assign(myAwakenings, data.awakenings);
+                    if (data.level) Object.assign(myLevel, data.level);
+                    if (data.statBonus) Object.assign(myStatBonus, data.statBonus);
+                } else {
+                    // Ancien format : fichier = objet d'éveils brut, sans niveau/bonus
+                    Object.assign(myAwakenings, data);
+                }
+                saveAwk(); saveMyLevel(); saveMyStatBonus();
+                document.getElementById('meGridInner').innerHTML = '';
+                renderMesEveils();
+                refreshAllMonsterBadges();
+                refreshTeamViews();
+            } catch { }
         };
         reader.readAsText(file);
     };
@@ -865,7 +930,7 @@ function autoBuildTeam() {
             const cat = buffCategory(id);
             s += v * (W[cat] ?? 1) * (b.team ? 1.4 : 1);
         });
-        s += getAwkLevel(nm) * 6;
+        s += getAwkLevel(nm) * 6 + investBonus(nm);
         return s;
     }
 
@@ -1401,6 +1466,7 @@ function renderStrategicGrid(gridId, ctx, w, h, teamColor) {
                 const m = MONSTERS[nm];
                 html += `<div class="sgrid-pc" draggable="true" ondragstart="sgDragStart(event,'${gridId}','${nm}')" ondragend="sgDragEnd()" style="border-color:${teamColor || TCOL[m.type]}">
           <img src="${IP}${nm}.png" onerror="this.style.display='none'">
+          ${monsterBadgesHtml(nm)}
           <div class="sgrid-name">${nm}</div>
           <div class="sgrid-rm" onclick="event.stopPropagation();sgRemove('${gridId}','${nm}')">×</div>
         </div>`;
@@ -1509,7 +1575,7 @@ function evalTeamScore(members, strat) {
             }
             total += pairSynergyBonus(id, teamBufSeen, w);
         });
-        total += getAwkLevel(nm) * 6;
+        total += getAwkLevel(nm) * 6 + investBonus(nm);
     });
 
     // --- Gestion de la composition d'équipe ---
@@ -1549,7 +1615,7 @@ function randomizedGreedyBuild(teamSize, strat, usedElsewhere, randomness) {
             const cat = OFF_IDS.has(id) ? 'off' : DEF_IDS.has(id) ? 'def' : TEAM_IDS.has(id) ? 'team' : 'off';
             s += v * (W[cat] ?? 1) * (b.team ? 1.4 : 1);
         });
-        s += getAwkLevel(nm) * 6;
+        s += getAwkLevel(nm) * 6 + investBonus(nm);
         return s;
     }
 
@@ -1588,7 +1654,7 @@ function randomizedGreedyBuild(teamSize, strat, usedElsewhere, randomness) {
         if (isSupport) comp += supportNeed > 0 ? (55 + supportNeed * 18) * (compW / 3) : (supportNeed < -1 ? -40 : 0);
         if (isSupport && strat.typeRatio.support === 0) comp -= 80;
         if (t === 'tank' && !typeCounts.tank) comp += 200;
-        return syn + comp + getAwkLevel(nm) * 6;
+        return syn + comp + getAwkLevel(nm) * 6 + investBonus(nm);
     }
 
     function pickRandomTop(scoredList, k) {
@@ -1679,7 +1745,7 @@ function renderCmpRowSolo(nm, idx) {
 
     return `<div class="mrow" style="border-left:4px solid ${col};width:100%">
     <div style="display:flex;gap:clamp(8px,3%,16px);padding:clamp(10px,3%,18px) clamp(10px,3%,18px) clamp(8px,2%,14px);align-items:flex-start;position:relative;flex-wrap:wrap">
-      <div class="mrow-port" style="width:clamp(96px,32%,144px);height:clamp(96px,32%,144px);flex-shrink:0"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
+      <div class="mrow-port" style="width:clamp(96px,32%,144px);height:clamp(96px,32%,144px);flex-shrink:0"><img src="${IP}${nm}.png" onerror="this.style.display='none'">${monsterBadgesHtml(nm)}</div>
       <div class="mrow-port-rm" onclick="removeCmp(${idx})">×</div>
       <div style="flex:1;min-width:120px">
         <div class="mrow-name" style="font-size:clamp(1rem,5cqw,1.25rem);word-break:break-word">${nm}</div>
@@ -1762,7 +1828,7 @@ function renderCmpRowCompact(nm, idx) {
 
     return `<div class="mrow" style="border-left:4px solid ${col};flex:1;min-width:0">
     <div style="display:flex;gap:10px;padding:12px 14px;align-items:flex-start;position:relative">
-      <div class="mrow-port" style="width:52px;height:52px"><img src="${IP}${nm}.png" onerror="this.style.display='none'"></div>
+      <div class="mrow-port" style="width:52px;height:52px"><img src="${IP}${nm}.png" onerror="this.style.display='none'">${monsterBadgesHtml(nm)}</div>
       <div class="mrow-port-rm" onclick="removeCmp(${idx})" style="top:6px;right:6px">×</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:1rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nm}</div>
