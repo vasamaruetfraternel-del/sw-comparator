@@ -495,7 +495,8 @@ function clearTeam() { selTb = []; renderTeam(); buildGrid(); }
 function openTbInfo() {
     document.getElementById('tbInfoContent').innerHTML = `
     <div class="tbinfo-title">ℹ️ Comment fonctionne la sélection automatique ?</div>
-
+	<div class="faq-tip">Un monstre marqué <strong>🚫 Exclure</strong> dans Mes Éveils n'apparaît jamais dans les Suggestions ni dans aucun Auto-Build.</div>
+	<div class="faq-tip"><strong>L'Auto-Build</strong> offre une base solide pour vos compositions. S'il n'est pas infaillible, il propose des configurations optimisées qui tendent vers l'excellence.</div>
     <div class="tbinfo-sec">
       <h4>💡 Suggestions (sous l'équipe, en construction manuelle)</h4>
       <p>Dès qu'il reste de la place dans l'équipe, les 10 meilleurs monstres restants sont proposés en chips cliquables. Pour chaque monstre pas encore dans l'équipe (et pas exclu), le score additionne :</p>
@@ -544,8 +545,6 @@ function openTbInfo() {
         <li><strong>Éveil maximum</strong> coché dans Mes Éveils (jusqu'à +42 pour un Éveil 7★) ;</li>
         <li><strong>Niveau et Bonus de stats</strong> déclarés dans Mes Éveils, sur une échelle en racine carrée (pour départager les candidats sans écraser le reste du score).</li>
       </ul>
-      <div class="faq-tip">Un monstre marqué <strong>🚫 Exclure</strong> dans Mes Éveils n'apparaît jamais dans les Suggestions ni dans aucun Auto-Build.</div>
-	  <div class="faq-tip"><strong>L'Auto-Build</strong> offre une base solide pour vos compositions. S'il n'est pas infaillible, il propose des configurations optimisées qui tendent vers l'excellence.</div>
     </div>
   `;
     document.getElementById('tbInfoModal').style.display = 'flex';
