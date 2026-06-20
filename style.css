@@ -303,7 +303,7 @@ html, body {
 .pc-type {
     position: absolute;
     top: 3px;
-    left: 3px;
+    right: 24px;
     font-size: .55rem;
     font-weight: 900;
     background: rgba(0,0,0,.7);
@@ -421,6 +421,7 @@ html, body {
 }
 
 .mrow-port {
+    position: relative;
     width: 80px;
     height: 80px;
     border-radius: 8px;
@@ -1036,6 +1037,15 @@ html, body {
         object-fit: cover;
         object-position: top center;
         pointer-events: none
+    }
+
+    .sgrid-pc .mb-wrap {
+        gap: 1px
+    }
+
+    .sgrid-pc .mb-lv, .sgrid-pc .mb-sb {
+        font-size: .48rem;
+        padding: 0 3px
     }
 
 .sgrid-name {
@@ -1952,6 +1962,70 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 5px
+}
+
+.me-card-stats {
+    display: flex;
+    gap: 10px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--b1);
+    flex-wrap: wrap
+}
+
+.me-stat-field {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .7rem;
+    font-weight: 700;
+    color: var(--tx2)
+}
+
+.me-stat-input {
+    width: 56px;
+    background: var(--s3);
+    border: 1px solid var(--b2);
+    border-radius: 4px;
+    color: var(--tx);
+    font-family: inherit;
+    font-size: .76rem;
+    font-weight: 700;
+    padding: 4px 6px;
+    text-align: center
+}
+
+/* Badges Niveau / Bonus de stats — affichés sur le portrait du monstre partout dans l'app */
+.mb-wrap {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 2;
+    pointer-events: none
+}
+
+.mb-lv {
+    background: rgba(0,0,0,.78);
+    color: #ffd84a;
+    font-size: .55rem;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 2px;
+    line-height: 1.3;
+    white-space: nowrap
+}
+
+.mb-sb {
+    background: rgba(0,0,0,.78);
+    color: #7fe0a0;
+    font-size: .55rem;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 2px;
+    line-height: 1.3;
+    white-space: nowrap
 }
 
 .me-mini-chip {
