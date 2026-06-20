@@ -544,7 +544,8 @@ function openTbInfo() {
         <li><strong>Éveil maximum</strong> coché dans Mes Éveils (jusqu'à +42 pour un Éveil 7★) ;</li>
         <li><strong>Niveau et Bonus de stats</strong> déclarés dans Mes Éveils, sur une échelle en racine carrée (pour départager les candidats sans écraser le reste du score).</li>
       </ul>
-      <div class="faq-tip">💡 Un monstre marqué <strong>🚫 Exclure</strong> dans Mes Éveils n'apparaît jamais dans les Suggestions ni dans aucun Auto-Build.</div>
+      <div class="faq-tip">Un monstre marqué <strong>🚫 Exclure</strong> dans Mes Éveils n'apparaît jamais dans les Suggestions ni dans aucun Auto-Build.</div>
+	  <div class="faq-tip"><strong>L'Auto-Build</strong> offre une base solide pour vos compositions. S'il n'est pas infaillible, il propose des configurations optimisées qui tendent vers l'excellence.</div>
     </div>
   `;
     document.getElementById('tbInfoModal').style.display = 'flex';
