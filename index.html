@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -17,7 +17,6 @@
         <button class="ntab" id="tab-tb" onclick="switchTab('tb')">Team Builder</button>
         <button class="ntab" id="tab-tl" onclick="switchTab('tl')">Tier List</button>
         <button class="ntab" id="tab-me" onclick="switchTab('me')">Mes Éveils</button>
-        <button class="ntab" id="tab-faq" onclick="switchTab('faq')">F.A.Q</button>
         <div class="nav-right">
             <div class="nav-search">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
@@ -65,6 +64,7 @@
                             <button class="sz" data-s="25" onclick="setSize(25)">25</button>
                         </div>
                         <button class="tb-clr" id="tbClrBtn" onclick="clearTeam()" disabled>Vider</button>
+                        <button class="tb-info-btn" onclick="openTbInfo()" title="Comment fonctionne la sélection automatique ?">ℹ️ Info</button>
                         <span class="tb-ctr" id="tbCtr">0 / 15</span>
                     </div>
                     <div class="tb-saves-bar" id="tbSavesBar"></div>
@@ -73,6 +73,12 @@
                         <div id="tbSlots"></div>
                         <div id="tbScores"></div>
                         <div id="tbBuffBtnWrap"></div>
+                    </div>
+                </div>
+                <div class="tbinfo-overlay" id="tbInfoModal" style="display:none" onclick="if(event.target===this)closeTbInfo()">
+                    <div class="tbinfo-box">
+                        <button class="tbinfo-close" onclick="closeTbInfo()">✕</button>
+                        <div id="tbInfoContent"></div>
                     </div>
                 </div>
             </div>
@@ -138,27 +144,6 @@
                             <div class="me-grid" id="meGridInner"></div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="panel off" id="panelFaq">
-                <div style="flex:1;overflow-y:auto;padding:24px 32px;max-width:900px;margin:0 auto;width:100%">
-
-                    <div style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--b1)">
-                        <div style="font-size:1.4rem;font-weight:900;color:var(--green2);margin-bottom:4px">F.A.Q — SW Rush Tool</div>
-                        <div style="font-size:.85rem;color:var(--tx2)">Toutes les réponses sur le fonctionnement du Fiche des monstres, du Team Builder et des scores.</div>
-                    </div>
-
-                    <div style="position:relative;margin-bottom:20px">
-                        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--tx2);pointer-events:none">🔍</span>
-                        <input type="text" id="faqSearch" placeholder="Rechercher une question, un mot-clé…"
-                               oninput="filterFaq()"
-                               style="width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--tx);padding:10px 14px 10px 36px;border-radius:6px;font-size:.9rem;outline:none;font-family:inherit;transition:.15s">
-                    </div>
-
-                    <div id="faqCats" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px"></div>
-
-                    <div id="faqContainer"></div>
-
                 </div>
             </div>
         </div>
