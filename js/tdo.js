@@ -67,6 +67,7 @@ function autoBuildBalancedTeams(teamsArr, strategies, teamSize, getUsedFn) {
                                 syn += v * w * 0.2;
                             }
                         }
+                        syn += pairSynergyBonus(id, teamBufSet, w);
                     });
 
                     let comp = 0;
