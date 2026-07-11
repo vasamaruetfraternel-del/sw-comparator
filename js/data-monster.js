@@ -1,4 +1,4 @@
-﻿const CW = .6;
+const CW = .6;
 const MAX_T = 500;
 const MAX_AWK = 200;
 const MAX_SPELL_EACH = 100;
@@ -39,9 +39,9 @@ function skillPts(nm) {
 
 
 const BUFF_CATS = {
-    atk: { label: "⚔ ATQ/Dégâts", ids: ["atk_10", "atk_20", "atk_25_delay", "atk_100", "atk_80", "atk_up_stack", "dmg_15", "dmg_20", "dmg_150", "dmg_aoe_scaling", "dmg_buff_scaling", "dmg_debuff_scaling", "dmg_unique_target", "dmg_frozen_50", "dmg_stunned_50", "dmg_stunned_20", "dmg_def_down_50", "dmg_cc_50", "dmg_poisoned_20", "dmg_bleed_20", "dmg_burned_20", "dmg_sleeping_20", "dmg_dot_50", "dmg_petrified_20", "dmg_blinded_20", "dmg_melee_def_target", "target_weakness_provoke", "target_weakness_immunity", "target_weakness_shield", "atk_down_ennemy_count", "atk_nerf_20"] },
-    crit: { label: "✦ Critique", ids: ["crit_rate_10", "crit_rate_10_cond", "crit_rate_50", "crit_dmg_10_cond", "crit_dmg_20", "crit_res_10_cond", "crush_rate_10", "crush_rate_10_cond", "crush_rate_10_team", "crush_dmg_20", "crush_dmg_20_ally", "crush_rate_20_ally", "double_hit_10", "double_hit_15", "double_hit_10_cond", "triple_hit_10", "no_crit_cd", "teamwork_stack", "one_team_one_spirit", "perfect_team", "double_triple_dmg_team", "bloom_stack", "full_bloom", "crit_rate_nerf_20", "dodge_rate_20", "dodge_nerf_20", "weak_hit_rate_20", "weak_hit_rate_20_melee"] },
-    spd: { label: "⚡ Vitesse", ids: ["spd_10", "spd_15", "spd_15_cond", "spd_30", "spd_40_cond", "spd_team_20", "skill_accel_15", "skill_accel_20_cond", "move_spd_200", "exclusive_cd_down", "cd_reset_proc", "cd_skill_cond", "no_crit_cd"] },
+    atk: { label: "⚔ ATQ/Dégâts", ids: ["atk_10", "atk_20", "atk_25_delay", "atk_100", "atk_80", "atk_up_stack", "dmg_15", "dmg_20", "dmg_150", "dmg_aoe_scaling", "dmg_buff_scaling", "dmg_debuff_scaling", "dmg_unique_target", "dmg_frozen_50", "dmg_frozen_20", "dmg_stunned_50", "dmg_stunned_20", "dmg_def_down_50", "dmg_cc_50", "dmg_poisoned_20", "dmg_bleed_20", "dmg_burned_20", "dmg_sleeping_20", "dmg_dot_50", "dmg_petrified_20", "dmg_blinded_20", "dmg_melee_def_target", "target_weakness_provoke", "target_weakness_immunity", "target_weakness_shield", "atk_down_ennemy_count", "atk_nerf_20"] },
+    crit: { label: "✦ Critique", ids: ["crit_rate_10", "crit_rate_10_cond", "crit_rate_50", "crit_dmg_10_cond", "crit_dmg_20", "crit_res_10_cond", "crush_rate_10", "crush_rate_10_cond", "crush_rate_10_team", "crush_dmg_20", "crush_dmg_20_ally", "crush_rate_20_ally", "double_hit_10", "double_hit_15", "double_hit_10_cond", "triple_hit_10", "multi_hit_exclusive", "no_crit_cd", "teamwork_stack", "one_team_one_spirit", "perfect_team", "double_triple_dmg_team", "bloom_stack", "full_bloom", "crit_rate_nerf_20", "dodge_rate_20", "dodge_nerf_20", "weak_hit_rate_20", "weak_hit_rate_20_melee"] },
+    spd: { label: "⚡ Vitesse", ids: ["spd_10", "spd_15", "spd_15_cond", "spd_30", "spd_40_cond", "spd_team_20", "skill_accel_15", "skill_accel_20_cond", "skill_accel_stack", "move_spd_200", "exclusive_cd_down", "cd_reset_proc", "cd_skill_cond", "no_crit_cd"] },
     range: { label: "🏹 Portée", ids: ["range_3", "range_5", "aoe_range_30", "aoe_range_30_cond"] },
     def: { label: "🛡 Défense", ids: ["def_15", "hp_max_15_cond", "res_lp_30", "dmg_resist_10", "dmg_resist_20_cond", "dmg_resist_80_cond", "dmg_resist_15_cond", "dmg_resist_20_team", "shield_hits_3_team", "shield_hits_5", "stealth_shield", "endurance_cond", "dodge_3s", "protection_shield", "limit_shield", "dmg_down_provoked", "dmg_resist_aoe_30", "debuff_immune", "regen_team"] },
     cc: { label: "🌀 CC/Survie", ids: ["cc_eff_20", "cc_immune_team_30", "cc_immune_self_react", "fran_blessing_team", "cd_reset_proc", "cd_skill_cond", "stealth", "strip_shield", "lifesteal_15_cond", "provoke_status", "entrave", "blindness", "stun", "freeze", "sleep", "petrify", "fear_25", "block_heal", "strip_immunity", "strip_debuff_team"] },
@@ -142,6 +142,7 @@ const BUFFS = {
     "dmg_debuff_scaling": { label: "Dégâts / Nb Debuffs (max 15)", color: "#d07030", power: 44 },
     "dmg_unique_target": { label: "Dégâts Cible Unique ↑", color: "#cc5030", power: 14 },
     "dmg_frozen_50": { label: "Dégâts +50% (cibles Gelées)", color: "#66ccff", power: 24, cond: true },
+    "dmg_frozen_20": { label: "Dégâts +20% (cibles Gelées)", color: "#66ccff", power: 16, cond: true },
     "dmg_stunned_50": { label: "Dégâts +50% (cibles Étourdies)", color: "#cc8800", power: 24, cond: true },
     "dmg_stunned_20": { label: "Dégâts +20% (cibles Étourdies)", color: "#cc8800", power: 16, cond: true },
     "dmg_def_down_50": { label: "Dégâts +50% (cibles DEF réduite)", color: "#cc6030", power: 24, cond: true },
@@ -158,6 +159,7 @@ const BUFFS = {
     "dmg_100_immunity": { label: "Dégâts +100% cible sous immunité", color: "#ff6600", power: 20, cond: true },
     "dmg_100_solotarget": { label: "Dégâts +100% cible seule", color: "#ff6600", power: 26 },
     "dmg_frozen_50_team": { label: "Dégâts +50% (cibles Gelées) ALLIÉS", color: "#66ccff", power: 43, cond: true, team: true },
+    "dmg_frozen_20_team": { label: "Dégâts +20% (cibles Gelées) ALLIÉS", color: "#66ccff", power: 29, cond: true, team: true },
     "dmg_stunned_50_team": { label: "Dégâts +50% (cibles Étourdies) ALLIÉS", color: "#cc8800", power: 43, cond: true, team: true },
     "dmg_cc_50_team": { label: "Dégâts +50% (cibles sous CC) ALLIÉS", color: "#cc5588", power: 45, cond: true, team: true },
     "dmg_dot_50_team": { label: "Dégâts +50% (cibles sous DoT) ALLIÉS", color: "#cc6644", power: 53, cond: true, team: true },
@@ -388,6 +390,7 @@ const BUFFS = {
     "skill_accel_30_melee": { label: "Accél. Compétences +30% Allié type Mêlée", color: "#30b0d0", power: 35, team: true },
     "skill_accel_30_range": { label: "Accél. Compétences +30% Allié type Distance", color: "#30b0d0", power: 35, team: true },
     "skill_accel_30_team": { label: "Accél. Compétences ALLIÉS +30%", color: "#30b0d0", power: 48, team: true },
+    "skill_accel_stack": { label: "Accél. Compétences +3%/cumul (max 90%)", color: "#30b0d0", power: 18, cond: true },
     "cd_reset_proc": { label: "Reset CD Compétence (conditionnel)", color: "#00ffff", power: 20, cond: true },
     "cd_reset_proc_team": { label: "Reset CD Compétence ALLIÉS (conditionnel)", color: "#00ffff", power: 36, cond: true, team: true },
     "cd_skill_cond": { label: "Réduction CD Compétence Excl. (conditionnel)", color: "#30c0d0", power: 12, cond: true },
@@ -690,6 +693,7 @@ const BUFFS = {
     "floraison": { label: "Floraison (Crits peuvent déclencher Coups Multiples)", color: "#d06030", power: 15 },
     "full_bloom": { label: "Pleine Floraison (Crits déclenchent Coups Multiples)", color: "#e05555", power: 36, cond: true },
     "full_bloom_team": { label: "Pleine Floraison ALLIÉS", color: "#e05555", power: 64, cond: true, team: true },
+    "multi_hit_exclusive": { label: "Lames Multiples (Coup Double/Triple sur compétence exclusive)", color: "#cc70bb", power: 15 },
     "cd_reset_exclu_2S": { label: "10% Réduction compétence exclusive ( Cooldown : 2 sec )", color: "#66ddaa", power: 30, cond: true },
     "atk_stack_debuff_count": { label: "A chaque debuff, gagne 5% ATK par stack ( Max. 30% )", color: "#ff44aa", power: 30, cond: true, team: true },
     "accuracy_nerf_5": { label: "Précision ennemi -20%", color: "#88cccc", power: 15, cond: true },
@@ -752,6 +756,7 @@ const BASIC_SKILLS = {
     "Lushen": { name: "", desc: "Inflige 350% de la puissance d'attaque en dégâts à la cible.", cd: 0, buffs: [], atk_pct: 350 },
     "Raki": { name: "", desc: "Inflige 380% de la puissance d'attaque en dégâts dans un cône étroit de 3m devant soi.", cd: 0, buffs: [], atk_pct: 380, aoe: true },
     "Tilasha": { name: "", desc: "Inflige 460% de la puissance d'attaque en dégâts à la cible.", cd: 0, buffs: [], atk_pct: 460 },
+    "Almace": { name: "", desc: "Inflige 380% de la puissance d'attaque en dégâts dans un cône étroit de 3m devant soi.", cd: 0, buffs: [], atk_pct: 380, aoe: true },
 };
 
 const CRIT_SKILLS = {
@@ -811,6 +816,7 @@ const CRIT_SKILLS = {
     "Raki": { name: "", desc: "Inflige 2 fois 290% de la puissance d'attaque en dégâts critiques dans un rayon de 4m autour de soi.\nEn cas d'attaque réussie, confère aux alliés de type Mêlée l'effet de renforcement Augmentation des dégâts infligés de 20% pendant 2 sec. (Effet cumulable)\nInflige des dégâts supplémentaires proportionnels au nombre d'effets d'altération d'état sur la cible. (Max 5)", cd: 2, buffs: ["dmg_20_melee", "dmg_cc_state_scaling"], atk_pct: 290, hits: 2, aoe: true },
 
     "Tilasha": { name: "", desc: "Inflige 880 % de la puissance d'attaque en dégâts critiques dans un rayon de 2m autour de la cible.\nEn cas d'attaque réussie, attribue l'effet de renforcement\nAugmentation des dégâts de coup puissants de 20% aux alliés de type à distance pendant 2 sec. (Effet cumulable)\nEn cas d'attaque réussie, attribue l'effet d'affaiblissement\nDiminution de la précision niv.5 pendant 2 sec.", cd: 2, buffs: ["crush_dmg_20_range", "accuracy_nerf_5"], atk_pct: 880, aoe: true },
+    "Almace": { name: "", desc: "Inflige 5 fois 170% de la puissance d'attaque en dégâts critiques dans un rayon de 2m autour de la cible.\nEn cas d'attaque réussie, attribue l'effet de dégâts continus Congélation pendant 5 sec.\nEn cas d'attaque réussie, attribue l'effet de renforcement Augmentation de la vitesse d'attaque de 20% aux alliés de Mêlée pendant 5 sec. (Effet cumulable)\nChaque cumul augmente l'accélération des compétences de 3% (Max 90%).", cd: 2, buffs: ["congelation_dot", "spd_20_melee", "skill_accel_stack"], atk_pct: 170, hits: 5, aoe: true },
 };
 
 const EXCLUSIVE_SKILLS = {
@@ -869,6 +875,7 @@ const EXCLUSIVE_SKILLS = {
     "Lushen": { name: "Magie d'amputation", desc: "Inflige 350% de la puissance d'attaque en dégâts dans un rayon de 4m autour de soi.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation de la vitesse d'attaque de 20% pendant 10 sec. (Effet cumulable)", cd: 10, buffs: ["spd_team_20"], atk_pct: 350, aoe: true },
     "Raki": { name: "Capture", desc: "Inflige 2 fois 390% de la puissance d'attaque en dégâts dans un rayon de 6m autour de soi.\nEn cas d'attaque réussie, confère aux alliés l'effet de renforcement Augmentation des dégâts critiques de 20% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, attribue à la cible l'effet d'altération d'état Entrave pendant 5 sec.", cd: 10, buffs: ["crit_dmg_team_20", "entrave"], atk_pct: 390, hits: 2, aoe: true },
     "Tilasha": { name: "", desc: "Inflige 1 420 % de la puissance d'attaque en dégâts dans un rayon de 3m autour de la cible.\nEn cas d'attaque réussie, attribue l'effet d'affaiblissement Chaîne de malédictions pendant 10 sec. (Effet cumulable)\nInflige des dégâts supplémentaires proportionnels au nombre d'effets d'affaiblissement sur la cible. (Jusqu'à 15 max)", cd: 10, buffs: ["curse_chain_stack", "dmg_debuff_scaling"], atk_pct: 1420, aoe: true },
+    "Almace": { name: "Lame du froid glacial", desc: "Inflige 5 fois 280% de la puissance d'attaque en dégâts dans un rayon de 4m autour de soi.\nEn cas d'attaque réussie, attribue l'effet de renforcement Exploitation de faiblesse – Congélation 20% aux alliés pendant 10 sec. (Effet cumulable)\nInflige des dégâts supplémentaires aux cibles en état de Congélation.", cd: 10, buffs: ["dmg_frozen_20_team", "congelation_dmg"], atk_pct: 280, hits: 5, aoe: true },
 };
 const MONSTERS = {
     "Craka": { type: "melee", awakenings: [AWK3, { level: 5, desc: "Début de combat :\n- ATQ +10%.\n- Résist. LP -30%.\n- Chaque Saignement → allié : Détection point faible 10% / 10s.", buffs: ["atk_10", "res_lp_30", "bleed", "weak_point_detect"], pvp: true, pve: false }, { level: 7, desc: "Attaque réussie :\n- Point faible – Saignement 15% sur ennemi.\n- Dégâts +20%.", buffs: ["weakness_element", "dmg_20"], pvp: true, pve: false }] },
@@ -926,6 +933,7 @@ const MONSTERS = {
     "Josephine": { type: "tank", awakenings: [{ level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true }, { level: 5, desc: "Début de combat :\n- Dégâts reçus ≤ 10% HP max (7s)\n- Type Mêlée partagé\n- Accél. Compétences +15%", buffs: ["limit_shield", "class_share_melee", "skill_accel_15"], pvp: true, pve: true }, { level: 7, desc: "Attaque réussie :\n- Dégâts +15% / bouclier ennemi (max +45%)\n- Dégâts +20%", buffs: ["target_weakness_shield", "dmg_20"], pvp: true, pve: true }] },
     "Raki": { type: "melee", awakenings: [{ level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true }, { level: 5, desc: "Au début du combat, confère à soi-même pendant 3 sec l'effet de renforcement Esquive absolue.\nAu début du combat, s'octroie l'effet de renforcement Accélération de la compétence de 15%. (Suppression impossible, cumulable)\nÀ chaque fois qu'un effet d'entrave est appliqué, accorde à un allié l'effet de renforcement Détection de point faible – Entrave de 10 % pendant 10 sec. (Effet cumulable)", buffs: ["dodge_3s", "skill_accel_15", "weak_point_entrave2"], pvp: true, pve: false }, { level: 7, desc: "En cas d'attaque réussie, applique un effet d'Point faible – Entrave de 15% pendant 10 sec. (Effet cumulable)\nEn cas d'attaque réussie, attire à sa position tous les ennemis bénéficiant de l'effet Entrave.\nLes ennemis affectés par le cercle magique Chaînes infernales sont attirés, que l'attaque touche ou non.\nLes dégâts infligés par le monstre augmentent de 20%.\n(Suppression impossible, effet cumulable)", buffs: ["weak_point_entrave", "pull_target", "dmg_20"], pvp: true, pve: true }] },
     "Tilasha": { type: "range", awakenings: [{ level: 3, desc: "Réduit de 100% le temps de recharge de ses compétences au début du combat.", buffs: [], pvp: true, pve: true }, { level: 5, desc: "Augmentation de la portée de 3.\nDiminution temps de recharge cd exclusive, cd : 2 sec.", buffs: ["range_3", "cd_reset_exclu_2S"], pvp: true, pve: false }, { level: 7, desc: "Afflux de malice.\nA chaque débuff, gagne 5% atk par stack 10s.\nDégâts + 20%", buffs: ["atk_stack_debuff_count", "dmg_20"], pvp: true, pve: true }] },
+    "Almace": { type: "melee", awakenings: [AWK3, { level: 5, desc: "Début de combat :\n- Attribue l'effet de renforcement Lames Multiples (Coup Double/Triple sur compétence exclusive).\n- Sur dégâts mortels : Bouclier Endurance 3 sec (Temps de pause : 30 sec).\n- Sur dégâts mortels : Gel sur tous les ennemis 2 sec (Temps de pause : 30 sec).", buffs: ["multi_hit_exclusive", "endurance_cond", "freeze"], pvp: true, pve: true }, { level: 7, desc: "Attaque réussie :\n- Faiblesse Congélation sur ennemi (Dég. reçus +15%) / 10s.\n- Dégâts +20%.", buffs: ["weakness_element", "dmg_20"], pvp: true, pve: true }] },
 };
 
 const STRATEGIES = {
